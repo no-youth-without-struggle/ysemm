@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>vue-elementui</title>
+		<!--先引入vue.js库-->
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+		<!--axios-->
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<!-- 引入样式 -->
+		<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+		<!-- 引入组件库 -->
+		<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+		<script src="common/jquery-3.4.1.js"></script>
+		<style>
+			.el-header, .el-footer {
+				background-color: #B3C0D1;
+				color: #333;
+				text-align: center;
+				line-height: 60px;
+			}
+
+			.el-aside {
+
+				color: #333;
+				text-align: center;
+				line-height: 26px;
+				height: 650px;
+			}
+
+			.el-main {
+				background-color: #E9EEF3;
+				color: #333;
+				text-align: center;
+				line-height: 160px;
+			}
+
+			body > .el-container {
+				margin-bottom: 40px;
+			}
+
+			.el-container:nth-child(5) .el-aside,
+			.el-container:nth-child(6) .el-aside {
+				line-height: 260px;
+			}
+
+			.el-container:nth-child(7) .el-aside {
+				line-height: 320px;
+			}
+			.el-main{
+				line-height: 10px;
+			}
+
+		</style>
+	</head>
+	<body>
+		<div id="app">
+
+			<el-container>
+			   <el-header>Header</el-header>
+
+				<el-container>
+					<el-aside width="200px">
+						<el-tree :data="treeData"   @node-click="handleNodeClick"></el-tree>
+					</el-aside>
+						<el-main style="width:100%;height:800px;padding: 0px;margin:0px;">
+							<el-tabs v-model="editableTabsValue2" type="card" closable @tab-remove="removeTab" style="width:100%;height:100%;">
+								<el-tab-pane
+										v-for="(item, index) in editableTabs2"
+										:key="item.name"
+										:label="item.title"
+										:name="item.name"
+										style="width:100%;height:100%;"
+								>
+									<iframe :src="item.content" id="mainiframe" width="100%" height="600px;"   frameborder="0" scrolling="auto"></iframe>
+								</el-tab-pane>
+							</el-tabs>
+
+						</el-main>
+				</el-container>
+				<el-footer>Footer</el-footer>
+
+			</el-container>
+
+
+	    </div>
+	    <script>
+	    	var vue =new Vue({
+	    		el:"#app",
+	    		data:{
+                    treeData:[],
+					editableTabsValue2: '1',
+					editableTabs2: [{
+						title: '欢迎页',
+						name: '1',
+						content: 'http://www.baidu.com'
+					}],
+					tabIndex: 1
+	    		},
+				created:function(){
+                    var self=this;
+					axios.post("power/tree")
+						.then(function (response) {
+							 self.treeData=response.data;
+						})
+				},
+                methods: {
+                    handleNodeClick:function(data) {
+                        if(data.url!=null&&data.url!='null'&&data.url!=''&&data.url!='undefined') {
+						this.addTab(data.label,data.url);
+                        }
+                    },
+					addTab:function(targetName,url) {
+
+						var newTabName = ++this.tabIndex + '';
+						this.editableTabs2.push({
+							title: targetName,
+							name: newTabName,
+							content: url
+						});
+						this.editableTabsValue2 = newTabName;
+					},
+					removeTab:function(targetName) {
+						var tabs = this.editableTabs2;
+						var activeName = this.editableTabsValue2;
+						if (activeName === targetName) {
+							tabs.forEach(function(tab, index){
+								if (tab.name === targetName) {
+								var nextTab = tabs[index + 1] || tabs[index - 1];
+								if (nextTab) {
+									activeName = nextTab.name;
+								}
+							}
+						});
+						}
+
+						this.editableTabsValue2 = activeName;
+						this.editableTabs2 = tabs.filter(tab => tab.name !== targetName);
+					}
+			}
+	    	});
+			function changeFrameHeight(){
+				var ifm= document.getElementById("mainiframe");
+				ifm.height=document.documentElement.clientHeight-56;
+			}
+			window.onresize=function(){ changeFrameHeight();}
+			$(function(){changeFrameHeight();});
+	    </script>
+	</body>
+</html>

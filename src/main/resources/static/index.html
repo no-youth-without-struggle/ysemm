@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>测试一</title>
+    <script src="vue/js/vue.js"></script>
+    <script src="vue/js/index.js"></script>
+    <script src="vue/js/axios.js"></script>
+    <link href="vue/css/index.css" rel="stylesheet">
+</head>
+<body>
+<div id="app">
+    <el-row>
+        <el-form :inline="true" :model="formInline" class="demo-form-inline">
+            <el-form-item label="员工姓名">
+                <el-input v-model="formInline.ename" placeholder="员工姓名"></el-input>
+            </el-form-item>
+            <el-form-item label="员工部门">
+                <el-select v-model="formInline.deptno" placeholder="员工部门">
+                    <el-option v-for="item in dept" :label="item.dname" :value="item.deptno"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="onSubmit">查询</el-button>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="danger" @click="addEmp">添加</el-button>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="flash">刷新</el-button>
+            </el-form-item>
+        </el-form>
+    </el-row>
+    <el-row>
+    <el-table :data="tableData" style="width: 100%;height:100%;">
+        <el-table-column fixed prop="empno" label="员工编号" width="150"></el-table-column>
+        <el-table-column prop="ename" label="员工姓名" width="120"></el-table-column>
+        <el-table-column prop="job" label="职位" width="120"></el-table-column>
+        <el-table-column prop="sex" label="性别" width="120"></el-table-column>
+        <el-table-column prop="dname" label="部门" width="300"></el-table-column>
+        <el-table-column prop="hiredate" label="入职时间" width="120"></el-table-column>
+        <el-table-column label="操作">
+            <template slot-scope="scope">
+                <el-button size="mini" type="primary" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            </template>
+        </el-table-column>
+    </el-table>
+    </el-row>
+    <!--分页-->
+    <el-row>
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage4" :page-sizes="[2,3,4,5,10,15,100, 200, 300, 400]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+        </el-pagination>
+    </el-row>
+    <!--对话框-->
+    <el-dialog :title="title" :visible.sync="dialogFormVisible">
+        <el-form :model="form" ref="form" >
+            <el-form-item prop="empno">
+            <input type="hidden" :value="form.empno" >
+                </el-form-item >
+            <el-form-item label="员工姓名" prop="ename">
+                <el-input v-model="form.ename" auto-complete="off"style="width:260px;"></el-input>
+            </el-form-item>
+            <el-form-item label="员工职位"  prop="job" >
+                <el-input v-model="form.job" auto-complete="off" style="width:260px;"></el-input>
+            </el-form-item>
+            <el-form-item label="员工性别" prop="sex">
+                <el-radio-group v-model="form.sex">
+                    <el-radio label="男"></el-radio>
+                    <el-radio label="女"></el-radio>
+                </el-radio-group>
+            </el-form-item>
+            <el-form-item label="员工部门" prop="deptno">
+                <el-select v-model="form.deptno" placeholder="员工部门" style="width:260px;">
+                    <el-option v-for="item in dept" :label="item.dname" :value="item.deptno"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="入职日期" prop="hiredate">
+                <el-date-picker v-model="form.hiredate" type="date" placeholder="选择日期" style="width:260px;">
+                </el-date-picker>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="save">确 定</el-button>
+        </div>
+    </el-dialog>
+
+
+</div>
+</body>
+<script>
+    var app = new Vue({
+        el:"#app",
+        data:{//数据
+            currentPage4: 1,//初始页数
+            dept:[],
+            pageSize:5,//每页个数
+            total:0,//总数
+            formInline: {
+                start:"",
+                count:"",
+                ename:"",
+                deptno:""
+            },
+            tableData: [],
+            /*对话框信息*/
+            dialogFormVisible:false,//对话框显示
+            title:"",//对话框标题
+            form:{
+                empno:"",
+            },//对话框的内容
+
+        } ,
+        methods:{//方法
+            //刷新
+            flash:function(){
+                app.formInline={};
+              app.currentPage4=1;
+              app.pageSize=5;
+                upload();
+            },
+            onSubmit:function() {//提交的方法
+                upload();
+            },
+            handleSizeChange:function(val) {
+                //console.log("每页 条");
+                app.pageSize=val;
+                upload();
+            },
+            handleCurrentChange:function(val) {
+               // console.log("当前页:");
+                app.currentPage4=val;
+                upload();
+            },
+            handleEdit:function(index, row) {//修改操作
+                app.dialogFormVisible=true;
+                axios.post("emp/update",{empno:row.empno})
+                  .then(function (value) {
+                        app.form=value.data;
+                  });
+            },
+            handleDelete:function(index, row) {//删除操作
+                var self=this;
+                axios.post("emp/deleteEmp",{empno:row.empno})
+                    .then(function (resourse) {
+                        var result = resourse.data.code;
+                        if(result == 200){
+                            self.$message({
+                                message: '操作成功',
+                                type: 'success'
+                            });
+                        }else{
+                            self.$message.error('操作失败');
+                        }
+                        upload();
+                    });
+            },
+            addEmp:function () {//添加方法
+                app.dialogFormVisible=true;
+            },
+            save:function () {//保存
+                var self=this;
+                var path="";
+                if (app.form.empno == null || app.form.empno == ""){
+                    path="emp/insertEmp";
+                }else{
+                    path="emp/updateEmp";
+                }
+                app.dialogFormVisible = false;
+                axios.post(path,app.form)
+                    .then(function (resourse) {
+                        var result = resourse.data.code;
+                        if(result == 200){
+                            self.$message({
+                                message: '操作成功',
+                                type: 'success'
+                            });
+                        }else{
+                            self.$message.error('操作失败');
+                        }
+                        self.$refs['form'].resetFields();
+                        upload();
+                    });
+            }
+
+        }
+    });
+    function upload(){
+        //每页个数
+        app.formInline.start=(app.currentPage4-1)*app.pageSize;
+        app.formInline.count=app.pageSize;
+        axios.post('emp/login',app.formInline)
+            .then(function (response) {
+                app.tableData =response.data.list;
+                app.dept=response.data.dept;
+                app.total=response.data.counts;
+            });
+    }
+    upload();
+
+</script>
+</html>

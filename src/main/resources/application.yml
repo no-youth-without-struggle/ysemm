@@ -1,0 +1,51 @@
+server:
+  port: 8080 #配置访问端口
+  servlet:
+    context-path: / #配置访问时的项目名
+spring:
+  resource:
+    static-locations: classpath:/static/,classpath:/templates/
+  devtools:
+    remote:
+     restart:
+      enabled: true #热加载
+  datasource: #数据源
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/person?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    username: root
+    password: bai123
+
+
+  http:
+    encoding.charset: UTF-8
+    encoding.enable: true
+    encoding.force: true
+    #multipart:
+     # enabled: true
+      #max-file-size: 10MB
+      #max-request-size: 100MB
+
+  jackson:
+     date-format: yyyy-MM-dd HH:mm:ss
+     time-zone: GMT+8
+
+  thymeleaf:
+    mode: HTML
+    encoding: UTF-8
+    #content-type: text/html
+    cache: false
+
+  mvc:
+    view:
+      suffix: .html
+      prefix: /view/
+
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml
+  type-aliases-package: com.aaa.ysemm.customer.entity
+logging:
+  level:
+    com:
+     example:
+      demo:
+       mapper: debug
