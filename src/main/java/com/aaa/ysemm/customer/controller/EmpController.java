@@ -1,13 +1,10 @@
 package com.aaa.ysemm.customer.controller;
-
 import com.aaa.ysemm.customer.entity.Emp;
 import com.aaa.ysemm.customer.entity.Page;
 import com.aaa.ysemm.customer.service.EmpService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
