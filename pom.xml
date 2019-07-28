@@ -85,6 +85,92 @@
 			<artifactId>pagehelper-spring-boot-starter</artifactId>
 			<version>1.2.3</version>
 		</dependency>
+		<!--druid-->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid-spring-boot-starter</artifactId>
+			<version>1.1.0</version>
+		</dependency>
+      <!--短信接口-->
+		<!-- https://mvnrepository.com/artifact/commons-httpclient/commons-httpclient -->
+		<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient</artifactId>
+			<version>3.1</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.10</version>
+		</dependency>
+		<!-- 身份识别 -->
+		<dependency>
+
+			<groupId>com.alibaba</groupId>
+
+			<artifactId>fastjson</artifactId>
+
+			<version>1.2.15</version>
+
+		</dependency>
+
+		<dependency>
+
+			<groupId>org.apache.httpcomponents</groupId>
+
+			<artifactId>httpclient</artifactId>
+
+			<version>4.2.1</version>
+
+		</dependency>
+
+		<dependency>
+
+			<groupId>org.apache.httpcomponents</groupId>
+
+			<artifactId>httpcore</artifactId>
+
+			<version>4.2.1</version>
+
+		</dependency>
+
+		<dependency>
+
+			<groupId>commons-lang</groupId>
+
+			<artifactId>commons-lang</artifactId>
+
+			<version>2.6</version>
+
+		</dependency>
+		<!-- 支付宝支付 -->
+		<dependency>
+			<groupId>com.alipay.sdk</groupId>
+			<artifactId>alipay-sdk-java</artifactId>
+			<version>3.0.52.ALL</version>
+		</dependency>
+		<dependency>
+
+			<groupId>org.eclipse.jetty</groupId>
+
+			<artifactId>jetty-util</artifactId>
+
+			<version>9.3.7.v20160115</version>
+
+		</dependency>
+
+		<dependency>
+
+			<groupId>junit</groupId>
+
+			<artifactId>junit</artifactId>
+
+			<version>4.5</version>
+
+			<scope>test</scope>
+
+		</dependency>
 		<!--ftp依赖包-->
 		<dependency>
 			<groupId>commons-net</groupId>

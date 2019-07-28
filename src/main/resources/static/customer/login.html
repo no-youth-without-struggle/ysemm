@@ -32,9 +32,8 @@
 						<input type="password" id="password" lay-verify="required" maxlength="20" placeholder="请输入密码" autocomplete="off" class="layui-input">
 					</div>
 					<div class="layui-form-item form_code">
-						<input type="text" id="code" lay-verify="required|code" maxlength="6" placeholder="请输入验证码" autocomplete="off" class="layui-input">
-						<div class="code"><img id="picture" width="118" height="38"  src="servlet/PicServlet"
-											   onclick="reloadImage()"></div>
+						<input type="text" id="code" lay-verify="required|code" maxlength="6" placeholder="请输入验证码" autocomplete="off" class="layui-input" style="width:181px;">
+						<div class="code"><canvas width="118" height="38" id='picture' onclick="reloadImage()"></canvas></div>
 						<br>
 					</div>
 
@@ -53,12 +52,13 @@
 		<script type="text/javascript" src="layui/layui.all.js"></script>
 		<script type="text/javascript" src="js/login.js"></script>
 		<script type="text/javascript" src="js/jquery.min.js"></script>
+		<script type="text/javascript" src="/common/Code.js"></script>
 	<script type="text/javascript">
+		var code="";
 		reloadImage();
 		function reloadImage() {
 			/*document.getElementById('picture').src = 'servlet/PicServlet?ts=' + new Date().getTime();*/
-			var code=createCode();
-			alert(code);
+			code=createCode();
 			var options = {
 				canvasId: "picture",/**canvas的id*/
 				txt: code,/**传入验证码内容*/
@@ -67,8 +67,6 @@
 			};
 			writeAuthCode(options);
 		}
-
-
 	</script>
 	</body>
 
