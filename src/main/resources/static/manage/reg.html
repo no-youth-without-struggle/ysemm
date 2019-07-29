@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>注册</title>
+    <!--先引入vue.js库-->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!--axios-->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!--引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+</head>
+<body>
+<div id="reg">
+    <el-form :model="ruleForm" status-icon  ref="ruleForm" label-width="100px" class="demo-ruleForm">
+    <el-form-item prop="email" label="邮箱">
+        <el-input v-model="ruleForm.email"></el-input>
+    </el-form-item>
+    <el-form-item label="密码" prop="password">
+        <el-input type="password" v-model="ruleForm.password" auto-complete="off"></el-input>
+    </el-form-item>
+    </el-form>
+    <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="regData">注 册</el-button>
+    </div>
+
+</div>
+<script>
+var vue=new Vue({
+    el:"#reg",
+    data:{
+        ruleForm:{},
+    },
+    methods:{
+        regData:function(){
+            axios.post('/login/reg',this.ruleForm)
+                .then(function (value) {
+                    alert("注册成功");
+                });
+        }
+    }
+})
+
+</script>
+</body>
+</html>
