@@ -19,25 +19,26 @@
 				<fieldset class="layui-elem-field layui-field-title">
 					<legend class="text-white">欢迎来到注册中心</legend>
 				</fieldset>
+
 				<div class="layui-form layui-form-pane">
-					<div class="layui-form">
+					<form class="layui-form" lay-filter="registerForm" id="registerForm">
 						<div class="layui-form-item">
-							<input class="layui-input" id="phone" placeholder="请输入手机号" type="text" maxlength="11" lay-verify="required|phone|regexit" autofocus="autofocus" autocomplete="off">
+							<input class="layui-input" id="phone" onblur="getTelephone()" placeholder="请输入手机号" type="text" maxlength="11" lay-verify="required|phone|regexit" autofocus="autofocus" autocomplete="off">
 						</div>
 						<div class="layui-form-item">
 							<input class="layui-input" id="password" placeholder="请输入密码" type="password" maxlength="20" lay-verify="required|pwd" autocomplete="off">
 						</div>
 						<div class="layui-form-item">
-							<input class="layui-input" placeholder="请再次输入密码" type="password" maxlength="20" lay-verify="required|rePwd" autocomplete="off">
+							<input class="layui-input" id="passwordTwo" onblur="passwordEquals()" placeholder="请再次输入密码" type="password" maxlength="20" lay-verify="required|rePwd" autocomplete="off">
 						</div>
 						<div class="layui-form-item form_code">
-							<input id="code" class="layui-input" placeholder="请输入图片验证码" type="text" maxlength="6" lay-verify="required|code" style="width: 181px;">
+							<input id="code" class="layui-input" onblur="codeEquals()" placeholder="请输入图片验证码" type="text" maxlength="6" lay-verify="required|code" style="width: 181px;">
 							<div class="code"><div class="code"><canvas width="118" height="38" id='picture' onclick="reloadImage()"></canvas></div></div>
 						</div>
 						<div class="layui-form-item form_code">
 							<input id="msg-code" class="layui-input" placeholder="请输入短信验证码" type="text" maxlength="6" lay-verify="required|number|msgcode">
 							<div class="code">
-								<a id="msg-btn" class="layui-btn layui-btn-normal tel-btn" style="width: 120px;">获取验证码</a>
+								<button id="msg-btn" class="layui-btn layui-btn-normal"  onclick="submitCode()"style="width: 120px;">获取验证码</button>
 							</div>
 						</div>
 						<div class="layui-form-item" style="float: left;margin-left: -10px;">
@@ -45,22 +46,24 @@
 							<a href="#" target="_blank">《注册协议》</a>
 						</div>
 						<div class="layui-form-item">
-							<button id="reg" type="submit" class="login_btn layui-btn layui-btn-radius layui-btn-normal" lay-submit lay-filter="register">立即注册</button>
+							<button id="reg" type="button" onclick="submitForm()" class="login_btn layui-btn layui-btn-radius layui-btn-normal" lay-submit lay-filter="register">立即注册</button>
 						</div>
+
 						<div>
 							<small class="text-white">已经有账户了？</small>
 							<a href="login.html">点此登录</a>
 						</div>
-					</div>
+					</form>
 				</div>
 			</div>
 		</div>
 	</body>
 	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<script type="text/javascript" src="layui/layui.all.js"></script>
-	<script type="text/javascript" src="js/register.js"></script>
 	<script type="text/javascript" src="/common/Code.js"></script>
+	<script type="text/javascript" src="/common/jquery-3.4.1.js"></script>
 	<script type="text/javascript">
+        //图片验证码
 		var code="";
 		reloadImage();
 		function reloadImage() {
@@ -74,6 +77,95 @@
 			};
 			writeAuthCode(options);
 		}
+		/*
+		* 发送验证码
+		* */
+        function submitCode(){
+            $.ajax({
+               url:"/login/getCode?telephone="+$("#phone").val(),
+               type:"GET",
+                dataType:"json",
+                success:function (data) {
+                }
+            });
+        }
+        /*比较两次的密码是否相同
+        * */
+        function passwordEquals() {
+			var password = $("#password").val();
+			var passwordTwo = $("#passwordTwo").val();
+			if(password!=passwordTwo){
+				layer.alert('两次输入的密码不一致，请重新输入', {
+					icon: 5,
+					title: "温馨提示"
+				});
+			}
+		}
+
+		/**
+		 * 图片验证码校验
+		 */
+		function codeEquals() {
+			var inCode=$("#code").val();
+			var LowerCode=inCode.toUpperCase( );
+			if (code!=LowerCode){
+			layer.alert('输入的验证码不正确，请重新输入', {
+				icon: 5,
+				title: "温馨提示"
+			});
+			}
+		}
+		/**
+		 * 判断手机号是否重复
+		 *
+		 */
+		function getTelephone() {
+			$.ajax({
+				url:"/login/getTelephone?telephone="+$("#phone").val(),
+				type:"get",
+				dateType:"json",
+				success:function (data) {
+					if (data.code==300){
+						layer.alert('手机号重复了亲', {
+							icon: 5,
+							title: "温馨提示"
+						});
+					}
+				}
+
+			});
+		}
+		/**
+		 * 提交表单数据
+		 */
+		function submitForm() {
+			var form={
+				telephone:$("#phone").val(),
+				password:$("#password").val(),
+				phonecode:$("#msg-code").val(),
+			}
+			$.ajax({
+				url:"/login/postForm",
+				type:"post",
+				contentType:'application/json;charset=UTF-8',
+				data:JSON.stringify(form),
+				dataType:"json",
+				success:function (data) {
+					if (data.code==200){
+						top.layer.msg("恭喜您，注册成功", {time:3000});
+						// 清空表单 （“registerForm”是表单的id）
+						$("#registerForm")[0].reset();
+						layui.form.render();
+					}else {
+						top.layer.msg("注册失败", {time:3000});
+						// 清空表单 （“registerForm”是表单的id）
+						$("#registerForm")[0].reset();
+						layui.form.render();
+					}
+				}
+			});
+		}
+
 	</script>
 
 </html>
