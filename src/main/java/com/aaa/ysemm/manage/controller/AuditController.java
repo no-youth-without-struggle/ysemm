@@ -36,6 +36,7 @@ public class AuditController {
     public String pass(@RequestBody Map map){
         int ok = service.pass(map);
         if(ok!=0){
+           service.passone(map);
             return "成功";
         }
         return "不成功";
