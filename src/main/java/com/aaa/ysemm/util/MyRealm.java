@@ -1,5 +1,4 @@
 package com.aaa.ysemm.util;
-;
 import com.aaa.ysemm.manage.entity.Login;
 import com.aaa.ysemm.manage.service.LoginService;
 import org.apache.shiro.authc.*;
@@ -12,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashSet;
 import java.util.Set;
+
 
 public class MyRealm extends AuthorizingRealm {
     @Autowired

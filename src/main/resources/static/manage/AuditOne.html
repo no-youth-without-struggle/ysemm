@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <el-form :inline="true" :model="formInline" class="demo-form-inline">
+        <el-form-item label="检索">
+            <el-input v-model="formInline.parameter"></el-input>
+        </el-form-item>
+        <el-form-item>
+            <el-button type="primary" @click="onSubmit">查询</el-button>
+        </el-form-item>
+    </el-form>
+    <el-table
+            :data="tableData"
+            stripe
+            style="width: 100%">
+        <el-table-column
+                prop="loan_id"
+                label="id"
+                width="130">
+        </el-table-column>
+        <el-table-column
+                label="公司名称"
+                width="130">
+            <template slot-scope="scope">
+                <el-popover trigger="hover" placement="top">
+                    <p>法人: {{ scope.row.pname }}</p>
+                    <p>法人邮箱: {{ scope.row.email }}</p>
+                    <p>法人身份证: {{ scope.row.IDCard }}</p>
+                    <p>法人手机号: {{ scope.row.telephone }}</p>
+                    <p>法人性别: {{ scope.row.sex }}</p>
+                    <p>公司电话: {{ scope.row.phone }}</p>
+                    <p>公司性质: {{ scope.row.nature }}</p>
+                    <p>公司地址: {{ scope.row.address }}</p>
+                    <p>营业执照: {{ scope.row.business_license }}</p>
+                    <div slot="reference" class="name-wrapper">
+                        <el-tag size="medium">{{ scope.row.cname }}</el-tag>
+                    </div>
+                </el-popover>
+            </template>
+        </el-table-column>
+        <el-table-column
+                prop="loan_money"
+                label="借款金额"
+                width="130">
+        </el-table-column>
+        <el-table-column
+                prop="loan_type"
+                label="借款类型"
+                width="130">
+        </el-table-column>
+        <el-table-column
+                label="抵押物"
+                width="130">
+            <template slot-scope="scope">
+                <el-popover trigger="hover" placement="top">
+                    <p>市场估值: {{ scope.row.valuation }}</p>
+                    <p>种类: {{ scope.row.pledge_type }}</p>
+                    <p>年限: {{ scope.row.pledge_time }}</p>
+                    <p>描述: {{ scope.row.description }}</p>
+                    <div slot="reference" class="name-wrapper">
+                        <el-tag size="medium">{{ scope.row.pledge_name }}</el-tag>
+                    </div>
+                </el-popover>
+            </template>
+        </el-table-column>
+        <el-table-column
+                label="担保人"
+                width="130">
+            <template slot-scope="scope">
+                <el-popover trigger="hover" placement="top">
+                    <p>性别: {{ scope.row.sex1 }}</p>
+                    <p>身份证号: {{ scope.row.IDCard1 }}</p>
+                    <p>工作: {{ scope.row.job }}</p>
+                    <p>职位: {{ scope.row.position }}</p>
+                    <p>手机号: {{ scope.row.telephone1 }}</p>
+                    <p>住址: {{ scope.row.address1 }}</p>
+                    <p>收入: {{ scope.row.income }}</p>
+                    <div slot="reference" class="name-wrapper">
+                        <el-tag size="medium">{{ scope.row.gname }}</el-tag>
+                    </div>
+                </el-popover>
+            </template>
+        </el-table-column>
+        <el-table-column
+                prop="apply_time"
+                label="申请时间"
+                width="130">
+        </el-table-column>
+        <el-table-column
+                label="审核状态"
+                width="130">
+            <template scope="scope">
+                <p>{{scope.row.loans_status===0?'一审中':'？？？'}}</p>
+            </template>
+        </el-table-column>
+        <el-table-column label="操作"
+                         width="230px">
+            <template slot-scope="scope">
+                <el-button
+                        size="mini"
+                        type="danger"
+                        @click="handlepass(scope.$index, scope.row)">通过
+                </el-button>
+            </template>
+        </el-table-column>
+    </el-table>
+    <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="currentPage"
+            :page-sizes="[2,4,6,8]"
+            :page-size="pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="total">
+    </el-pagination>
+    <el-dialog :title="title" :visible.sync="dialogFormVisible">
+        <el-form :model="form">
+            <el-form-item label="邮箱" :label-width="formLabelWidth">
+                <el-input v-model="form.email" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="密码" :label-width="formLabelWidth">
+                <el-input v-model="form.password" auto-complete="off"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button type="error" @click="dialogFormVisible = false">取 消</el-button>
+            <el-button type="primary" @click="pass">确 定</el-button>
+        </div>
+    </el-dialog>
+</div>
+<script>
+    var vue = new Vue({
+        el: "#app",
+        data: {
+            tableData: [],
+            currentPage: 1,
+            pageSize: 4,
+            total: 0,
+            formInline: {
+                parameter: ''
+            },
+            title:'',
+            dialogFormVisible: false,
+            form: {
+                email: '',
+                password: ''
+            },
+            formLabelWidth: '120px',
+            url:''
+        },
+        created: function () {
+            this.load();
+        },
+        methods: {
+            load: function () {
+                var va = this;
+                var start = (this.currentPage - 1) * this.pageSize;
+                axios.post('/audit/selectloans', {start: start, pagesize: this.pageSize, parameter:this.formInline.parameter})
+                    .then(function (response) {
+                        JSON.stringify(response.data);
+                        va.tableData = response.data.list;
+                        va.total = response.data.count;
+                    });
+            },
+            handleSizeChange: function (val) {
+                this.pageSize = val;
+                this.load();
+            },
+
+            handleCurrentChange: function (val) {
+                this.currentPage = val;
+                this.load();
+            },
+            handlepass: function (index, row) {
+
+                this.$confirm('你将为此条借款通过审核', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                });
+                    this.dialogFormVisible=true;
+                this.title = "登陆确认";
+                this.url = "/audit/pass";
+                this.form = {
+                    email: '',
+                    password: ''
+                };
+
+            },
+            onSubmit: function () {
+                this.load();
+            },
+            pass:function () {
+                var self = this;
+                    axios.post(this.url, this.form)
+                        .then(function (response) {
+                            if (response.data == "成功") {
+                                self.$notify({
+                                    title: '成功',
+                                    message: '操作成功',
+                                    type: 'success'
+                                });
+                                self.load();
+                                this.dialogFormVisible= false;
+                            } else {
+                                self.$notify.error({
+                                    title: '错误',
+                                    message: '账号密码错误'
+                                });
+                                this.dialogFormVisible= false;
+                            }
+                        }).catch(function () {
+                        self.$message({
+                            type: 'info',
+                            message: '已取消'
+                        });
+                    });
+            }
+        }
+    })
+</script>
+</body>
+</html>
