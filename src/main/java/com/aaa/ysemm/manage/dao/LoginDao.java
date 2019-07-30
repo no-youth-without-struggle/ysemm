@@ -17,15 +17,17 @@ import java.util.Map;
  */
 @Repository
 public interface LoginDao {
-    /**
-     * 管理员登录
-     * @return
-     */
-    @Select("select * from login where status=1 and email=#{email} and password=#{password}")
-    Login queryLogin(Login login);
+
+
     /**
      * 用户注册
      */
     @Insert("insert into login(email,password) VALUES(#{email},#{password})")
     int saveReg(Login login);
+    /**
+     * 管理员登录
+     * @return
+     */
+    @Select("select * from login where status=1 and email=#{email}")
+    List<Map> queryLoginTWwo(Map map);
 }

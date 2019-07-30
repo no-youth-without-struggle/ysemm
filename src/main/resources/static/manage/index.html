@@ -1,52 +1,71 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
 <head>
-<title>后台登录</title>
-<!-- Custom Theme files -->
-<link href="css/style.css" rel="stylesheet" type="text/css" media="all"/>
-<!-- Custom Theme files -->
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
-<meta name="keywords" content="后台登录" />
-	<script  type="text/javascript" src="vue/js/vue.js"></script>
-	<script  type="text/javascript"src="vue/js/index.js"></script>
-	<script type="text/javascript" src="vue/js/axios.js"></script>
-	<link href="vue/css/index.css" rel="stylesheet"/>
-	<script src="../common/jquery-3.4.1.js"></script>
+	<meta charset="utf-8" />
+	<title>后台登录</title>
+	<style>
+		el-input{
+			width: 50px;
+		}
+	</style>
+	<!--先引入vue.js库-->
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<!--axios-->
+	<script src="vue/js/axios.js"></script>
+	<!-- 引入样式 -->
+	<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+	<!-- 引入组件库 -->
+	<script src="https://unpkg.com/element-ui/lib/index.js"></script>
 </head>
 <body>
 <div id="app">
-<div class="login-form">
-			<div class="top-login">
-				<span><img src="images/group.png" alt=""/></span>
-			</div>
-			<h1>管理员登录</h1>
-			<div class="login-top">
-			<form action="" method="post">
-				<div class="login-ic">
-					<i ></i>
-					<input type="text" name="username" value="用户" onFocus="this.value = '';" onBlur="if (this.value == '') {this.value = '请输入用户名！';}"/>
-					<div class="clear"> </div>
-				</div>
-				<div class="login-ic">
-					<i class="icon"></i>
-					<input type="password" name="password" value="密码" onFocus="this.value = '';" onBlur="if (this.value == '') {this.value = '请输入密码！';}"/>
-					<div class="clear"> </div>
-				</div>
-				<div>
-					<a  value="登录" onclick="LoginData"></a>
-				</div>
-				</form>
-			</div>
-</div>
+	<el-form :model="form" :class="login-form">
+		<el-form-item label="邮箱" :label-width="formLabelWidth">
+			<el-input  v-model="form.email" autocomplete="off" placeholder="请输入邮箱！" style="width: 260px;"></el-input>
+		</el-form-item>
+		<el-form-item label="密码" :label-width="formLabelWidth">
+			<el-input  v-model="form.password" autocomplete="off" placeholder="请输入密码！"  style="width: 260px;"></el-input>
+		</el-form-item>
+	</el-form>
+	<div slot="footer" class="center-pill">
+		<el-button type="danger" @click="reset">重置</el-button>
+		<el-button type="primary" @click="login">登陆</el-button>
+	</div>
 </div>
 <script>
-$(function () {
-	$("#LoginData").click(function () {
-		alert(666);
+	var vue =new Vue({
+		el:"#app",
+		data:{
+			form: {
+				email: '',
+				password:''
+
+			},
+			formLabelWidth:'120px'
+		},
+		methods: {
+			login: function () {
+				var self = this;
+				alert(this.form.email);
+				axios.post("/login/userLogin",this.form)
+						.then(function (response) {
+							var msg =  response.data.msg;
+							alert(msg);
+							if(msg=='suc'){
+								location.href='reg.html';
+							}else{
+								self.$message.error(msg);
+							}
+						})
+
+			},
+			reset: function () {
+				this.form.email="";
+				this.form.password="";
+			}
+		}
 	});
-});
 </script>
+<a href="imgs/login.jpeg"></a>
 </body>
 </html>

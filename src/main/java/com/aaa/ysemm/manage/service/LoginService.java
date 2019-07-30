@@ -17,11 +17,12 @@ public interface LoginService {
      * 管理员登录
      * @return
      */
-    Login queryLogin(Login login);
-
+    List<Map> queryLoginTWwo(Map map);
     /**
      * 用户注册
      * @return
      */
     int saveReg(Login login);
+
+
 }

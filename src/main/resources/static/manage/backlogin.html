@@ -1,0 +1,68 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>后台登录</title>
+<!-- Custom Theme files -->
+<link href="/manage/css/style.css" rel="stylesheet" type="text/css" media="all"/>
+<!-- Custom Theme files -->
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<meta name="keywords" content="后台登录" />
+	<script src="/common/jquery-3.4.1.js" ></script>
+<!--Google Fonts-->
+<!--<link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+--><!--Google Fonts-->
+</head>
+<body>
+<!--header start here-->
+<div class="login-form">
+			<div class="top-login">
+				<span><img src="/manage/images/group.png" alt=""/></span>
+			</div>
+			<h1>管理员登录</h1>
+			<div class="login-top">
+			<form>
+				<div class="login-ic">
+					<i ></i>
+					<input type="text" id="email"  />
+					<div class="clear"> </div>
+				</div>
+				<div class="login-ic">
+					<i class="icon"></i>
+					<input type="password" id="password" />
+					<div class="clear"> </div>
+				</div>
+			
+				<div class="log-bwn">
+					<input type="button"  value="登录" onclick="submitForm()">
+				</div>
+				</form>
+			</div>
+</div>		
+
+<script>
+function submitForm() {
+	var form={
+		email:$("#email").val(),
+		password:$("#password").val()
+	}
+	$.ajax({
+		url:"/login/userLogin",
+		type:"post",
+		data:JSON.stringify(form),
+		contentType:'application/json;charset=UTF-8',
+		dataType:"json",
+		success:function (data) {
+			var msg =  data.msg;
+			if(msg=='suc'){
+				location.href='reg.html';
+			}else{
+				self.$message.error(msg);
+			}
+		}
+	});
+}
+</script>
+</body>
+</html>

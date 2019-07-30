@@ -22,14 +22,14 @@ public class LoginServiceImpl implements LoginService {
     @Autowired
     private LoginDao loginDao;
     @Override
-    public Login queryLogin(Login login) {
-        return loginDao.queryLogin(login);
-    }
-
-    @Override
     public int saveReg(Login login) {
         PasswordHelper passwordHelper=new PasswordHelper();
         passwordHelper.encryptPassword(login);
         return loginDao.saveReg(login);
+    }
+
+    @Override
+    public List<Map> queryLoginTWwo(Map map) {
+        return loginDao.queryLoginTWwo(map);
     }
 }
