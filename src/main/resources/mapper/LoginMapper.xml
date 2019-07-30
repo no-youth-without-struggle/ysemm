@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace:命名空间：对应的dao接口的名字-->
+<mapper namespace="com.aaa.ysemm.customer.dao.LoginMapper">
+    <!--查询手机号是否存在-->
+    <select id="getTelephone" resultType="int">
+        select uid from user_login where telephone=#{telephone}
+    </select>
+    <!--添加注册用户-->
+    <insert id="postForm">
+        insert into user_login(username,telephone,password,password_salt,time)
+        values (#{username},#{telephone},#{password},#{passwordSalt},#{time})
+    </insert>
+    <!--根据手机号查询用户的信息-->
+    <select id="getSubmitLoin" resultType="map">
+        select uid,username,telephone,password,password_salt passwordSalt,status,time,pay_password payPassword from user_login
+        where telephone=#{telephone} and status=#{status}
+    </select>
+</mapper>
