@@ -41,4 +41,13 @@ public class AuditController {
         }
         return "不成功";
     }
+//    驳回
+    @RequestMapping("/unpass")
+    public String unpass(@RequestBody Map map){
+        int ok = service.unpass(map);
+        if(ok==1){
+         return "成功";
+        }
+        return "不成功";
+    }
 }
