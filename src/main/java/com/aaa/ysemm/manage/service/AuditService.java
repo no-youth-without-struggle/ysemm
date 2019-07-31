@@ -11,4 +11,6 @@ public interface AuditService {
     int pass(Map map);
 
     void passone(Map map);
+
+    int unpass(Map map);
 }
