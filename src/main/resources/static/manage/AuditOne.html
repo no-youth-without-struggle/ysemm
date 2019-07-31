@@ -112,6 +112,11 @@
                         type="danger"
                         @click="handlepass(scope.$index, scope.row)">通过
                 </el-button>
+                <el-button
+                        size="mini"
+                        type="danger"
+                        @click="unpass(scope.$index, scope.row)">驳回
+                </el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -139,6 +144,20 @@
             <el-button type="primary" @click="pass">确 定</el-button>
         </div>
     </el-dialog>
+
+    </el-pagination>
+    <el-dialog :title="title" :visible.sync="dialogFormVisible1">
+        <el-form :model="former">
+            <el-input v-model="former.loan_id" type="hidden"  auto-complete="off"></el-input>
+            <el-form-item label="驳回理由" :label-width="formLabelWidth">
+                <el-input v-model="former.resault" auto-complete="off"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button type="error" @click="dialogFormVisible1 = false">取 消</el-button>
+            <el-button type="primary" @click="ununpass">确 定</el-button>
+        </div>
+    </el-dialog>
 </div>
 <script>
     var vue = new Vue({
@@ -153,10 +172,15 @@
             },
             title:'',
             dialogFormVisible: false,
+            dialogFormVisible1:false,
             form: {
                 loan_id:'',
                 email: '',
                 password: ''
+            },
+            former:{
+                loan_id:'',
+                resault:''
             },
             formLabelWidth: '120px',
             url:''
@@ -228,6 +252,35 @@
             },
             onSubmit: function () {
                 this.load();
+            },
+            unpass: function (index, row) {
+                this.dialogFormVisible1=true;
+                this.title = "驳回理由";
+                this.url = "/audit/unpass";
+                this.former.loan_id =row.loan_id;
+                this.former.resault='';
+            },
+            ununpass:function(){
+              var self = this;
+              axios.post(this.url,this.former)
+                  .then(function (response) {
+                      if (response.data == "成功") {
+                          self.$notify({
+                              title: '成功',
+                              message: '驳回成功',
+                              type: 'success'
+                          });
+                          self.load();
+                          self.dialogFormVisible1= false;
+                      } else {
+                          self.$notify.error({
+                              title: '错误',
+                              message: '遇到了未知错误，驳回失败'
+                          });
+                          self.load();
+                          self.dialogFormVisible1= false;
+                      }
+                  })
             },
             pass:function () {
                 var self = this;
