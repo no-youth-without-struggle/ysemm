@@ -1,5 +1,6 @@
 package com.aaa.ysemm.manage.controller;
 
+import com.aaa.ysemm.customer.entity.Emp;
 import com.aaa.ysemm.manage.entity.Login;
 import com.aaa.ysemm.manage.service.LoginService;
 import org.apache.shiro.SecurityUtils;
@@ -30,13 +31,21 @@ public class LoginController {
     private LoginService loginService;
 
     /**
+     * 获取Session中的登录信息
+     * @param request
+     * @return
+     */
+    @RequestMapping("getSession")
+    public Object getSession(HttpServletRequest request){
+        return (Map)request.getSession().getAttribute("emp");
+    }
+    /**
      * 登录方法
      * @return
      */
     @RequestMapping("/userLogin")
     public Object login(@RequestBody Map map){
         String userName= map.get("email")+"";
-
         String passWord = map.get("password")+"";
         System.out.println(map+".............................");
         Subject subject = SecurityUtils.getSubject();

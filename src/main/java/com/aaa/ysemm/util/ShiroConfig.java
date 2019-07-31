@@ -40,7 +40,7 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/checkToken", "anon");
 		//放开登录注册以及首页
 		filterChainDefinitionMap.put("/manage/**", "anon");
-
+		filterChainDefinitionMap.put("/login/**", "anon");
 		//未登录放开首页贷款信息
 	/*	filterChainDefinitionMap.put("/indexInformation","anon");
 		filterChainDefinitionMap.put("/indexInformationDiYa","anon");
