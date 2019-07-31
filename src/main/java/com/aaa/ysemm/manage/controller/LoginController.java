@@ -5,12 +5,13 @@ import com.aaa.ysemm.manage.service.LoginService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.session.HttpServletSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,7 @@ public class LoginController {
     @RequestMapping("/userLogin")
     public Object login(@RequestBody Map map){
         String userName= map.get("email")+"";
+
         String passWord = map.get("password")+"";
         System.out.println(map+".............................");
         Subject subject = SecurityUtils.getSubject();
