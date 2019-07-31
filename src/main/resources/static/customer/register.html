@@ -82,7 +82,7 @@
 		* */
         function submitCode(){
             $.ajax({
-               url:"/login/getCode?telephone="+$("#phone").val(),
+               url:"/beforelogin/getCode?telephone="+$("#phone").val(),
                type:"GET",
                 dataType:"json",
                 success:function (data) {
@@ -121,7 +121,7 @@
 		 */
 		function getTelephone() {
 			$.ajax({
-				url:"/login/getTelephone?telephone="+$("#phone").val(),
+				url:"/beforelogin/getTelephone?telephone="+$("#phone").val(),
 				type:"get",
 				dateType:"json",
 				success:function (data) {
@@ -145,7 +145,7 @@
 				phonecode:$("#msg-code").val(),
 			}
 			$.ajax({
-				url:"/login/postForm",
+				url:"/beforelogin/postForm",
 				type:"post",
 				contentType:'application/json;charset=UTF-8',
 				data:JSON.stringify(form),

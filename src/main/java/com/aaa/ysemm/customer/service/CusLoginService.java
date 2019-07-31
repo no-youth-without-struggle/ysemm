@@ -13,8 +13,7 @@ import java.util.Map;
  * @Date: 2019/7/28 16:28
  * @Version: 1.0
  */
-@Repository
-public interface LoginService {
+public interface CusLoginService {
     //判断电话是否重复
     ResultUtil getTelehone(String telephone);
     //录入用户登录信息

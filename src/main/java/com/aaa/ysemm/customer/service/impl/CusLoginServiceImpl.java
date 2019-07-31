@@ -1,8 +1,8 @@
 package com.aaa.ysemm.customer.service.impl;
 
-import com.aaa.ysemm.customer.dao.LoginMapper;
+import com.aaa.ysemm.customer.dao.CusLoginMapper;
 import com.aaa.ysemm.customer.entity.UserLogin;
-import com.aaa.ysemm.customer.service.LoginService;
+import com.aaa.ysemm.customer.service.CusLoginService;
 import com.aaa.ysemm.util.MD5Util;
 import com.aaa.ysemm.util.RandomStringUtil;
 import com.aaa.ysemm.util.ResultUtil;
@@ -22,9 +22,9 @@ import java.util.Map;
  * @Version: 1.0
  */
 @Service
-public class LoginServiceImpl implements LoginService {
+public class CusLoginServiceImpl implements CusLoginService {
     @Autowired
-    private LoginMapper loginMapper;
+    private CusLoginMapper loginMapper;
     //短信验证码
     String code=null;
     /**

@@ -15,7 +15,7 @@ import java.util.Map;
  * @Version: 1.0
  */
 @Repository
-public interface LoginMapper {
+public interface CusLoginMapper {
 
     Integer getTelephone(String telephone);
 

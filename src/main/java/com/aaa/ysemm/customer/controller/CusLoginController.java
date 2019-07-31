@@ -1,6 +1,6 @@
 package com.aaa.ysemm.customer.controller;
 import com.aaa.ysemm.customer.entity.UserLogin;
-import com.aaa.ysemm.customer.service.LoginService;
+import com.aaa.ysemm.customer.service.CusLoginService;
 import com.aaa.ysemm.util.RandomStringUtil;
 import com.aaa.ysemm.util.ResultUtil;
 import org.apache.shiro.SecurityUtils;
@@ -22,11 +22,11 @@ import javax.servlet.http.HttpSession;
  * @Version: 1.0
  */
 @RestController
-@RequestMapping("/login")
-public class LoginController {
+@RequestMapping("/beforelogin")
+public class CusLoginController {
 
     @Autowired
-     private LoginService service;
+     private CusLoginService service;
     /**
      * ajax异步获取手机验证码
      * @param telephone

@@ -93,7 +93,7 @@
 				password:$("#password").val()
 			}
 			$.ajax({
-				url:"/login/submitLoginForm",
+				url:"/beforelogin/submitLoginForm",
 				type:"post",
 				contentType:'application/json;charset=UTF-8',
 				data:JSON.stringify(form),
