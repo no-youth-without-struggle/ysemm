@@ -19,4 +19,8 @@ public interface AuditDao {
 
     @Update("update loans set loans_status=1 where loan_id=#{loan_id}")
     void passone(Map map);
+
+    @Update("update loans set auditor_reason=#{resault}," +
+            "loans_status=3 where loan_id=#{loan_id}")
+    int unpass(Map map);
 }

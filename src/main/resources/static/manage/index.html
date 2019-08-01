@@ -113,7 +113,7 @@
 				<el-aside width="200px" class="layui-bg-black">
 					<div class="user-photo">
 						<a class="img" title="我的头像" ><img src="../layui/images/face.jpg"></a>
-						<p>你好！<span class="userName">${username}</span>, 欢迎登录</p>
+						<p>你好！<span class="userName">{{userName}}</span>, 欢迎登录</p>
 					</div>
 					<el-tree :data="treeData" style="background: bottom;color:white "  default-expand-all @node-click="handleNodeClick"></el-tree>
 				</el-aside>
@@ -139,6 +139,7 @@
 	</div>
 </div>
 <script>
+
 	var vue = new Vue({
 		el: "#app",
 		data: {
@@ -149,11 +150,16 @@
 				name: '1',
 				url: 'https://www.tmall.com/?ali_trackid=2:mm_26632258_3504122_48284354:1564472597_234_1360245004&clk1=18912da378ca0473c5ceb1f3b85ad8d8&upsid=18912da378ca0473c5ceb1f3b85ad8d8'
 			}],
-			tabIndex: 1
+			tabIndex: 1,
+			userName:''
 		},
 		//树形菜单查询
 		created: function () {
 			var self = this;
+			axios.post("/login/getSession")
+					.then(function (response) {
+						self.userName = response.data.email;
+					})
 			axios.post("/powers/tree", this.form)
 					.then(function (response) {
 						self.treeData = response.data;
