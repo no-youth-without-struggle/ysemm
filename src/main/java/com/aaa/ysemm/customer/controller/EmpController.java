@@ -19,7 +19,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/emp")
-public class EmpController {
+public class    EmpController {
 
     @Autowired
     private EmpService empService;
