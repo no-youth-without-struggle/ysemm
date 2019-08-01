@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>一审审核管理</title>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <!-- 引入样式 -->
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
@@ -112,6 +112,11 @@
                         type="danger"
                         @click="handlepass(scope.$index, scope.row)">通过
                 </el-button>
+                <el-button
+                        size="mini"
+                        type="danger"
+                        @click="unpass(scope.$index, scope.row)">驳回
+                </el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -126,6 +131,7 @@
     </el-pagination>
     <el-dialog :title="title" :visible.sync="dialogFormVisible">
         <el-form :model="form">
+            <el-input v-model="form.loan_id" type="hidden"  auto-complete="off"></el-input>
             <el-form-item label="邮箱" :label-width="formLabelWidth">
                 <el-input v-model="form.email" auto-complete="off"></el-input>
             </el-form-item>
@@ -136,6 +142,20 @@
         <div slot="footer" class="dialog-footer">
             <el-button type="error" @click="dialogFormVisible = false">取 消</el-button>
             <el-button type="primary" @click="pass">确 定</el-button>
+        </div>
+    </el-dialog>
+
+    </el-pagination>
+    <el-dialog :title="title" :visible.sync="dialogFormVisible1">
+        <el-form :model="former">
+            <el-input v-model="former.loan_id" type="hidden"  auto-complete="off"></el-input>
+            <el-form-item label="驳回理由" :label-width="formLabelWidth">
+                <el-input v-model="former.resault" auto-complete="off"></el-input>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button type="error" @click="dialogFormVisible1 = false">取 消</el-button>
+            <el-button type="primary" @click="ununpass">确 定</el-button>
         </div>
     </el-dialog>
 </div>
@@ -152,9 +172,15 @@
             },
             title:'',
             dialogFormVisible: false,
+            dialogFormVisible1:false,
             form: {
+                loan_id:'',
                 email: '',
                 password: ''
+            },
+            former:{
+                loan_id:'',
+                resault:''
             },
             formLabelWidth: '120px',
             url:''
@@ -183,23 +209,78 @@
                 this.load();
             },
             handlepass: function (index, row) {
-
-                this.$confirm('你将为此条借款通过审核', '提示', {
+                var self =this;
+                this.$confirm('你正在为此贷款信息通过一审，请确定为本人操作', '提示', {
                     confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
-                });
+                }).then(() => {
                     this.dialogFormVisible=true;
-                this.title = "登陆确认";
-                this.url = "/audit/pass";
-                this.form = {
-                    email: '',
-                    password: ''
-                };
+                    this.title = "登陆确认";
+                    this.url = "/audit/pass";
+                    this.form.loan_id =row.loan_id;
+                    this.form.email='';
+                    this.form.password=''
+            }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消'
+                    });
+            });
+                /*this.$confirm('你将为此条借款通过审核', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(function(){
+                    this.$message({
+                        type: 'success',
+                        message: '删除成功!'
+                    });
+                    /!*this.dialogFormVisible=true;
+                    this.title = "登陆确认";
+                    this.url = "/audit/pass";
+                    this.form.loan_id =row.loan_id;
+                    this.form.email='';
+                    this.form.password=''*!/
+                }).catch(function () {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消'
+                    });
+                });*/
 
             },
             onSubmit: function () {
                 this.load();
+            },
+            unpass: function (index, row) {
+                this.dialogFormVisible1=true;
+                this.title = "驳回理由";
+                this.url = "/audit/unpass";
+                this.former.loan_id =row.loan_id;
+                this.former.resault='';
+            },
+            ununpass:function(){
+              var self = this;
+              axios.post(this.url,this.former)
+                  .then(function (response) {
+                      if (response.data == "成功") {
+                          self.$notify({
+                              title: '成功',
+                              message: '驳回成功',
+                              type: 'success'
+                          });
+                          self.load();
+                          self.dialogFormVisible1= false;
+                      } else {
+                          self.$notify.error({
+                              title: '错误',
+                              message: '遇到了未知错误，驳回失败'
+                          });
+                          self.load();
+                          self.dialogFormVisible1= false;
+                      }
+                  })
             },
             pass:function () {
                 var self = this;
@@ -208,24 +289,19 @@
                             if (response.data == "成功") {
                                 self.$notify({
                                     title: '成功',
-                                    message: '操作成功',
+                                    message: '一审通过',
                                     type: 'success'
                                 });
                                 self.load();
-                                this.dialogFormVisible= false;
+                                self.dialogFormVisible= false;
                             } else {
                                 self.$notify.error({
                                     title: '错误',
                                     message: '账号密码错误'
                                 });
-                                this.dialogFormVisible= false;
+                                self.dialogFormVisible= false;
                             }
-                        }).catch(function () {
-                        self.$message({
-                            type: 'info',
-                            message: '已取消'
-                        });
-                    });
+                        })
             }
         }
     })

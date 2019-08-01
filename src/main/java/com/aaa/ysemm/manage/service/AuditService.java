@@ -9,4 +9,8 @@ public interface AuditService {
     int count(Map map);
 
     int pass(Map map);
+
+    void passone(Map map);
+
+    int unpass(Map map);
 }

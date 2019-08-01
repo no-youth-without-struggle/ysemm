@@ -34,4 +34,15 @@ public class AuditServiceImpl implements AuditService {
         }
         return 1;
     }
+
+    @Override
+    public void passone(Map map) {
+        dao.passone(map);
+    }
+
+    @Override
+    public int unpass(Map map) {
+        int ok = dao.unpass(map);
+        return ok;
+    }
 }
