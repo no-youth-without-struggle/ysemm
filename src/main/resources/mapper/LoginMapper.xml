@@ -14,7 +14,7 @@
         values (#{username},#{telephone},#{password},#{passwordSalt},#{time})
     </insert>
     <!--根据手机号查询用户的信息-->
-    <select id="getSubmitLoin" resultType="map">
+    <select id="getSubmitLoin" resultType="UserLogin">
         select uid,username,telephone,password,password_salt passwordSalt,status,time,pay_password payPassword from user_login
         where telephone=#{telephone} and status=#{status}
     </select>

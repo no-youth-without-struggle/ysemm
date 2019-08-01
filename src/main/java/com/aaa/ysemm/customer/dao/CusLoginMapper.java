@@ -21,5 +21,5 @@ public interface CusLoginMapper {
 
     int postForm(UserLogin userLogin);
 
-    List<Map> getSubmitLoin(Map map);
+    List<UserLogin> getSubmitLoin(Map map);
 }
