@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace:命名空间：对应的dao接口的名字-->
+<mapper namespace="com.aaa.ysemm.customer.dao.RepaymentMapper">
+    <!--查询还款人还款信息-->
+    <select id="queryRepayment" resultType="map">
+        select co.cname cname,lo.loan_money loanMoney,lo.loan_type loanType,p.pledge_name pledgeName,lo.apply_time applyTime,
+        lo.repayment_type repaymentType,lo.repayment_time repaymentTime,lo.repayment_rate  repaymentRate from loans lo join  repayment re
+on lo.loan_id=re.lid join company co on co.cid=lo.loan_cid join pledge p on p.id=lo.pledge_id
+where lo.loans_status=4
+    </select>
+    <!--查询还款期限-->
+    <select id="queryHKQX" resultType="map">
+        select re.rid,re.re_money reMoney,re.re_balance reBalace,re.nper nper,re.`status`,ul.uid,co.cid,co.cname,lo.loan_type,ul.telephone from repayment re join user_login ul
+on re.uid=ul.uid join loans lo ON lo.loan_id=re.lid join company co on co.cid=lo.loan_cid where ul.uid=#{uid} and re.status=0
+    </select>
+    <!--还款完成之后修改状态-->
+    <update id="updateRepaymentStatus" parameterType="Integer">
+        update repayment set status=1 where rid=#{rid}
+    </update>
+    <!--判断账户的钱是否充足-->
+    <select id="queryCM" resultType="map">
+      select total_money totalMoney,cm.* from customer_manager cm join user_login ul on cm.uid=ul.uid where telephone=#{tel};
+    </select>
+</mapper>

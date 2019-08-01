@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户还款</title>
+    <!--先引入vue.js库-->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!--axios-->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!--引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <link href="css/common.css" rel="stylesheet" />
+    <link href="css/register.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="script/jquery.min.js"></script>
+    <script type="text/javascript" src="script/common.js"></script>
+    <script src="script/login.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="app">
+    <template>
+        <!--<el-table-->
+                <!--:data="tableData"-->
+                <!--style="width: 100%">-->
+            <!--<el-table-column-->
+                    <!--prop="cname"-->
+                    <!--label="公司名称"-->
+                    <!--width="180">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+                    <!--prop="loanMoney"-->
+                    <!--label="还款金额"-->
+                    <!--width="180">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+                    <!--prop="loanType"-->
+                    <!--label="还款方式"-->
+                    <!--width="180">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+                    <!--prop="pledgeName"-->
+                    <!--label="抵押或无名称"-->
+                    <!--width="180">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+                    <!--prop="applyTime"-->
+                    <!--label="申请日期"-->
+                    <!--width="180">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+                    <!--prop="repaymentType"-->
+                    <!--label="还款类型"-->
+                    <!--width="180">-->
+            <!--</el-table-column><el-table-column-->
+                    <!--prop="repaymentTime"-->
+                    <!--label="还款日期"-->
+                    <!--width="180">-->
+            <!--</el-table-column>-->
+            <!--<el-table-column-->
+                    <!--prop="repaymentRate"-->
+                    <!--label="还款利息"-->
+                    <!--width="180">-->
+            <!--</el-table-column>-->
+        <!--</el-table>-->
+
+
+    <el-table
+            :data="tableData2"
+            style="width: 100%">
+        <el-table-column
+                prop="reMoney"
+                label="应还金额"
+                width="180">
+        </el-table-column>
+        <el-table-column
+                prop="reBalace"
+                label="剩余还款金额"
+                width="180">
+        </el-table-column>
+        <el-table-column
+                prop="nper"
+                label="期数"
+                width="180">
+        </el-table-column>
+        <el-table-column
+                prop="status"
+                label="还款状态"
+                width="180">
+        </el-table-column>
+        <el-table-column label="是否还款" >
+            <template slot-scope="scope">
+                <el-button   type="primary"size="mini" @click="handleEdit(scope.$index, scope.row)">还款</el-button>
+            </template>
+        </el-table-column>
+    </el-table>
+    </template>
+</div>
+<script>
+    var vue =new Vue({
+       el:"#app",
+       data:{
+           tableData2: []
+       },
+        created:function(){
+            var self=this;
+            //查询还款期限
+            axios.post('/rep/queryHKQX')
+                .then(function (response) {
+                    self.tableData2=response.data;
+                });
+
+        },
+        methods:{
+            handleEdit:function (index, row) {
+                axios.post('/rep/pub/',{row:row,rid:row.rid,status:row.status})
+                    .then(function (response) {
+                        alert(response);
+                    });
+                alert(row.reMoney);
+                this.name="已还款";
+            }
+        }
+    });
+
+    /**
+     * 判断账户余额是否大于还款金额
+     */
+    // axios.post('/rep/queryCM',{uid:1})
+    //     .then(function (response) {
+    //         alert(response.data.totalMoney+"账户总余额");
+    //         alert(response.data+"账号数据");
+    //         alert(response.data.totalMoney+"账户总余额2");
+    //     })
+</script>
+</body>
+</html>
