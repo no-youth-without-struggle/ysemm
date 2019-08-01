@@ -1,4 +1,5 @@
 package com.aaa.ysemm.util;
+import com.aaa.ysemm.customer.entity.UserLogin;
 import com.aaa.ysemm.customer.service.CusLoginService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
@@ -44,9 +45,9 @@ public class CustomerShiroRealm extends AuthorizingRealm implements Serializable
 		map.put("status",1);
 		System.out.println("map"+map);
 		//通过username查询
-		List<Map> user = loginService.getSubmitLoin(map);
+		List<UserLogin> user = loginService.getSubmitLoin(map);
 		String realmName = getName();
-		Map emp =null;
+		UserLogin emp =null;
 		if(user!=null&&user.size()>0){
 			emp = user.get(0);
 			System.out.println("emp"+emp.toString());
@@ -54,14 +55,14 @@ public class CustomerShiroRealm extends AuthorizingRealm implements Serializable
 		if(emp==null) {
 			throw  new UnknownAccountException(); //账号不存在异常
 		}
-		System.out.println("passwordSalt"+emp.get("passwordSalt"));
-		ByteSource salt = ByteSource.Util.bytes(emp.get("passwordSalt"));
+		System.out.println("passwordSalt"+emp.getPasswordSalt());
+		ByteSource salt = ByteSource.Util.bytes(emp.getPasswordSalt());
 		/*if (0==user.getEnable()) {
 			throw new LockedAccountException(); // 帐号锁定
 		}*/
 		SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(
-				emp.get("telephone"),//用户名
-				emp.get("password"),//密码
+				emp.getTelephone(),//用户名
+				emp.getPassword(),//密码
 				salt,
 				realmName//realm name
 		);

@@ -19,5 +19,5 @@ public interface CusLoginService {
     //录入用户登录信息
     ResultUtil postForm(UserLogin userLogin);
     //判断用户是否登录
-    List<Map> getSubmitLoin(Map map);
+    List<UserLogin> getSubmitLoin(Map map);
 }

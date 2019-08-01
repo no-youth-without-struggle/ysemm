@@ -22,5 +22,5 @@ import java.util.Map;
 public class ResultUtil {
     private int code;
     private String msg;
-    private Map<String,Object> map;
+    private Object obj;
 }
