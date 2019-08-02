@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE mapper
+                PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aaa.ysemm.manage.dao.ClientDao">
+
+    <select id="queryClinet" resultType="map">
+
+select  * from company
+<where>
+    <if test="cname!=null and cname!=''">
+        and (cname like "%"#{cname}"%"
+        or pname like "%"#{cname}"%")
+    </if>
+    <if test="status!=null and status!=''">
+        and client_status= #{status}
+    </if>
+</where>
+limit #{start},#{pageSize}
+ </select>
+
+
+    <select id="queryPage" resultType="int">
+        select count(*) from company
+    </select>
+
+    <update id="update" parameterType="map">
+        update Company
+        <set>
+            <if test="cid != null and cid!=''">
+            client_status=3 where cid=#{cid}
+        </if>
+        </set>
+    </update>
+</mapper>
