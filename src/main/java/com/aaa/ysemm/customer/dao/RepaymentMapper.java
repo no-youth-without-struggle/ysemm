@@ -25,6 +25,14 @@ public interface RepaymentMapper {
      */
     List<Map> queryHKQX(Object obj);
     /**
+     * 查询还款期限的信息 以及应还信息
+     */
+    List<Map> queryHKQX2(Object obj);
+    /**
+     * 查询已经还款的 信息
+     */
+    List<Map> queryAHKQX(Object obj);
+    /**
      * 还款完之后修改用户的状态
      *
      */
@@ -32,5 +40,6 @@ public interface RepaymentMapper {
     /**
      * 通过登录的账号判断账户金额是否能够还的本期的贷款
      */
-    List<Map> queryCM(Object uid);
+    Map queryCM(Object uid);
+
 }

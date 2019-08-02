@@ -1,9 +1,11 @@
 package com.aaa.ysemm.customer.controller;
 
 
+import com.aaa.ysemm.customer.dao.CusManageMapper;
 import com.aaa.ysemm.customer.entity.MingXi;
 import com.aaa.ysemm.customer.entity.UserLogin;
 import com.aaa.ysemm.customer.service.MingXiService;
+import com.aaa.ysemm.customer.service.MoneyManageService;
 import com.aaa.ysemm.customer.service.RepaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,6 +35,10 @@ public class RepaymentController {
     private RepaymentService repayService;
     @Autowired
     private MingXiService mingXiService;
+    @Autowired
+    private CusManageMapper cusManageMapper;
+    @Autowired
+    private MoneyManageService moneyManageService;
     /**
      * 查询借款记录
      * @param map
@@ -61,39 +67,66 @@ public class RepaymentController {
         }
         return null;
     }
+    /**
+     *全部还款信息查询
+     */
+    @RequestMapping("queryHKQX2")
+    public List<Map> queryHKQX2(Object obj, HttpServletRequest request){
+        //获取登陆里面的 登陆账号的信息
+        Object emp = request.getSession().getAttribute("emp");
+//        通过信息查询当前账户的还款余额
+        List<Map> queryHKQX2 = repayService.queryHKQX2(emp);
+        if (queryHKQX2!=null&&queryHKQX2.size()>0){
+            return queryHKQX2;
+        }
+        return null;
+    }
+    /**
+     * 查询还款过的信息
+     */
+    @RequestMapping("queryAHKQX")
+    public List<Map> queryAHKQX(Object obj, HttpServletRequest request){
+        //获取登陆里面的 登陆账号的信息
+        Object emp = request.getSession().getAttribute("emp");
+//        通过信息查询当前账户的还款余额
+        List<Map> queryHKQX = repayService.queryAHKQX(emp);
+        if (queryHKQX!=null&&queryHKQX.size()>0){
+            return queryHKQX;
+        }
+        return null;
+    }
 
     /**
      * 判断账户金额是否足够还本期的贷款
      * @param
      * @return
      */
-//    @RequestMapping("queryCM")
-//    public List<Map> queryCM(@RequestBody Object uid,HttpServletRequest request){
-//        System.out.println("...................");
-//        //获取登陆里面的 登陆账号的信息
-//        Object emp = request.getSession().getAttribute("emp");
-//        List<Map> mapList = repayService.queryCM(emp);
-//        for (Map map1 : mapList) {
-//            System.out.println(map1+".....");
-//        }
-//        return mapList;
-//    }
+    @RequestMapping("queryCM")
+    public Map queryCM(HttpSession session){
+        //获取登陆里面的 登陆账号的信息
+        UserLogin emp = (UserLogin) session.getAttribute("emp");
+        //获取手机号码
+        String telephone = emp.getTelephone();
+//        通过手机号查询用户账户信息
+        Map map = repayService.queryCM(telephone);
+        return map;
+    }
     @RequestMapping("pub")
     public Object p(@RequestBody Map map){
+        //获取当前系统时间
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String format = dateFormat.format(new Date());
-        System.out.println(format);
         map.put("operatorTime",format);
-        System.out.println(map.get("row"));
-        System.out.println(map.get("rid"));
+        Object reMoney = map.get("reMoney");
         Object rid = map.get("rid");
-//        System.out.println(rid);
-//        System.out.println(map.get("status"));
-//        Object status = map.get("status");
-//        System.out.println(status);
         repayService.updateRepaymentStatus(rid);
-        int i = mingXiService.saveMingXi(map);
-        System.out.println(i+"添加成功！");
+        //添加到明细表
+        mingXiService.saveMingXi(map);
+        //个人账户总金额 减去还款的金额
+        System.out.println("得到的公司金额。。。。。"+reMoney);
+        cusManageMapper.updateMoney(reMoney);
+        //总金额加上还款金额
+        moneyManageService.updateManageMoney(reMoney);
         return map;
     }
 }

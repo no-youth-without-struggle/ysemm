@@ -43,6 +43,9 @@ public class UserLogin {
         this.phonecode = phonecode;
     }
 
+    public UserLogin() {
+    }
+
     public Integer getUid() {
         return uid;
     }

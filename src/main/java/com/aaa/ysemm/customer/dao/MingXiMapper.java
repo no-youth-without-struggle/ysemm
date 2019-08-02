@@ -19,5 +19,6 @@ public interface MingXiMapper {
      * @param mingXi
      * @return
      */
+/*    int saveMingXi(Map mingXi);*/
     int saveMingXi(Map mingXi);
 }

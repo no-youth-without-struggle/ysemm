@@ -7,6 +7,6 @@
     <!--保存数据到明细表-->
     <insert id="saveMingXi" parameterType="map">
         insert into mingxi(cm_id,pay_type,pay_money,operator,operator_time,remark)
-VALUES(#{cid},#{loan_type},#{reMoney},#{telephone},#{operatorTime},#{nper})
+VALUES(#{cid},#{type},#{reMoney},#{telephone},#{operatorTime},#{nper})
     </insert>
 </mapper>

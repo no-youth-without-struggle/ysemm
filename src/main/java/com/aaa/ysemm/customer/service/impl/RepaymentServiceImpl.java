@@ -34,13 +34,23 @@ public class RepaymentServiceImpl implements RepaymentService {
     }
 
     @Override
+    public List<Map> queryHKQX2(Object obj) {
+        return repaymentMapper.queryHKQX2(obj);
+    }
+
+    @Override
+    public List<Map> queryAHKQX(Object obj) {
+        return repaymentMapper.queryAHKQX(obj);
+    }
+
+    @Override
     public int updateRepaymentStatus(Object status) {
         return repaymentMapper.updateRepaymentStatus(status);
     }
 
     @Override
-    public List<Map> queryCM(Object uid) {
-        List<Map> mapList = repaymentMapper.queryCM(uid);
+    public Map queryCM(Object uid) {
+        Map mapList = repaymentMapper.queryCM(uid);
         if (mapList!=null&&mapList.size()>0){
             return mapList;
         }

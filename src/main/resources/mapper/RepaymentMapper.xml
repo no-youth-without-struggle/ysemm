@@ -13,9 +13,19 @@ where lo.loans_status=4
     </select>
     <!--查询还款期限-->
     <select id="queryHKQX" resultType="map">
-        select re.rid,re.re_money reMoney,re.re_balance reBalace,re.nper nper,re.`status`,ul.uid,co.cid,co.cname,lo.loan_type,ul.telephone from repayment re join user_login ul
-on re.uid=ul.uid join loans lo ON lo.loan_id=re.lid join company co on co.cid=lo.loan_cid where ul.uid=#{uid} and re.status=0
+        select MIN(re.rid), re.rid,re.re_money reMoney,re.re_balance reBalace,re.nper nper,re.`status`,ul.uid,co.cid,co.cname,lo.loan_type,ul.telephone from repayment re join user_login ul
+on re.uid=ul.uid join loans lo ON lo.loan_id=re.lid join company co on co.cid=lo.loan_cid where ul.uid=#{uid} and re.status=0;
     </select>
+    <!--查询全部还款期限-->
+    <select id="queryHKQX2" resultType="map">
+        select re.rid,re.re_money reMoney,re.re_balance reBalace,re.nper nper,re.`status`,ul.uid,co.cid,co.cname,lo.loan_type,ul.telephone from repayment re join user_login ul
+on re.uid=ul.uid join loans lo ON lo.loan_id=re.lid join company co on co.cid=lo.loan_cid where ul.uid=#{uid} and re.status=0;
+    </select>
+    <!--查询还款过的信息-->
+    <select id="queryAHKQX" resultType="map">
+select  re.rid,re.re_money reMoney,re.re_balance reBalace,re.nper nper,re.`status`,ul.uid,co.cid,co.cname,lo.loan_type,ul.telephone from repayment re join user_login ul
+on re.uid=ul.uid join loans lo ON lo.loan_id=re.lid join company co on co.cid=lo.loan_cid where ul.uid=#{uid} and re.status=1;
+     </select>
     <!--还款完成之后修改状态-->
     <update id="updateRepaymentStatus" parameterType="Integer">
         update repayment set status=1 where rid=#{rid}
