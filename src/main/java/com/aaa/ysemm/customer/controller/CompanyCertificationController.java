@@ -36,14 +36,15 @@ public class CompanyCertificationController {
     private FtpUtil ftputil;
 
     @RequestMapping("/adduser")
-    public String adduser(@RequestBody Map map,HttpSession session){
+    public Map adduser(@RequestBody Map map,HttpSession session){
 //      获取session
         UserLogin emp = (UserLogin) session.getAttribute("emp");
-        System.out.println(emp.getUid());
         map.put("uid",emp.getUid());
-
+        System.out.println(map);
         service.adduser(map);
-        return "成功";
+        HashMap map1 = new HashMap();
+        map1.put("ok","chenggong");
+        return map1;
     }
 
 //上传图片，调用身份证ocr，添加数据库
