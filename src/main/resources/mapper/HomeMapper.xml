@@ -10,12 +10,16 @@
 
     <!--添加借款信息-->
     <insert id="insertBorrow">
-    insert  into loans(loanCid,loanMoney,loanType,pledgeId,applyTime,repaymentType,repaymentTime,repaymentRate)
-    values(#{loanCid},#{loanMoney},#{loanType},#{pledgeId},#{applyTime},#{repaymentType},#{repaymentTime},#{repaymentRate},)
+    insert  into loans(loan_cid,loan_money,loan_type,pledge_id,apply_time,repayment_type,repayment_time,repayment_rate)
+    values(#{loanCid},#{loanMoney},#{loanType},#{id},#{applyTime},#{repaymentType},#{repaymentTime},#{repaymentRate})
     </insert>
     <!--添加抵押物品信息-->
-    <insert id="insertPledge" useGeneratedKeys="true" parameterType="int" keyColumn="id">
-      insert into poledge(pledge_name,valuation,pledge_type,description) values(#{pledgeName},#{valuation},#{pledgeType},#{description})
+    <insert id="insertPledge" useGeneratedKeys="true" keyProperty="id" parameterType="map">
+      insert into pledge(id,pledge_name,valuation,pledge_type,description) values(0,#{pledgeName},#{valuation},#{pledgeType},#{description})
     </insert>
+    <select id="getLogin" resultType="int">
+        select cid
+        from company where uid=#{uid}
+    </select>
 
 </mapper>

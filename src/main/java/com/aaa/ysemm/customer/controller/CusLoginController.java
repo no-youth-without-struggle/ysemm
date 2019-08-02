@@ -1,6 +1,7 @@
 package com.aaa.ysemm.customer.controller;
 import com.aaa.ysemm.customer.entity.UserLogin;
 import com.aaa.ysemm.customer.service.CusLoginService;
+import com.aaa.ysemm.util.PhotoUtil;
 import com.aaa.ysemm.util.RandomStringUtil;
 import com.aaa.ysemm.util.ResultUtil;
 import org.apache.shiro.SecurityUtils;
@@ -34,8 +35,9 @@ public class CusLoginController {
      */
     @RequestMapping("/getCode")
     public ResultUtil getCode(String telephone, HttpSession session){
-        String code= RandomStringUtil.getRandomNumber(6);
-      /*  String code = PhotoUtil.getCode(telephone);*/
+      /*  String code= RandomStringUtil.getRandomNumber(6);*/
+        System.out.println(telephone);
+        String code = PhotoUtil.getCode(telephone);
         System.out.println("code"+code);
         session.setAttribute("code",code);
         return new ResultUtil(200,"获取成功",null);

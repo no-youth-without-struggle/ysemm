@@ -1,6 +1,7 @@
 package com.aaa.ysemm.customer.dao;
 
 import com.aaa.ysemm.customer.entity.UserLogin;
+import com.aaa.ysemm.customer.entitys.Company;
 import com.aaa.ysemm.customer.entitys.Loans;
 import com.aaa.ysemm.customer.entitys.Pledge;
 import org.apache.ibatis.annotations.Insert;
@@ -23,5 +24,7 @@ public interface HomeMapper {
    //添加借款信息
     int insertBorrow(Object borrow);
 
-    int insertPledge(Object pledge);
+    void insertPledge(Object pledge);
+
+    Integer getLogin(Object uid);
 }
