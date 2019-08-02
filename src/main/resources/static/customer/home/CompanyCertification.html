@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+        .upload-demo .el-upload {
+            border: 1px dashed #d9d9d9;
+            border-radius: 6px;
+            width: 360px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            margin-top: 119px;
+        }
+
+        .upload-demo .el-upload:hover {
+            border-color: #409EFF;
+        }
+
+        .upload-demo-icon {
+            font-size: 28px;
+            color: #8c939d;
+            width: 360px;
+            height: 160px;
+            line-height: 178px;
+            text-align: center;
+        }
+
+        .avatar {
+            width: 360px;
+            height: 180px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <el-steps :active="active" align-center finish-status="success">
+        <el-step title="步骤1" description="填写你的基本信息"></el-step>
+        <el-step title="步骤2" description="企业信息登记是对您包括您的公司的一个实名认证，您只需要上传相关照片信息，我们会自动帮您完成信息登记（请认真完成此步奏，否则您在本网站的借款方式将变得无比繁琐）"></el-step>
+        <el-step title="步骤3" description="完成"></el-step>
+    </el-steps>
+
+    <el-form v-if="isShowA" ref="form" :model="form" label-width="80px">
+        <el-form-item label="公司名称">
+            <el-input v-model="form.came"></el-input>
+        </el-form-item>
+        <el-form-item label="您的邮箱">
+            <el-input v-model="form.email"></el-input>
+        </el-form-item>
+        <el-form-item label="手机号">
+            <el-input v-model="form.telephone"></el-input>
+        </el-form-item>
+        <el-form-item label="公司电话">
+            <el-input v-model="form.phone"></el-input>
+        </el-form-item>
+        <el-form-item label="公司性质">
+            <el-input v-model="form.nature"></el-input>
+        </el-form-item>
+        <el-form-item label="公司地址">
+            <el-input v-model="form.address"></el-input>
+        </el-form-item>
+        <el-form-item label="银行卡号">
+            <el-input v-model="form.bankCard"></el-input>
+        </el-form-item>
+        <el-form-item>
+            <el-button type="primary" @click="onSubmit">提交</el-button>
+        </el-form-item>
+    </el-form>
+
+
+            <el-row v-if="isShowB" :gutter="20">
+                <el-col :span="8">
+                    <el-upload
+                            name="face_IDCard"
+                            class="upload-demo"
+                            drag
+                            action="/authentication/upload"
+                            multiple
+                            :show-file-list="false"
+                            :on-success="handleAvatarSuccess"
+                            :before-upload="beforeAvatarUpload">
+                        <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                        <i class="el-icon-upload"></i>
+                        <div class="el-upload__text">身份证正面照<em>点击上传</em></div>
+                    </el-upload>
+                </el-col>
+                <el-col :span="8">
+                    <el-upload
+                            margin-left="350px"
+                            name="reverse_IDCard"
+                            class="upload-demo"
+                            drag
+                            action="/authentication/uploadanouther"
+                            multiple
+                            :show-file-list="false"
+                            :on-success="handleAvatarSuccess1"
+                            :before-upload="beforeAvatarUpload">
+                        <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                        <i class="el-icon-upload"></i>
+                        <div class="el-upload__text">身份证反面照<em>点击上传</em></div>
+                    </el-upload>
+
+                </el-col>
+                <el-col :span="8">
+                    <el-upload
+                            name="business_license"
+                            class="upload-demo"
+                            drag
+                            action="/authentication/businesslicense"
+                            multiple
+                            :show-file-list="false"
+                            :on-success="handleAvatarSuccess2"
+                            :before-upload="beforeAvatarUpload">
+                        <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                        <i class="el-icon-upload"></i>
+                        <div class="el-upload__text">公司营业执照<em>点击上传</em></div>
+                    </el-upload>
+                    <div style="margin-left: 45%; margin-top: 30px">
+                        <el-button type="primary">主要按钮</el-button>
+                    </div>
+
+                </el-col>
+            </el-row>
+
+           <el-row v-if="isShowC">
+               <span>完成认证</span>
+           </el-row>
+
+            <el-dialog
+                    title="提示"
+                    :visible.sync="centerDialogVisible"
+                    width="30%"
+                    center>
+                <span>企业信息登记是对您包括您的公司的一个实名认证，您只需要上传相关照片信息，我们会自动帮您完成信息登记（请认真完成此步奏，否则您在本网站的借款方式将变得无比繁琐）</span>
+                <span slot="footer" class="dialog-footer">
+    <el-button type="primary" @click="centerDialogVisible = false">我知道了</el-button>
+  </span>
+            </el-dialog>
+
+
+    <el-button style="margin-top: 12px;" @click="unnext">上一步</el-button>
+    <el-button style="margin-top: 12px;" @click="next">下一步</el-button>
+</div>
+<script>
+    var vue = new Vue({
+        el: "#app",
+        data: {
+            imageUrl: '',
+            imageUrl1: '',
+            imageUrl2: '',
+            centerDialogVisible: false,
+            active: 0,
+            isShowA:true,
+            isShowB:false,
+            isShowC:false,
+            form:{
+                cname:'',
+                email:'',
+                telephone:'',
+                phone:'',
+                nature:'',
+                address:'',
+                bankCard:''
+            }
+        },
+        methods: {
+            handleAvatarSuccess(res, file) {
+                this.imageUrl = URL.createObjectURL(file.raw);
+                file.response.s1;
+                file.response.s;
+            },
+            handleAvatarSuccess1(res, file) {
+                this.imageUrl1 = URL.createObjectURL(file.raw);
+                file.response.s1;
+                file.response.s;
+            },
+            handleAvatarSuccess2(res, file) {
+                this.imageUrl2 = URL.createObjectURL(file.raw);
+                file.response.s1;
+                file.response.s;
+            },
+            beforeAvatarUpload(file) {
+                const isJPG = file.type === 'image/jpeg';
+                alert(file.size);
+                const isLt2M = file.size / 1024 / 1024 < 10;
+                if (!isJPG) {
+                    alert(file.type);
+                    this.$message.error('上传图片格式不正确!');
+                }
+                if (!isLt2M) {
+                    alert(isLt2M);
+                    this.$message.error('上传头像图片大小不能超过 10MB!');
+                }
+                return isJPG && isLt2M;
+            },
+            next() {
+                if (this.active++ > 2) this.active = 3;
+                if(this.active==0){
+                    this.isShowA=true;
+                    this.isShowB=false;
+                    this.isShowC=false;
+                }else if(this.active==1){
+                    this.isShowA=false;
+                    this.isShowB=true;
+                    this.isShowC=false;
+                    this.centerDialogVisible=true;
+                }else {
+                    this.isShowA=false;
+                    this.isShowB=false;
+                    this.isShowC=true;
+                }
+
+            },
+            unnext() {
+                if (this.active-- < 2) this.active = 0;
+                if(this.active==0){
+                    this.isShowA=true;
+                    this.isShowB=false;
+                    this.isShowC=false;
+                }else if(this.active==1){
+                    this.isShowA=false;
+                    this.isShowB=true;
+                    this.isShowC=false;
+                    this.centerDialogVisible=true;
+                }else {
+                    this.isShowA=false;
+                    this.isShowB=false;
+                    this.isShowC=true;
+                }
+            },
+            onSubmit:function () {
+                axios.post('/authentication/adduser',{userdata:this.form})
+                    .then(function (value) {
+                        if (value.data == "成功") {
+                            self.$notify({
+                                title: '成功',
+                                message: '第一步认证成功',
+                                type: 'success'
+                            });
+                        }else{
+                            self.$notify.error({
+                                title: '错误',
+                                message: '遇到了未知错误，认证失败'
+                            });
+                        }
+                    })
+            }
+        }
+    })
+</script>
+</body>
+</html>

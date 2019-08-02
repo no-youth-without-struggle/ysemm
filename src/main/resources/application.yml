@@ -35,6 +35,10 @@ spring:
     view:
       suffix: .html
       prefix: /
+#      本地文件上传最大10MB
+  servlet:
+    multipart:
+      max-file-size: 10MB
 mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml
   type-aliases-package: com.aaa.ysemm.customer.entity
