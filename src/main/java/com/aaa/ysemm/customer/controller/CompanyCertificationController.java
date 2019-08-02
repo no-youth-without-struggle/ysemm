@@ -37,7 +37,11 @@ public class CompanyCertificationController {
 
     @RequestMapping("/adduser")
     public String adduser(@RequestBody Map map,HttpSession session){
+//      获取session
         UserLogin emp = (UserLogin) session.getAttribute("emp");
+        System.out.println(emp.getUid());
+        map.put("uid",emp.getUid());
+
         service.adduser(map);
         return "成功";
     }
