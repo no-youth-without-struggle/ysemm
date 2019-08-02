@@ -2,6 +2,7 @@ package com.aaa.ysemm.customer.service.impl;
 
 import com.aaa.ysemm.customer.dao.HomeMapper;
 import com.aaa.ysemm.customer.entity.UserLogin;
+import com.aaa.ysemm.customer.entitys.Company;
 import com.aaa.ysemm.customer.entitys.Loans;
 import com.aaa.ysemm.customer.entitys.Pledge;
 import com.aaa.ysemm.customer.service.HomeService;
@@ -55,12 +56,18 @@ public class HomeServiceImpl implements HomeService {
     @Override
     public ResultUtil postBorrow(Map map) {
         System.out.println("map"+map);
-        Object borrow = map.get("borrow");
-        Object pledge = map.get("pledge");
+        //根据uid查询企业信息
 
+        Integer cid=mapper.getLogin(map.get("uid"));
+        if (cid==null){
+            return new ResultUtil(300,"查无此企业",null);
+        }
+        map.put("loanCid",cid);
         //添加借款信息
-       int id= mapper.insertPledge(pledge);
-       int lid= mapper.insertBorrow(borrow);
+       mapper.insertPledge(map);
+       map.put("applyTime",new Date());
+       Integer lid= mapper.insertBorrow(map);
         return new ResultUtil(200,"操作成功",null);
     }
+
 }

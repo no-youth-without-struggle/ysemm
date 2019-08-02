@@ -1,6 +1,9 @@
 package com.aaa.ysemm.customer.controller;
 
 import com.aaa.ysemm.customer.entity.UserLogin;
+import com.aaa.ysemm.customer.entitys.Company;
+import com.aaa.ysemm.customer.entitys.Loans;
+import com.aaa.ysemm.customer.entitys.Pledge;
 import com.aaa.ysemm.customer.service.HomeService;
 import com.aaa.ysemm.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +42,10 @@ public class HomeController {
      * 添加借款人信息
      */
     @RequestMapping("/postBorrow")
-    public ResultUtil postBorrow(@RequestBody Map map){
-        return service.postBorrow(map);
+    public ResultUtil postBorrow(@RequestBody Map map,HttpSession session){
+        UserLogin userLogin = (UserLogin) session.getAttribute("emp");
+       map.put("uid",userLogin.getUid());
+        ResultUtil resultUtil = service.postBorrow(map);
+        return resultUtil;
     }
 }

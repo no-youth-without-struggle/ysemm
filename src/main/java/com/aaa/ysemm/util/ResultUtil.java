@@ -5,8 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.util.Map;
-
 /**
  * @ProjectName: ysemm
  * @Package: com.aaa.ysemm.util
