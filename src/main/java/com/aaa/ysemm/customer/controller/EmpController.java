@@ -17,11 +17,6 @@ import java.util.Map;
  * @Date: 2019/7/18 19:22
  * @Version: 1.0
  */
-
-
-
-
-
 @RestController
 @RequestMapping("/emp")
 public class EmpController {
@@ -47,7 +42,6 @@ public class EmpController {
         return empService.updateEmp(emp);
     }
     /**
-     *
      * 添加操作
      */
     @RequestMapping("/insertEmp")

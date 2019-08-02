@@ -77,6 +77,7 @@ public class CusLoginServiceImpl implements CusLoginService {
      */
     @Override
     public List<UserLogin> getSubmitLoin(Map map) {
+        System.out.println("tttttttttt"+map);
         List<UserLogin> submitLoin = loginMapper.getSubmitLoin(map);
         System.out.println("submit"+submitLoin);
         return submitLoin;

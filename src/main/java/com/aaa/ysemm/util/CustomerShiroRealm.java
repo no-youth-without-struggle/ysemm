@@ -9,6 +9,8 @@ import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +23,7 @@ import java.util.Map;
  * author:
  * createTime:2018-11-29 18:37
  */
+
 public class CustomerShiroRealm extends AuthorizingRealm implements Serializable{
 
 	@Autowired

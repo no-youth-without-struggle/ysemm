@@ -6,12 +6,15 @@ import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.apache.shiro.web.servlet.ShiroHttpServletRequest;
 import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -24,6 +27,8 @@ import java.util.Map;
 @Configuration
 public class ShiroConfig {
 
+	//@Autowired
+	//private HttpServletRequest request;
 	@Bean
 	public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {
 		System.out.println("ShiroConfiguration.shirFilter()");
@@ -41,11 +46,12 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/js/**", "anon");
 		filterChainDefinitionMap.put("/script/**", "anon");
 		filterChainDefinitionMap.put("/style/**", "anon");
-		filterChainDefinitionMap.put("/static/**", "anon");
+		filterChainDefinitionMap.put("/static/", "anon");
 		//验证token
 		filterChainDefinitionMap.put("/checkToken", "anon");
 		//放开登录注册以及首页
 		filterChainDefinitionMap.put("/manage/**", "anon");
+		filterChainDefinitionMap.put("/login/**", "anon");
 		filterChainDefinitionMap.put("/login/**", "anon");
 		//未登录放开首页贷款信息
 	/*	filterChainDefinitionMap.put("/indexInformation","anon");
@@ -79,6 +85,8 @@ public class ShiroConfig {
 		// 如果不设置默认会自动寻找Web工程根目录下的"/login"页面
 		/*shiroFilterFactoryBean.setLoginUrl("/manage/index.html");*/
 		shiroFilterFactoryBean.setLoginUrl("/manage/backlogin.html");
+		//StringBuffer requestURL = ShiroHttpServletRequest.getRequestURL();
+
 		// 登录成功后要跳转的链接
 		shiroFilterFactoryBean.setSuccessUrl("/manage/reg.html");
 
@@ -89,7 +97,7 @@ public class ShiroConfig {
 
 	}
 
-	@Bean
+	@Bean("myShiroRealm")
 	public MyShiroRealm myShiroRealm(){
 		MyShiroRealm myShiroRealm = new MyShiroRealm();
 		return myShiroRealm;
@@ -144,6 +152,7 @@ public class ShiroConfig {
 	public SecurityManager securityManager(@Qualifier("customerShiroRealm") CustomerShiroRealm customerShiroRealm) {
 		DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
 		manager.setRealm(customerShiroRealm);
+//		manager.setRealm(myShiroRealm);
 		return manager;
 	}
 

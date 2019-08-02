@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户还款</title>
+    <!--先引入vue.js库-->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!--axios-->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!--引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <link href="css/common.css" rel="stylesheet" />
+    <link href="css/register.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="script/jquery.min.js"></script>
+    <script type="text/javascript" src="script/common.js"></script>
+    <script src="script/login.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="app">
+    <template>
+        <!--<span id="sp">当前余额为:</span>-->
+        <div style="margin: 20px 0">
+            <el-button type="success" plain @click="huankuanInfo">{{buttonvalue}}</el-button>
+            <el-button type="primary" plain @click="huanAll">{{buttonvalue2}}</el-button>
+        </div>
+         <el-table
+                 v-if="status==true"
+            :data="tableData3"
+            style="width: 100%">
+        <el-table-column
+                prop="reMoney"
+                label="应还金额(元)"
+                width="180">
+        </el-table-column>
+        <el-table-column
+                prop="reBalace"
+                label="剩余还款金额(元)"
+                width="180">
+        </el-table-column>
+        <el-table-column
+                prop="nper"
+                label="期数"
+                width="180">
+        </el-table-column>
+        <el-table-column
+                prop="status"
+                label="还款状态"
+                :formatter="formatter"
+                width="180">
+        </el-table-column>
+         </el-table>
+    </template>
+    <template>
+        <el-table
+                v-if="status2==true"
+                :data="tableData4"
+                style="width: 100%">
+            <el-table-column
+                    prop="reMoney"
+                    label="应还金额(元)"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="reBalace"
+                    label="剩余还款金额(元)"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="nper"
+                    label="期数"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="status"
+                    label="还款状态"
+                    :formatter="formatter"
+                    width="180">
+            </el-table-column>
+        </el-table>
+            </template>
+
+                <!--<el-table-->
+                <!--:data="tableData"-->
+                <!--style="width: 100%">-->
+                <!--<el-table-column-->
+                <!--prop="cname"-->
+                <!--label="公司名称"-->
+                <!--width="180">-->
+                <!--</el-table-column>-->
+                <!--<el-table-column-->
+                <!--prop="loanMoney"-->
+                <!--label="还款金额"-->
+                <!--width="180">-->
+                <!--</el-table-column>-->
+                <!--<el-table-column-->
+                <!--prop="loanType"-->
+                <!--label="还款方式"-->
+                <!--width="180">-->
+                <!--</el-table-column>-->
+                <!--<el-table-column-->
+                <!--prop="pledgeName"-->
+                <!--label="抵押或无名称"-->
+                <!--width="180">-->
+                <!--</el-table-column>-->
+                <!--<el-table-column-->
+                <!--prop="applyTime"-->
+                <!--label="申请日期"-->
+                <!--width="180">-->
+                <!--</el-table-column>-->
+                <!--<el-table-column-->
+                <!--prop="repaymentType"-->
+                <!--label="还款类型"-->
+                <!--width="180">-->
+                <!--</el-table-column><el-table-column-->
+                <!--prop="repaymentTime"-->
+                <!--label="还款日期"-->
+                <!--width="180">-->
+                <!--</el-table-column>-->
+                <!--<el-table-column-->
+                <!--prop="repaymentRate"-->
+                <!--label="还款利息"-->
+                <!--width="180">-->
+                <!--</el-table-column>-->
+                <!--</el-table>-->
+                <el-table
+                        :data="tableData2"
+                        style="width: 100%">
+                    <el-table-column
+                            prop="reMoney"
+                            label="应还金额(元)"
+                            width="180">
+                    </el-table-column>
+                    <el-table-column
+                            prop="reBalace"
+                            label="剩余还款金额(元)"
+                            width="180">
+                    </el-table-column>
+                    <el-table-column
+                            prop="nper"
+                            label="期数"
+                            width="180">
+                    </el-table-column>
+                    <el-table-column
+                            prop="status"
+                            label="还款状态"
+                            :formatter="formatter"
+                            width="180">
+                    </el-table-column>
+                    <el-table-column label="是否还款" >
+                        <template slot-scope="scope">
+                            <el-button type="primary"size="mini" @click="handleEdit(scope.$index, scope.row)">还款</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </template>
+    </template>
+
+</div>
+<script>
+    var vue =new Vue({
+       el:"#app",
+       data:{
+           tableData2: [],
+           tableData3: [],
+           tableData4: [],
+           totalMoney:'',
+           status:false,
+           status2:false,
+           buttonvalue:"查看还款信息",
+           buttonvalue2:"查看未还款信息"
+       },
+        created:function(){
+           //要还款的期数
+            this.loadData();
+            axios.post('/rep/queryCM')
+                .then(function (response) {
+                    vue.totalMoney=response.data.totalMoney;
+                });
+        },
+        methods:{
+           loadData:function(){
+               var self=this;
+               //查询还款期限
+               axios.post('/rep/queryHKQX')
+                   .then(function (response) {
+                       self.tableData2=response.data;
+                       // document.write("当前余额为:"+self.tableData2+"元");
+                   });
+           },//判断是否还款
+            formatter: function(row,column){
+               var msg="";
+              if (row.status==0){
+                  msg="未还款";
+              } else if (row.status==1){
+                  msg="已还款";
+              }
+              return msg;
+            },
+            handleEdit:function (index, row) {
+               //判断个人账号余额是否在于当前应还 金额
+               if (vue.totalMoney>=row.reMoney){
+                   axios.post('/rep/pub/',row)
+                       .then(function (response) {
+                           alert("还款成功！");
+                           this.loadData();
+                       });
+               }else {
+                   alert("余额不足请充值！");
+               }
+            },//查询还过款的信息
+            huankuanInfo:function () {
+                vue.status=!vue.status;
+                if (vue.status==true){
+                    vue.buttonvalue="收起"
+                }else{
+                    vue.buttonvalue="查看还款信息"
+                }
+                var self=this;
+                axios.post('/rep/queryAHKQX')
+                    .then(function (response) {
+                        self.tableData3=response.data;
+                    });
+            },
+            huanAll:function () {
+            vue.status2=!vue.status2;
+            if (vue.status2==true){
+                vue.buttonvalue2="收起"
+            }else{
+                vue.buttonvalue2="查看未还款信息"
+            }
+            var self=this;
+            axios.post('/rep/queryHKQX2')
+                .then(function (response) {
+                    self.tableData4=response.data;
+                });
+        }
+        }
+    });
+</script>
+</body>
+</html>
