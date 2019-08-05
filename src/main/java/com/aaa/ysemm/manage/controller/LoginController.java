@@ -39,45 +39,14 @@ public class LoginController {
      * @return
      */
     @RequestMapping("/userLogin")
-    public Map login(@RequestBody Map map, HttpSession session){
+    public Map login(@RequestBody Map map, HttpSession session) {
         Map logins = loginService.getLogin(map);
-        if (logins!=null){
+        if (logins != null) {
             Login login = (Login) logins.get("login");
-            session.setAttribute("login",login);
+            session.setAttribute("login", login);
         }
         return logins;
 
-
-      /*
-        String userName= map.get("email")+"";
-        String passWord = map.get("password")+"";
-        System.out.println(map+".............................");
-        Subject subject = SecurityUtils.getSubject();
-        String msg="";
-        if(userName!=null&&!"".equals(userName)) {
-            UsernamePasswordToken token = new UsernamePasswordToken(userName,passWord);
-            try {
-                subject.login(token);
-                msg="suc";
-            } catch (AuthenticationException exception) {
-                //清除session
-                token.clear();
-                //自定义信息
-
-                if (UnknownAccountException.class.getName().equals(exception+"")) {
-                    msg = "您输入的账号不存在~";
-                } else if (IncorrectCredentialsException.class.getName().equals(exception.getClass().getName())) {
-                    msg = "您输入的密码不正确~";
-                } else if (LockedAccountException.class.getName().equals(exception.getClass().getName()) ){
-                    msg = " 您的账号已经被锁定 无法登入系统~";
-                } else {
-                    msg = "账号或者密码错误~";
-                }
-            }
-        }
-        Map mapTmp = new HashMap();
-        mapTmp.put("msg",msg);
-        return mapTmp;*/
     }
 
     /**
