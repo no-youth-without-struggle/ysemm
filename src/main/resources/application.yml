@@ -12,7 +12,7 @@ spring:
   datasource: #数据源
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.11.113:3306/b2b?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    url: jdbc:mysql://192.168.11.128:3306/b2b?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
     username: root
     password: 123
   http:
@@ -24,7 +24,7 @@ spring:
       #max-file-size: 10MB
       #max-request-size: 100MB
   jackson:
-     date-format: yyyy-MM-dd
+     date-format: yyyy-MM-dd HH:mm:ss
      time-zone: GMT+8
   thymeleaf:
     mode: HTML
@@ -41,7 +41,7 @@ spring:
       max-file-size: 10MB
 mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml
-  type-aliases-package: com.aaa.ysemm.customer.entity
+  type-aliases-package: com.aaa.ysemm.entity
 logging:
   level:
     com:

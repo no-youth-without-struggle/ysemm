@@ -1,8 +1,7 @@
-package com.aaa.ysemm.customer.entitys;
-
+package com.aaa.ysemm.entity;
 import org.springframework.format.annotation.DateTimeFormat;
-
 import java.util.Date;
+
 /**
  * table name:  role_per
  * author name: Mr Chen
@@ -11,13 +10,13 @@ import java.util.Date;
 @lombok.Data
 @lombok.AllArgsConstructor
 @lombok.NoArgsConstructor
-public class RolePer{
+public class RolePer {
 	private int id;
 	private int rid;
 	private int pid;
 	private String operator;
 	private int operatorId;
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:MM:SS")
-	private java.util.Date operatorTime;
+	private Date operatorTime;
 }
 

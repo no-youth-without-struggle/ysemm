@@ -1,6 +1,7 @@
-package com.aaa.ysemm.customer.entitys;
+package com.aaa.ysemm.entity;
 
 import java.util.Date;
+
 /**
  * table name:  login
  * author name: Mr Chen
@@ -9,14 +10,13 @@ import java.util.Date;
 @lombok.Data
 @lombok.AllArgsConstructor
 @lombok.NoArgsConstructor
-public class Login{
-
+public class Login {
 	private int lid;
 	private String email;
 	private String password;
 	private int status;
-	private java.util.Date currentTime;
-
+	private Date currentTime;
+	
 
 }
 

@@ -1,19 +1,14 @@
 package com.aaa.ysemm.manage.controller;
 
-import com.aaa.ysemm.customer.entity.Emp;
-import com.aaa.ysemm.manage.entity.Login;
+import com.aaa.ysemm.customer.entity.TreeNode;
+import com.aaa.ysemm.entity.Login;
 import com.aaa.ysemm.manage.service.LoginService;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.*;
-import org.apache.shiro.subject.Subject;
-import org.apache.shiro.web.session.HttpServletSession;
+import com.aaa.ysemm.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,7 +39,16 @@ public class LoginController {
      * @return
      */
     @RequestMapping("/userLogin")
-    public Object login(@RequestBody Map map){
+    public Map login(@RequestBody Map map, HttpSession session){
+        Map logins = loginService.getLogin(map);
+        if (logins!=null){
+            Login login = (Login) logins.get("login");
+            session.setAttribute("login",login);
+        }
+        return logins;
+
+
+      /*
         String userName= map.get("email")+"";
         String passWord = map.get("password")+"";
         System.out.println(map+".............................");
@@ -73,7 +77,25 @@ public class LoginController {
         }
         Map mapTmp = new HashMap();
         mapTmp.put("msg",msg);
-        return mapTmp;
+        return mapTmp;*/
+    }
+
+    /**
+     * 获取权限菜单
+     */
+    @RequestMapping("/loginMenu")
+    public ResultUtil getLoginMenu(Integer rid,HttpSession session){
+        List<TreeNode> loginMenu = loginService.getLoginMenu(rid);
+        session.setAttribute("loginMenu",loginMenu);
+        return  new ResultUtil(ResultUtil.CODE_SUCCESS,ResultUtil.MSG_SUCCESS,null);
+    }
+    /**
+     * 获取动态权限树
+     */
+    @RequestMapping("/getTree")
+    public List<TreeNode> getTree(HttpSession session){
+        List<TreeNode> loginMenu = (List<TreeNode>) session.getAttribute("loginMenu");
+        return loginMenu;
     }
 
     /**
