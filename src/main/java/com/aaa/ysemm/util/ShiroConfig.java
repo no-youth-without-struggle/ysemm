@@ -152,7 +152,6 @@ public class ShiroConfig {
 	public SecurityManager securityManager(@Qualifier("customerShiroRealm") CustomerShiroRealm customerShiroRealm) {
 		DefaultWebSecurityManager manager = new DefaultWebSecurityManager();
 		manager.setRealm(customerShiroRealm);
-//		manager.setRealm(myShiroRealm);
 		return manager;
 	}
 
