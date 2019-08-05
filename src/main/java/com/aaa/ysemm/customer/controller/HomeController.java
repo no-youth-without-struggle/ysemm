@@ -48,4 +48,11 @@ public class HomeController {
         ResultUtil resultUtil = service.postBorrow(map);
         return resultUtil;
     }
+    /**
+     * 前台动态获取借款信息
+     */
+    @RequestMapping("/allMoney")
+    public Map allMoney(@RequestBody Map map){
+       return  service.getAllMoney(map);
+    }
 }

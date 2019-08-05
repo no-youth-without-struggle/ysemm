@@ -19,4 +19,5 @@ public interface HomeService {
     ResultUtil postBorrow(Map map);
 
 
+    Map getAllMoney(Map map);
 }

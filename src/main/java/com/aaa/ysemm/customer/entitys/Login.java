@@ -17,5 +17,6 @@ public class Login{
 	private int status;
 	private java.util.Date currentTime;
 
+
 }
 

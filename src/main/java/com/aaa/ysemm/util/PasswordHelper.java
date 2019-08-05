@@ -1,6 +1,6 @@
 package com.aaa.ysemm.util;
 
-import com.aaa.ysemm.manage.entity.Login;
+import com.aaa.ysemm.entity.Login;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.util.ByteSource;
 
