@@ -38,6 +38,16 @@
             height: 180px;
             display: block;
         }
+        .avatar1 {
+            width: 360px;
+            height: 180px;
+            display: block;
+        }
+        .avatar2 {
+            width: 360px;
+            height: 180px;
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -109,6 +119,7 @@
                             action="/authentication/upload"
                             multiple
                             :show-file-list="false"
+                            :key="1"
                             :on-success="handleAvatarSuccess"
                             :before-upload="beforeAvatarUpload">
                         <img v-if="imageUrl" :src="imageUrl" class="avatar">
@@ -125,9 +136,10 @@
                             action="/authentication/uploadanouther"
                             multiple
                             :show-file-list="false"
+                            :key="2"
                             :on-success="handleAvatarSuccess1"
                             :before-upload="beforeAvatarUpload">
-                        <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                        <img v-if="imageUrl" :src="imageUrl1" class="avatar1">
                         <i class="el-icon-upload"></i>
                         <div class="el-upload__text">身份证反面照<em>点击上传</em></div>
                     </el-upload>
@@ -141,9 +153,10 @@
                             action="/authentication/businesslicense"
                             multiple
                             :show-file-list="false"
+                            :key="3"
                             :on-success="handleAvatarSuccess2"
                             :before-upload="beforeAvatarUpload">
-                        <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                        <img v-if="imageUrl" :src="imageUrl2" class="avatar2">
                         <i class="el-icon-upload"></i>
                         <div class="el-upload__text">公司营业执照<em>点击上传</em></div>
                     </el-upload>
@@ -189,30 +202,26 @@
         },
         methods: {
             handleAvatarSuccess(res, file) {
+                alert(111);
                 this.imageUrl = URL.createObjectURL(file.raw);
-                file.response.s1;
-                file.response.s;
+
             },
-            handleAvatarSuccess1(res, file) {
-                this.imageUrl1 = URL.createObjectURL(file.raw);
-                file.response.s1;
-                file.response.s;
+            handleAvatarSuccess1(res, file1) {
+                alert(222);
+                this.imageUrl1 = URL.createObjectURL(file1.raw);
+
             },
-            handleAvatarSuccess2(res, file) {
-                this.imageUrl2 = URL.createObjectURL(file.raw);
-                file.response.s1;
-                file.response.s;
+            handleAvatarSuccess2(res, file2) {
+                alert(333);
+                this.imageUrl2 = URL.createObjectURL(file2.raw);
             },
             beforeAvatarUpload(file) {
                 const isJPG = file.type === 'image/jpeg';
-                alert(file.size);
                 const isLt2M = file.size / 1024 / 1024 < 10;
                 if (!isJPG) {
-                    alert(file.type);
                     this.$message.error('上传图片格式不正确!');
                 }
                 if (!isLt2M) {
-                    alert(isLt2M);
                     this.$message.error('上传头像图片大小不能超过 10MB!');
                 }
                 return isJPG && isLt2M;
