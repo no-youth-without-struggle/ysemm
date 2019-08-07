@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>资金记录</title>
+</head>
+<script src="../vue/js/vue.js"></script>
+<script src="../vue/js/index.js"></script>
+<script src="../vue/js/axios.js"></script>
+<link href="../vue/css/index.css" rel="stylesheet">
+<body>
+<div id="app">
+    <el-form :inline="true" :model="formInline" class="demo-form-inline">
+        <el-form-item label="操作类型">
+            <el-select v-model="formInline.name"  placeholder="请选择操作类型" style="width: 150px;">
+                <el-option label="借款" value="放款"></el-option>
+                <el-option label="充值" value="充值"></el-option>
+                <el-option label="提现" value="提现"></el-option>
+                <el-option label="还款" value="还款"></el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="开始时间">
+            <el-date-picker type="date" placeholder="选择日期" v-model="formInline.startDate" style="width: 150px;"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="结束时间">
+            <el-date-picker type="date" placeholder="选择日期" v-model="formInline.endDate" style="width: 150px;"></el-date-picker>
+        </el-form-item>
+        <el-form-item>
+            <el-button type="primary" @click="selectEmp">查询</el-button>
+        </el-form-item>
+    </el-form>
+    <template>
+        <el-table :data="tableData" ref="multipleTable" style="width: 100%"  tooltip-effect="dark">
+            <el-table-column prop="pay_type" label="操作类型" :formatter="formatType" width="180"></el-table-column>
+            <el-table-column prop="pay_money" label="操作金额" width="180"></el-table-column>
+            <el-table-column prop="operator_time" label="操作时间"></el-table-column>
+            <el-table-column prop="remark" label="操作描述"></el-table-column>
+        </el-table>
+    </template>
+    <!--分页-->
+    <div class="block">
+        <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="formInline.page"
+                       :page-sizes="[5, 10, 15, 20]" :page-size="5" layout="total, sizes, prev, pager, next, jumper" :total="counts">
+        </el-pagination>
+    </div>
+</div>
+</body>
+<script>
+    var app = new Vue({
+        el:"#app",
+        data:{
+            title:"",
+            centerDialogVisible:false,
+            tableData: [],
+            dept:[],
+            counts:'',//总数
+            formInline:{
+                name:'',
+                startDate:'',
+                endDate:'',
+                page:1,
+                count:5,
+            },
+        },
+        methods:{
+            formatType:function(row, column){
+                if (row.pay_type=="放款"){
+                    return "借款";
+                }else{
+                    return row.pay_type;
+                }
+            },
+            //查询
+            selectEmp:function () {
+                load();
+            },
+            handleSizeChange:function(val) {//当前每页个数
+                app.formInline.count=val;
+                app.formInline.page=1;
+                load();
+            },
+            handleCurrentChange:function(val) {//当前页数
+                app.formInline.page=val;
+                load();
+            }
+        }
+    });
+    load();
+    function load() {
+        axios.post("/homeBorrow/getMoneyRecord",app.formInline)
+            .then(function (result) {
+                app.tableData=result.data.fundList;
+                app.counts=result.data.count;
+            });
+    }
+
+    </script>
+</html>

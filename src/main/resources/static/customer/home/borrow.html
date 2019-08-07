@@ -40,7 +40,7 @@
 					<el-row>
 						<el-col :span="8">
 							<el-form-item label="借款金额">
-								<el-input v-model="form.loanMoney" style="width:160px;height: 25px;"></el-input>元
+								<el-input v-model="form.loanMoney"@change="rate()"style="width:160px;height: 25px;"></el-input>元
 							</el-form-item>
 						</el-col>
 						<el-col :span="8">
@@ -125,9 +125,8 @@
 			<el-button v-if="active==2" style="margin-top: 12px;" @click="success">完成</el-button>
 		</div>
 	</body>
-	<script src="rate.js"></script>
 	<script>
-			getRA();
+
 		var app = new Vue({
 			el: "#app",
 			data: {
@@ -194,6 +193,15 @@
 				.then(function (result) {
 					app.company=result.data.obj;
 				})
+		/**
+		 * 判断用户是否有借款资格
+		 */
+		axios.post("/homeBorrow/getBorrowQualification")
+				.then(function (result) {
+					if (result.data.code!=200){
+						window.location.href="message1.html";
+					}
+				});
 
 	</script>
 

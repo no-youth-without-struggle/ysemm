@@ -1,5 +1,7 @@
 package com.aaa.ysemm.entity;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 /**
@@ -16,6 +18,23 @@ public class Login {
 	private String password;
 	private int status;
 	private Date currentTime;
+	private String IDCard;
+	private Integer rId;
+	private int eid;
+	private String ename;
+	private String telephone;
+	@DateTimeFormat( pattern = "yyyy-MM-dd HH:mm:ss")
+	private Date birthday;
+	private String sex;
+	private int deptId;
+	private String operator;
+	private Integer operatorId;
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private Date operatorTime;
+	private String address;
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	private  Date hiredate;
+
 	
 
 }

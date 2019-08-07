@@ -1,7 +1,7 @@
 package com.aaa.ysemm.customer.service.impl;
 
 import com.aaa.ysemm.customer.dao.CusLoginMapper;
-import com.aaa.ysemm.customer.entity.UserLogin;
+import com.aaa.ysemm.entity.UserLogin;
 import com.aaa.ysemm.customer.service.CusLoginService;
 import com.aaa.ysemm.util.MD5Util;
 import com.aaa.ysemm.util.RandomStringUtil;
@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -59,7 +58,7 @@ public class CusLoginServiceImpl implements CusLoginService {
         userLogin.setPassword(md5.get("password"));
 
         //随机生成用户名:ysemm+5位随机数
-        String username="ysemm"+ RandomStringUtil.generateZeroString(5);
+        String username="ysemm"+ RandomStringUtil.getRandomNumber(5);
         System.out.println("username"+username);
         userLogin.setUsername(username);
         //将用户信息添加到数据库
@@ -76,9 +75,9 @@ public class CusLoginServiceImpl implements CusLoginService {
      * @return
      */
     @Override
-    public List<UserLogin> getSubmitLoin(Map map) {
+    public UserLogin getSubmitLoin(Map map) {
         System.out.println("tttttttttt"+map);
-        List<UserLogin> submitLoin = loginMapper.getSubmitLoin(map);
+        UserLogin submitLoin = loginMapper.getSubmitLoin(map);
         System.out.println("submit"+submitLoin);
         return submitLoin;
     }

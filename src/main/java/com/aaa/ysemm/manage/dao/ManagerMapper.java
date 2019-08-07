@@ -33,4 +33,10 @@ public interface ManagerMapper {
     void postRole(Employee employee);
 
     Map<String, Object> postUpdateEmp(Integer eid);
+
+    void updateEmp(Map map);
+
+    void updateLogin(Map map);
+
+    void updateRole(Map map);
 }

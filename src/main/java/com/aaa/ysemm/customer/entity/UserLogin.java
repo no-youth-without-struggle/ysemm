@@ -16,10 +16,10 @@ import java.util.Date;
  * @Date: 2019/7/28 17:25
  * @Version: 1.0
  */
-/*@NoArgsConstructor
-@AllArgsConstructor
 @Data
-@ToString*/
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserLogin {
     private Integer uid;
     private String username;
@@ -31,6 +31,8 @@ public class UserLogin {
     private Date time;
     private String payPassword;
     private String phonecode;
+
+/*
     public UserLogin(Integer uid, String username, String telephone, String password, String passwordSalt, Integer status, Date time, String payPassword, String phonecode) {
         this.uid = uid;
         this.username = username;
@@ -116,5 +118,5 @@ public class UserLogin {
 
     public void setPhonecode(String phonecode) {
         this.phonecode = phonecode;
-    }
+    }*/
 }

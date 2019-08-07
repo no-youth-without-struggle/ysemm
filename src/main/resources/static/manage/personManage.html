@@ -33,7 +33,7 @@
             <el-table-column prop="ename" label="姓名" width="180"></el-table-column>
             <el-table-column prop="dname" label="部门"></el-table-column>
             <el-table-column prop="sex" label="性别"></el-table-column>
-            <el-table-column prop="status" label="状态"></el-table-column>
+            <el-table-column prop="status" label="状态"  :formatter="formatStatus"></el-table-column>
             <el-table-column prop="hiredate" label="入职日期"></el-table-column>
             <el-table-column label="操作" width="200">
                 <template slot-scope="scope">
@@ -44,7 +44,7 @@
     </template>
     <!--分页-->
     <div class="block">
-        <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="5"
+        <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="formInline.page"
                        :page-sizes="[5, 10, 15, 20]" :page-size="5" layout="total, sizes, prev, pager, next, jumper" :total="counts">
         </el-pagination>
     </div>
@@ -64,26 +64,26 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="10">
-                    <el-form-item label="部门">
-                        <el-select v-model="form.deptId" placeholder="请选择部门">
-                            <el-option v-for="item in dept" :label="item.dname" :value="item.deptId"></el-option>
+                    <el-form-item label="性别">
+                        <el-select v-model="form.sex" placeholder="请选择性别">
+                            <el-option label="男" value="男"></el-option>
+                            <el-option label="女" value="女"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
             </el-row>
             <el-row :gutter="20">
                 <el-col :span="10">
-                    <el-form-item label="角色">
-                    <el-select v-model="form.rId" placeholder="请选择角色">
+                    <el-form-item label="角色" >
+                    <el-select  v-model="form.rId" >
                         <el-option v-for="item in role" :label="item.rname" :value="item.rid"></el-option>
                     </el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :span="10">
-                    <el-form-item label="性别">
-                        <el-select v-model="form.sex" placeholder="请选择性别">
-                            <el-option label="男" value="男"></el-option>
-                            <el-option label="女" value="女"></el-option>
+                    <el-form-item label="部门">
+                        <el-select v-model="form.deptId" placeholder="请选择部门" >
+                            <el-option v-for="item in dept" :label="item.dname" :value="item.deptId"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
@@ -103,12 +103,22 @@
             <el-row :gutter="20">
                 <el-col :span="10">
                     <el-form-item label="入职时间">
-                        <el-date-picker type="date" placeholder="选择日期"value-format="yyyy-MM-dd HH:mm:ss" v-model="form.hiredate" style="width: 100%;"></el-date-picker>
+                        <el-date-picker type="date" placeholder="选择日期"value-format="yyyy-MM-dd HH:mm:ss" v-model="form.hiredate"></el-date-picker>
                     </el-form-item>
                 </el-col>
                 <el-col :span="10">
                     <el-form-item label="出生年月">
                         <el-date-picker type="date" placeholder="选择日期" value-format="yyyy-MM-dd HH:mm:ss"v-model="form.birthday"></el-date-picker>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row :gutter="10">
+                <el-col :span="10">
+                    <el-form-item label="状态">
+                        <el-select v-model="form.status"  placeholder="请选择状态">
+                        <el-option label="正常" value="1"></el-option>
+                        <el-option label="冻结" value="0"></el-option>
+                    </el-select>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -165,12 +175,11 @@
                 title:"",
                 centerDialogVisible:false,
                 tableData: [],
-                role:[],
                 dept:[],
                 counts:'',//总数
                 form:{},
                 emp:{},
-                empRole:[],
+               /* empRole:[],*/
                 formInline:{
                     name:'',
                     startDate:'',
@@ -180,39 +189,48 @@
                 },
             },
             methods:{
-//取消
+                formatStatus:function(row, column){
+                    if (row.status==0){
+                        return "冻结";
+                    }else{
+                        return "正常";
+                    }
+                },
+                //取消
                 close:function(){
                     app.centerDialogVisible=false;
+                    load();
                     app.form={};
                 },
-//修改
+                //修改
                 handleEdit:function(index, row) {
                     this.title="修改信息";
                     app.centerDialogVisible=true;
                    this.emp=row;
                    this.form=this.emp;
-
-                   /* axios.get("/manage/postUpdateEmp?eid="+row.eid)
-                        .then(function (value) {
-                            app.form=value.data;
-                        })*/
                 },
-//查询
+                //查询
                 selectEmp:function () {
                     load();
                 },
-//添加
+                //添加
                 addEmp:function () {
                     this.title="添加信息";
                     app.centerDialogVisible=true;
                 },
                 handleSizeChange:function(val) {//当前每页个数
                     app.formInline.count=val;
+                    app.formInline.page=1;
                     load();
                 },
                 handleCurrentChange:function(val) {//当前页数
                     app.formInline.page=val;
                     load();
+                },
+
+                addRole:function(){//添加角色
+                  app.form.rId.
+                  alert(app.form.rId)
                 },
                 submitEmp:function () {//提交用户
                     app.centerDialogVisible=false;
@@ -234,6 +252,7 @@
                 },
             }
         });
+
 
         /**
          *分页+模糊搜索

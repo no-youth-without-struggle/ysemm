@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>权限管理</title>
+    <!--先引入vue.js库-->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!--axios-->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <style>
+        .el-header, .el-footer {
+            background-color: #B3C0D1;
+            color: #333;
+            text-align: center;
+            line-height: 60px;
+        }
+        .el-aside {
+            color: #333;
+            text-align: center;
+            line-height: 26px;
+            height: 650px;
+        }
+
+        .el-main {
+            background-color: #E9EEF3;
+            color: #333;
+            text-align: center;
+            line-height: 26px;
+        }
+
+        body > .el-container {
+            margin-bottom: 40px;
+        }
+
+        .el-container:nth-child(5) .el-aside,
+        .el-container:nth-child(6) .el-aside {
+            line-height: 260px;
+        }
+
+        .el-container:nth-child(7) .el-aside {
+            line-height: 320px;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+
+    <el-container>
+
+        <el-aside width="200px">
+            <el-tree :data="treeData" default-expand-all   @node-click="handleNodeClick"></el-tree>
+        </el-aside>
+        <el-main>
+            <el-form ref="form" :model="form" label-width="80px">
+                <el-form-item label="权限id" v-if="idIsShow">
+                    <el-input  v-model="form.id" style="width: 120px;" readonly="true"></el-input>
+                </el-form-item>
+                <el-form-item label="权限名称">
+                    <el-input v-model="form.label" style="width: 120px;"></el-input>
+                </el-form-item>
+                <el-form-item label="父节点">
+                    <el-input v-model="form.parentName" @focus="onSelectParentNode" style="width: 120px;" readonly="true"></el-input>
+                    <el-input v-model="form.parentId"   type="hidden"></el-input>
+                </el-form-item>
+                <el-form-item label="权限地址">
+                    <el-input v-model="form.url" style="width: 320px;"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="onSubmit">{{form.submitBtn}}</el-button>
+                    <el-button type="danger" @click="del">删除</el-button>
+                </el-form-item>
+            </el-form>
+        </el-main>
+
+    </el-container>
+    <el-dialog title="权限树" :visible.sync="dialogFormVisible">
+        <el-tree :data="treeData" default-expand-all ref="tree"
+                 show-checkbox
+                 check-strictly="true"
+                 @check-change="handleClick"
+        ></el-tree>
+        <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+        </div>
+    </el-dialog>
+
+</div>
+<script>
+    var vue =new Vue({
+        el:"#app",
+        data:{
+            treeData:[],
+            form: {
+                id:0,
+                label:'',
+                parentId:0,
+                parentName:'',
+                url:'',
+                submitBtn:'添加'
+            },
+            dialogFormVisible:false,
+            idIsShow:false
+        },
+        created:function(){
+            var self=this;
+            axios.post("/Permission/getTree", this.form)
+                .then(function (response) {
+                    self.treeData=response.data;
+                })
+        },
+        methods: {
+            handleNodeClick: function (data) {
+                if (data.id != null && data.id != 'null' && data.id != '' && data.id != 'undefined') {
+                    //  console.log(JSON.stringify(data));
+                    this.form=data;
+                    this.idIsShow=true;
+                    this.form.submitBtn='修改';
+                    /* axios.post("/demo4/power/getPowerById?powerId="+data.id, this.form)
+                         .then(function (response) {
+                             self.idIsShow=true;
+                             self.form=response.data;
+                             self.form.submitBtn='修改';
+                         })*/
+                }
+            }, handleClick:function(data, checked, node){
+                if(checked == true){
+                    this.checkedId = data.id;
+                    this.form.parentId=data.id;
+                    this.form.parentName=data.label;
+                    this.$refs.treeForm.setCheckedNodes([data]);
+                }
+            },
+            getChecked:function(){
+                var nodes =  this.$refs.tree.getCheckedNodes();
+                this.form.parentId=nodes[0].id;
+                console.log(this.$refs.tree.getCheckedNodes())
+            },
+            onSelectParentNode:function(){
+                this.dialogFormVisible=true;
+            },
+            onSubmit:function(){
+                var reqUrl="";
+                if(this.idIsShow){
+                    reqUrl="/Permission/update";
+                }else{
+                    reqUrl="/Permission/save";
+                }
+                var _this=this;
+                axios.post(reqUrl, this.form)
+                    .then(function (response) {
+                        if(response.data==1){
+                            _this.$message({
+                                message: '恭喜你， 操作成功',
+                                type: 'success'
+                            });
+                            window.parent.location.reload();
+                        }else {
+                            _this.$message({
+                                message: '操作失败',
+                                type: 'danger'
+                            });
+                        }
+                    })
+            },
+            del:function(){
+                var _this=this;
+                if(this.form.id==0 ||this.form.url==''||this.form.url=='null'||this.form.url==null){
+                    this.$message.error(' 该节点id为空或者节点下有子节点，不能删除');
+                }else{
+                    this.$confirm('此操作将永久删除该条数据, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(function() {
+                        axios.post("/Permission/delete?id="+_this.form.id)
+                            .then(function (response) {
+                                if(response.data==1){
+                                    _this.$message({
+                                        message: '恭喜你， 操作成功',
+                                        type: 'success'
+                                    });
+                                    window.parent.location.reload();
+                                }else {
+                                    _this.$message({
+                                        message: '操作失败',
+                                        type: 'danger'
+                                    });
+                                }
+                            })
+
+                    }).catch(function() {
+                        _this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                    });
+
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>
