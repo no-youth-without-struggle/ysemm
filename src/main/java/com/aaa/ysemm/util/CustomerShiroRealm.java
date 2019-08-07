@@ -1,5 +1,5 @@
 package com.aaa.ysemm.util;
-import com.aaa.ysemm.customer.entity.UserLogin;
+import com.aaa.ysemm.entity.UserLogin;
 import com.aaa.ysemm.customer.service.CusLoginService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
@@ -9,11 +9,9 @@ import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
 
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -48,11 +46,9 @@ public class CustomerShiroRealm extends AuthorizingRealm implements Serializable
 		map.put("status",1);
 		System.out.println("map"+map);
 		//通过username查询
-		List<UserLogin> user = loginService.getSubmitLoin(map);
+		UserLogin emp = loginService.getSubmitLoin(map);
 		String realmName = getName();
-		UserLogin emp =null;
-		if(user!=null&&user.size()>0){
-			emp = user.get(0);
+		if(emp!=null){
 			System.out.println("emp"+emp.toString());
 		}
 		if(emp==null) {

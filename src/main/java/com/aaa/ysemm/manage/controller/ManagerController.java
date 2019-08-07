@@ -33,6 +33,7 @@ public class ManagerController {
      */
     @RequestMapping("/getEmp")
     public Map<String,Object> getEmp(@RequestBody PageUtil page){
+        System.out.println("page"+page.toString());
         return service.getEmp(page);
     }
     /**
@@ -51,16 +52,15 @@ public class ManagerController {
         Login login = (Login) session.getAttribute("login");
         employee.setOperatorId(login.getLid());
         ResultUtil resultUtil = service.postEmp(employee);
-        Employee operator = (Employee) resultUtil.getObj();
-        session.setAttribute("operator",operator);//将操作人员信息存到session中
         return resultUtil;
     }
+
     /**
-     * 获取修改人员的信息
+     * 修改人员信息
      */
-    @RequestMapping("/postUpdateEmp")
-    public Map<String,Object> postUpdateEmp(Integer eid){
-        return service.postUpdateEmp(eid);
+    @RequestMapping("/updateEmp")
+    public ResultUtil updateEmp(@RequestBody Map map){
+        return service.updateEmp(map);
     }
 
 

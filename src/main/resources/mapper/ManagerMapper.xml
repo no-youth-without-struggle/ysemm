@@ -4,25 +4,25 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--namespace:命名空间：对应的dao接口的名字-->
 <mapper namespace="com.aaa.ysemm.manage.dao.ManagerMapper">
-    <resultMap id="getRole" type="map" autoMapping="true">
+   <!-- <resultMap id="getRole" type="map" autoMapping="true">
         <id column="eid" property="eid"></id>
         <collection property="empRole"  column="eid=eid" select="Role" javaType="list" autoMapping="true">
             <id column="" property=""></id>
         </collection>
-    </resultMap>
-    <select id="Role" resultType="map">
+    </resultMap>-->
+   <!-- <select id="Role" resultType="map">
        select r.rId,r.rname from role r INNER JOIN emp_role em  on r.rId=em.eid WHERE eid=#{eid}
-    </select>
+    </select>-->
     <!--模糊分页查询人员信息-->
-    <select id="getEmp" resultMap="getRole">
-SELECT lo.email,lo.`password`,e.eid,e.ename,e.telephone,e.IDCard,e.email,e.address,e.birthday,e.hiredate,e.sex,e.`status`,d.deptId,d.dname from employee e INNER JOIN login lo on e.lid=lo.lid INNER JOIN department d on e.deptId=d.deptId
-  /*      SELECT e.eid,e.ename,e.telephone,e.IDCard,e.email,e.operator,e.operartor_id,e.operator_time,e.address,e.birthday,e.hiredate,e.sex,e.`status`,d.dname from employee e INNER JOIN department d on e.deptId=d.deptId*/
+    <select id="getEmp" resultType="map">
+        SELECT r.rId,r.rname,lo.email,lo.`password`,e.eid,e.ename,e.telephone,e.IDCard,e.email,e.address,e.birthday,e.hiredate,e.sex,e.`status`,d.deptId,d.dname from employee e INNER JOIN emp_role er on e.eid=er.eid INNER JOIN role r on r.rId=er.rid INNER JOIN login lo on e.lid=lo.lid INNER JOIN department d on e.deptId=d.deptId
+         /*      SELECT e.eid,e.ename,e.telephone,e.IDCard,e.email,e.operator,e.operartor_id,e.operator_time,e.address,e.birthday,e.hiredate,e.sex,e.`status`,d.dname from employee e INNER JOIN department d on e.deptId=d.deptId*/
             <include refid="likeEmp"></include>
         limit #{page},#{count}
     </select>
     <!--模糊查询人员个数-->
     <select id="getCount" resultType="int">
-        SELECT count(*) from employee e INNER JOIN department d on e.deptId=d.deptId
+        SELECT count(*) from employee e INNER JOIN emp_role er on e.eid=er.eid INNER JOIN role r on r.rId=er.rid INNER JOIN login lo on e.lid=lo.lid INNER JOIN department d on e.deptId=d.deptId
         <include refid="likeEmp"></include>
     </select>
     <sql id="likeEmp">
@@ -67,4 +67,17 @@ SELECT lo.email,lo.`password`,e.eid,e.ename,e.telephone,e.IDCard,e.email,e.addre
     <select id="postUpdateEmp" resultType="map">
 SELECT lo.email,lo.`password`,e.eid,e.ename,e.telephone,e.IDCard,e.email,e.operator,e.operator_id operatorId,e.operator_time operatorTime,e.address,e.birthday,e.hiredate,e.sex,e.`status`,d.dname from employee e INNER JOIN login lo on e.lid=lo.lid INNER JOIN department d on e.deptId=d.deptId WHERE e.eid=#{eid}
     </select>
+    <!--修改人员信息-->
+    <update id="updateEmp">
+update employee set ename=#{ename},IDCard=#{IDCard},telephone=#{telephone},email=#{email},birthday=#{birthday},sex=#{sex},deptId=#{deptId},status=#{status},hiredate=#{hiredate},address=#{address}
+where eid=#{eid}
+    </update>
+    <!--修改登录信息-->
+    <update id="updateLogin">
+update login set email=#{email},password=#{password} where lid=(SELECT lid from employee where eid=#{eid})
+    </update>
+    <!--修改角色信息-->
+    <update id="updateRole">
+      update emp_role set rid=#{rId} where eid=#{eid}
+    </update>
 </mapper>

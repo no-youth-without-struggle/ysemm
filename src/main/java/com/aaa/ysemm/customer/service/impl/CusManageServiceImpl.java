@@ -1,11 +1,10 @@
 package com.aaa.ysemm.customer.service.impl;
 
 import com.aaa.ysemm.customer.dao.CusManageMapper;
-import com.aaa.ysemm.customer.entitys.CustomerManager;
 import com.aaa.ysemm.customer.service.CusManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
 
 /**
  * fileName:CusManageServiceImpl

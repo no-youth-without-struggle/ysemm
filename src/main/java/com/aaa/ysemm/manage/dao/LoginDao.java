@@ -33,8 +33,8 @@ public interface LoginDao {
     List<Map> queryLoginTWwo(Map map);
 
 
-    @Select("select lid,email,password,status,current_time from login" +
-            "    where email=#{email} and password=#{password} and status=1;")
+    @Select("SELECT l.lid,l.email,l.`password`,l.`status`,e.eid,e.ename,e.IDCard,e.telephone,e.birthday,e.sex,e.deptId,e.address,e.operator,e.operator_id operatorId,e.operator_time operatorTime,e.hiredate  from login l INNER JOIN employee e on l.lid=e.lid" +
+            "    where l.email=#{email} and l.password=#{password} and l.status=1;")
     List<Login> getLogin(Map map);
 
     @Select(" select r.rid,r.rname from employee e INNER JOIN emp_role er on e.eid=er.eid INNER JOIN role r  on er.rid=r.rid where e.lid=#{lid}")

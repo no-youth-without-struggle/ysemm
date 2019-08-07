@@ -21,5 +21,5 @@ public interface ManagerService {
 
     ResultUtil postEmp(Employee employee);
 
-    Map<String, Object> postUpdateEmp(Integer eid);
+    ResultUtil updateEmp(Map map);
 }

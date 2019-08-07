@@ -1,7 +1,7 @@
 package com.aaa.ysemm.customer.service;
 
 import com.aaa.ysemm.customer.entity.MingXi;
-import com.aaa.ysemm.customer.entity.UserLogin;
+import com.aaa.ysemm.entity.UserLogin;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 

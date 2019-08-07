@@ -1,8 +1,6 @@
 package com.aaa.ysemm.customer.service;
-import com.aaa.ysemm.customer.entity.UserLogin;
+import com.aaa.ysemm.entity.UserLogin;
 import com.aaa.ysemm.util.ResultUtil;
-import org.springframework.stereotype.Repository;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -19,5 +17,5 @@ public interface CusLoginService {
     //录入用户登录信息
     ResultUtil postForm(UserLogin userLogin);
     //判断用户是否登录
-    List<UserLogin> getSubmitLoin(Map map);
+    UserLogin getSubmitLoin(Map map);
 }

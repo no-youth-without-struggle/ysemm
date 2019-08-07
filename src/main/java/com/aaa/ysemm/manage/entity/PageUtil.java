@@ -19,13 +19,22 @@ public class PageUtil {
     private String endDate;
     private int page;
     private int count;
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public int getPage() {
-        return page;
+        return (this.page-1)*count;
     }
 
     public void setPage(int page) {
-        this.page=(this.page-1)*count;
+        this.page=page;
     }
 
     public PageUtil(String name, String startDate, String endDate, int page, int count) {

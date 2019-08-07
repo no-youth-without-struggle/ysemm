@@ -70,7 +70,6 @@ public class ManagerServiceImpl implements ManagerService {
     @Transactional
     @Override
     public ResultUtil postEmp(Employee employee) {
-        System.out.println("map+++++++++++++++++++"+employee.toString());
         //添加用户账号
          managerMapper.postLogin(employee);
         //获取操作用户的信息
@@ -85,17 +84,21 @@ public class ManagerServiceImpl implements ManagerService {
         return new ResultUtil(ResultUtil.CODE_SUCCESS,ResultUtil.MSG_SUCCESS,emp);
     }
 
+
     /**
-     * 获取修改人员的信息
+     *修改 信息
+     * @param map
+     * @return
      */
+    @Transactional
     @Override
-    public Map<String, Object> postUpdateEmp(Integer eid) {
-        Map<String, Object> emp= managerMapper.postUpdateEmp(eid);
-        return null;
+    public ResultUtil updateEmp( Map map) {
+        //修改人员信息表信息
+         managerMapper.updateEmp(map);
+         //修改登录信息
+            managerMapper.updateLogin(map);
+        //修改角色信息
+            managerMapper.updateRole(map);
+            return new ResultUtil(ResultUtil.CODE_SUCCESS,ResultUtil.MSG_SUCCESS,null);
     }
-
-
-
-
-
 }

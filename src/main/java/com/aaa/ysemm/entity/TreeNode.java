@@ -1,5 +1,10 @@
 package com.aaa.ysemm.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
 import java.util.List;
 
 /**
@@ -10,13 +15,16 @@ import java.util.List;
  * @Date: 2019/7/19 20:30
  * @Version: 1.0
  */
+
 public class TreeNode {
     private Integer id;
     private String label;
     private Integer parentId;
-    private List<TreeNode> children;
+    private String parentName;
+    private List<TreeNode>  children;
     private String url;
-    private String addUsrName;
+    private String addUserName;
+    private Integer addID;
     private String addTime;
 
     public Integer getId() {
@@ -43,6 +51,14 @@ public class TreeNode {
         this.parentId = parentId;
     }
 
+    public String getParentName() {
+        return parentName;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
+
     public List<TreeNode> getChildren() {
         return children;
     }
@@ -59,12 +75,20 @@ public class TreeNode {
         this.url = url;
     }
 
-    public String getAddUsrName() {
-        return addUsrName;
+    public String getAddUserName() {
+        return addUserName;
     }
 
-    public void setAddUsrName(String addUsrName) {
-        this.addUsrName = addUsrName;
+    public void setAddUserName(String addUserName) {
+        this.addUserName = addUserName;
+    }
+
+    public Integer getAddID() {
+        return addID;
+    }
+
+    public void setAddID(Integer addID) {
+        this.addID = addID;
     }
 
     public String getAddTime() {
@@ -81,9 +105,11 @@ public class TreeNode {
                 "id=" + id +
                 ", label='" + label + '\'' +
                 ", parentId=" + parentId +
+                ", parentName='" + parentName + '\'' +
                 ", children=" + children +
                 ", url='" + url + '\'' +
-                ", addUsrName='" + addUsrName + '\'' +
+                ", addUserName='" + addUserName + '\'' +
+                ", addID=" + addID +
                 ", addTime='" + addTime + '\'' +
                 '}';
     }

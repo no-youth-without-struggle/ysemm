@@ -35,4 +35,19 @@ public class MD5Util {
         return map;
     }
 
+    /**
+     * 盐值+电话+密码
+     */
+
+    public static String addSaltMD5(String telephone, String password,String passwordSalt){
+        //加密方式
+        String hashAlgorithmName = "MD5";
+        //次数
+        int hashIterations = 1024;
+        ByteSource credentialsSalt = ByteSource.Util.bytes(passwordSalt);
+        //加密
+        Object obj = new SimpleHash(hashAlgorithmName, password, credentialsSalt, hashIterations);
+        String pass = obj.toString();
+        return pass;
+    }
 }
