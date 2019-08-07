@@ -20,5 +20,16 @@
         where telephone=#{telephone} and status=#{status}
     </select>
 
+    <!--验证用户的账号密码是否存在-->
+    <select id="getLogin" resultType="Login">
+    select lid,email,password,status,current_time from login
+    where email=#{email} and password=#{password} and status=1;
+    </select>
+    <!--根据用户id查询用户的角色信息-->
+    <select id="getRole" resultType="map">
+        select r.rid,r.rname from employee e INNER JOIN emp_role er on e.eid=er.eid INNER JOIN role r  on er.rid=r.rid where e.lid=1
+    </select>
+
+
 
 </mapper>

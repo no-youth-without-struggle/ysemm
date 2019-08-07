@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.css}" rel="stylesheet">
+<script th:src="@{/webjars/jquery/3.0.0/jquery.js}"></script>
+<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>放款管理</title>
+    <script>
+        //判断公司资金是否充足
+        function fkStudio(loan_id) {
+            $.ajax({
+                url:"/fk/queryZj?cid="+loan_id,
+                type:"GET",
+                dataType:"json",
+                success:function (data) {
+                   alert(data.result);
+                   window.location.href="huank.html";
+                }
+            });
+        }
+        //查询放款中的订单
+        function queryAll() {
+            $("#tbd").empty();
+            $.ajax({
+                url:"/fk/queryFK",
+                type:"GET",
+                dataType:"json",
+                success:function (msg) {
+                    for (var i = 0; i < msg.length; i++) {
+                        var emp=msg[i];
+                        /*alert(emp.loan_id);*/
+                        var tr="<tr>";
+                        tr+="<td>"+emp.cname+"</td>";
+                        tr+="<td>"+emp.loan_money+"</td>";
+                        tr+="<td>"+emp.status_name+"</td>";
+                        tr+="<td><input class='btn btn-primary' onclick='fkStudio("+emp.loan_id+")' type='button' value='放款'></td>";
+                        tr+="</tr>";
+                        $("#tbd").append(tr);
+                    }
+                }
+            });
+        }
+        $(function () {
+            queryAll(1);
+        });
+    </script>
+</head>
+<body>
+
+        <form class="form-inline">
+                <div class="form-group">
+                <label for="form1">公司名称：</label>
+                    <input type="text" class="form-control input-medium" style="width:150px;" id="form1" name="loancid">
+                </div>
+                <input class="btn btn-primary " type="button" value="查询" onclick="queryAll(1)">
+        </form>
+
+<table class="table table-bordered" style="text-align: center">
+    <tr>
+        <td>公司名称</td>
+        <td>贷款金额</td>
+        <td>审批状态</td>
+        <td>操&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;作</td>
+    </tr>
+    <tbody id="tbd"></tbody>
+</table>
+</body>
+</html>

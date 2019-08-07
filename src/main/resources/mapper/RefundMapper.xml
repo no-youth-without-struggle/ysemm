@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+        <!DOCTYPE mapper
+                PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+                "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aaa.ysemm.manage.dao.RefundDao">
+<select id="queryRefund" resultType="map">
+select re.rid,re.re_money reMoney,re.re_balance reBalace,re.toTime,re.nper nper,re.`status`,c.telephone,c.cid,c.cname,l.loan_type,l.loan_money from repayment re join
+loans l on re.lid=l.loan_id INNER JOIN company c on c.cid=l.loan_cid
+
+<where>
+    <if test="afterTime!=null and afterTime!=''">
+        and toTime  &lt; #{afterTime}
+    </if>
+    <if test="beforeTime!=null and beforeTime!=''">
+        and toTime  &gt; #{beforeTime}
+    </if>
+    <if test="cname!=null and cname!=''">
+        and cname like "%"#{cname}"%"
+    </if>
+</where>
+    limit #{start},#{pageSize}
+</select>
+
+        <select id="Page" resultType="int">
+       select count(*) from repayment re join
+loans l on re.lid=l.loan_id INNER JOIN company c on c.cid=l.loan_cid
+
+            <where>
+                <if test="afterTime!=null and afterTime!=''">
+                    and toTime  &lt; #{afterTime}
+                </if>
+                <if test="beforeTime!=null and beforeTime!=''">
+                    and toTime  &gt; #{beforeTime}
+                </if>
+                <if test="cname!=null and cname!=''">
+                    and cname like "%"#{cname}"%"
+                </if>
+            </where>
+    </select>
+
+</mapper>

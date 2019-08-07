@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace:命名空间：对应的dao接口的名字-->
+<mapper namespace="com.aaa.ysemm.manage.dao.ManagerMapper">
+    <resultMap id="getRole" type="map" autoMapping="true">
+        <id column="eid" property="eid"></id>
+        <collection property="empRole"  column="eid=eid" select="Role" javaType="list" autoMapping="true">
+            <id column="" property=""></id>
+        </collection>
+    </resultMap>
+    <select id="Role" resultType="map">
+       select r.rId,r.rname from role r INNER JOIN emp_role em  on r.rId=em.eid WHERE eid=#{eid}
+    </select>
+    <!--模糊分页查询人员信息-->
+    <select id="getEmp" resultMap="getRole">
+SELECT lo.email,lo.`password`,e.eid,e.ename,e.telephone,e.IDCard,e.email,e.address,e.birthday,e.hiredate,e.sex,e.`status`,d.deptId,d.dname from employee e INNER JOIN login lo on e.lid=lo.lid INNER JOIN department d on e.deptId=d.deptId
+  /*      SELECT e.eid,e.ename,e.telephone,e.IDCard,e.email,e.operator,e.operartor_id,e.operator_time,e.address,e.birthday,e.hiredate,e.sex,e.`status`,d.dname from employee e INNER JOIN department d on e.deptId=d.deptId*/
+            <include refid="likeEmp"></include>
+        limit #{page},#{count}
+    </select>
+    <!--模糊查询人员个数-->
+    <select id="getCount" resultType="int">
+        SELECT count(*) from employee e INNER JOIN department d on e.deptId=d.deptId
+        <include refid="likeEmp"></include>
+    </select>
+    <sql id="likeEmp">
+        <where>
+            <if test="name != null and name!=''">
+               and e.ename like concat('%',#{name},'%')
+            </if>
+            <if test="startDate !=null and startDate!=''">
+              and e.hiredate &lt; #{startDate}
+            </if>
+            <if test="endDate !=null and startDate !=''">
+                and e.hiredate &gt; #{endDate}
+            </if>
+        </where>
+    </sql>
+    <!--获取部门列表-->
+    <select id="getDepartment" resultType="department">
+        select deptId,dname,operator,operator_id operatorId,operator_time operatorTime from department
+    </select>
+    <!--获取角色列表-->
+    <select id="getRole" resultType="role">
+    select rId,rname,operator,operator_id operatorId,operator_time operatorTime from role
+    </select>
+    <!--添加用户的账号-->
+    <insert id="postLogin" keyProperty="lid" useGeneratedKeys="true" keyColumn="lid">
+        insert into login(email,password) values (#{email},#{password})
+    </insert>
+    <!--获取操作人的信息-->
+    <select id="getEmptor" resultType="Employee">
+        select eid,lid,ename from employee where lid=#{operatorId}
+    </select>
+    <!--添加用户信息-->
+    <insert id="postEmp" keyProperty="eid" useGeneratedKeys="true" keyColumn="eid">
+        insert into employee(lid,ename,IDCard,telephone,email,birthday,sex,deptId,operator,operator_id,operator_time,hiredate,address)
+        values (#{lid},#{ename},#{IDCard},#{telephone},#{email},#{birthday},#{sex},#{deptId},#{operator},#{operatorId},#{operatorTime},#{hiredate},#{address})
+    </insert>
+    <!--添加角色信息-->
+    <insert id="postRole">
+        insert into emp_role(eid,rid,operator,operator_id,operator_time) values(#{eid},#{rId},#{operator},#{operatorId},#{operatorTime})
+    </insert>
+    <!--获取修改人员的信息-->
+    <select id="postUpdateEmp" resultType="map">
+SELECT lo.email,lo.`password`,e.eid,e.ename,e.telephone,e.IDCard,e.email,e.operator,e.operator_id operatorId,e.operator_time operatorTime,e.address,e.birthday,e.hiredate,e.sex,e.`status`,d.dname from employee e INNER JOIN login lo on e.lid=lo.lid INNER JOIN department d on e.deptId=d.deptId WHERE e.eid=#{eid}
+    </select>
+</mapper>

@@ -65,7 +65,7 @@
 			},
 			success: function(result) {
 				if(result.status == 0) {
-					location = "index.html";
+					location = "register.html";
 				} else {
 					refCode();
 					$("#password").val("");
