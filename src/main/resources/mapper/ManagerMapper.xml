@@ -39,11 +39,11 @@ SELECT lo.email,lo.`password`,e.eid,e.ename,e.telephone,e.IDCard,e.email,e.addre
         </where>
     </sql>
     <!--获取部门列表-->
-    <select id="getDepartment" resultType="department">
+    <select id="getDepartment" resultType="com.aaa.ysemm.entity.Department">
         select deptId,dname,operator,operator_id operatorId,operator_time operatorTime from department
     </select>
     <!--获取角色列表-->
-    <select id="getRole" resultType="role">
+    <select id="getRole" resultType="com.aaa.ysemm.entity.Role">
     select rId,rname,operator,operator_id operatorId,operator_time operatorTime from role
     </select>
     <!--添加用户的账号-->
@@ -51,7 +51,7 @@ SELECT lo.email,lo.`password`,e.eid,e.ename,e.telephone,e.IDCard,e.email,e.addre
         insert into login(email,password) values (#{email},#{password})
     </insert>
     <!--获取操作人的信息-->
-    <select id="getEmptor" resultType="Employee">
+    <select id="getEmptor" resultType="com.aaa.ysemm.entity.Employee">
         select eid,lid,ename from employee where lid=#{operatorId}
     </select>
     <!--添加用户信息-->

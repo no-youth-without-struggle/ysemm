@@ -3,6 +3,7 @@ import com.aaa.ysemm.customer.entity.TreeNode;
 import com.aaa.ysemm.entity.Login;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.stereotype.Repository;
 
 
 import java.util.List;

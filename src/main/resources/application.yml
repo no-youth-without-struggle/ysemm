@@ -37,7 +37,7 @@ spring:
       prefix: /
 mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml
-  type-aliases-package: com.aaa.ysemm.customer.entity
+  type-aliases-package: com.aaa.ysemm.entity
 logging:
   level:
     com:
