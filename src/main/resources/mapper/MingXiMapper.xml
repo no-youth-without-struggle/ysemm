@@ -9,4 +9,30 @@
         insert into mingxi(cm_id,pay_type,pay_money,operator,operator_time,remark)
 VALUES(#{cid},#{type},#{reMoney},#{telephone},#{operatorTime},#{nper})
     </insert>
+    <!--客户资金明细查询-->
+    <select id="queryDetail" resultType="map">
+        select mx.id id,mx.operator operator,cp.client_name clientName,mx.pay_type payType,mx.pay_money payMoney,
+        mx.operator_time operatorTime,mx.remark remark  from mingxi mx join company cp on mx.cm_id=cp.cid
+        <where>
+            <if test="operator!=null and operator!=''">
+                and mx.operator like concat('%',#{operator},'%') or cp.client_name like concat('%',#{operator},'%')
+            </if>
+            <if test="money!=null and money!=''">
+                and mx.pay_type=#{money}
+            </if>
+       </where> and  mx.status=0 limit ${start},${pageSize}
+    </select>
+    <!--GROUP BY mx.operator-->
+    <!--明细表分页查询-->
+    <select id="queryDetailCount" resultType="int">
+        select COUNT(*)  from mingxi mx join company cp on mx.cm_id=cp.cid
+        <where>
+            <if test="operator!=null and operator!=''">
+                and mx.operator like concat('%',#{operator},'%') or cp.client_name like concat('%',#{operator},'%')
+            </if>
+            <if test="money!=null and money!=''">
+                and mx.pay_type=#{money}
+            </if>
+        </where> and  mx.status=0
+    </select>
 </mapper>

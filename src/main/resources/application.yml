@@ -24,7 +24,7 @@ spring:
       #max-file-size: 10MB
       #max-request-size: 100MB
   jackson:
-     date-format: yyyy-MM-dd HH:mm:ss
+     date-format: yyyy-MM-dd
      time-zone: GMT+8
   thymeleaf:
     mode: HTML
@@ -35,13 +35,9 @@ spring:
     view:
       suffix: .html
       prefix: /
-#      本地文件上传最大10MB
-  servlet:
-    multipart:
-      max-file-size: 10MB
 mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml
-  type-aliases-package: com.aaa.ysemm.entity
+  type-aliases-package: com.aaa.ysemm.customer.entity
 logging:
   level:
     com:

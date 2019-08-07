@@ -1,5 +1,6 @@
 package com.aaa.ysemm.customer.dao;
 
+import com.aaa.ysemm.customer.entity.UserLogin;
 import com.alibaba.druid.sql.ast.statement.SQLForeignKeyImpl;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -27,11 +28,11 @@ public interface RepaymentMapper {
     /**
      * 查询还款期限的信息 以及应还信息
      */
-    List<Map> queryHKQX2(Object obj);
+    List<Map> queryHKQX2(Integer uid);
     /**
      * 查询已经还款的 信息
      */
-    List<Map> queryAHKQX(Object obj);
+    List<Map> queryAHKQX(UserLogin obj);
     /**
      * 还款完之后修改用户的状态
      *

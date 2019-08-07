@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>资金管理明细查询</title>
+    <!--先引入vue.js库-->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!--axios-->
+    <script src="js/axios.min.js"></script>
+    <!--引入jquery-->
+    <script src="js/jquery3.3.1.min.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+</head>
+<body>
+<div id="detail">
+    <el-row>
+        <el-form :inline="true" :model="formInline" class="demo-form-inline">
+            <el-form-item label="公司查询">
+                <el-input v-model="formInline.operator" placeholder="请输入查询公司的名称或公司负责人名字"></el-input>
+            </el-form-item>
+            <el-form-item label="金额方式">
+                <el-select v-model="formInline.money" placeholder="金额方式">
+                    <el-option label="请选择" value=""></el-option>
+                    <el-option label="放款" value="放款"></el-option>
+                    <el-option label="还款" value="还款"></el-option>
+                    <el-option label="充值" value="充值"></el-option>
+                    <el-option label="提现" value="提现"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" @click="onSubmit">查询</el-button>
+                <el-button type="primary" @click="flush">刷新</el-button>
+                <!--<el-button type="primary" @click="toSave">添加</el-button>-->
+            </el-form-item>
+        </el-form>
+    </el-row>
+    <el-row>
+        <template>
+            <el-table
+                    :data="tableData"
+                    stripe
+                    style="width: 100%">
+                <el-table-column
+                        prop="id"
+                        label="公司名称"
+                        width="80">
+                </el-table-column>
+                <el-table-column
+                        prop="operator"
+                        label="公司名称"
+                        width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="clientName"
+                        label="客户名称"
+                        width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="name"
+                        label="客户名称"
+                        width="80">
+                </el-table-column>
+                <el-table-column
+                        prop="payType"
+                        label="运营状态"
+                        width="80">
+                </el-table-column>
+                <el-table-column
+                        prop="payMoney"
+                        label="贷款总金额"
+                        width="180">
+                </el-table-column>
+                <el-table-column
+                        prop="operatorTime"
+                        label="贷款时间"
+                        width="180">
+                </el-table-column> <el-table-column
+                    prop="remark"
+                    label="备注"
+                    width="80">
+            </el-table-column>
+                <el-table-column label="操作">
+                    <template slot-scope="scope">
+                        <!--<el-button-->
+                                <!--size="mini"-->
+                                <!--type="primary"-->
+                                <!--@click="handleEdit(scope.$index, scope.row)">编辑-->
+                        <!--</el-button>-->
+                        <el-button
+                                size="mini"
+                                type="danger"
+                                @click="handleDelete(scope.$index, scope.row)">删除这条记录
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </template>
+    </el-row>
+    <el-row>
+        <el-pagination
+                @size-change="handleSizeChange"
+                @current-change="handleCurrentChange"
+                :current-page="currentPage"
+                :page-sizes="[5,10,20,50, 100, 200, 300]"
+                :page-size="pageSize"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total">
+        </el-pagination>
+    </el-row>
+</div>
+<script>
+    var vue=new Vue({
+       el:'#detail',
+        data:{
+            tableData:[],
+            currentPage: 1,
+            pageSize: 5,
+            total: 0,
+            formInline: {
+                operator: '',
+                money:''
+            }
+        },created:function () {
+           //页面加载时显示数据
+           this.localData();
+        },methods:{
+           localData:function(){
+               var self=this;
+               //开始位置 （currentPage-1）*pageSize
+               var start = (this.currentPage - 1) * this.pageSize;
+               var operator=this.formInline.operator;
+               var money=this.formInline.money;
+               axios.post('/mingxi/queryDetale',{
+                   start: start,
+                   pageSize: this.pageSize,
+                   operator:operator,money:money})
+                   .then(function (response) {
+                       self.tableData=response.data.detail;
+                       self.total = response.data.total;
+                   });
+           },
+            handleSizeChange: function (val) {
+                this.pageSize = val;
+                this.localData();
+            },
+            handleCurrentChange: function (val) {
+                this.currentPage = val;
+                this.localData();
+            },//查询
+            onSubmit:function () {
+               this.localData();
+            },//刷新
+            flush:function () {
+                this.formInline.operator='';
+                this.formInline.money='';
+                this.localData();
+            },//删除本条记录
+            handleDelete: function (index, row) {
+                var self = this;
+                self.$confirm('此操作将永久删除该条数据, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(function () {
+                    axios.post("/mingxi/deleteRecord?id=" + row.id)
+                        .then(function (response) {
+                            //添加或者修改成功
+                            if (response.data.code == 200) {
+                                self.$message({
+                                    type: 'success',
+                                    message: '删除成功!'
+                                });
+                                //刷新页面
+                                self.localData();
+                            } else { //添加或者修改错误
+                                self.$message.error('错了哦， 操作错误');
+                            }
+                        })
+                }).catch(function () {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
+            }
+        }
+    });
+</script>
+</body>
+</html>

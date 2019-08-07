@@ -6,6 +6,7 @@ import com.aaa.ysemm.customer.service.MingXiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,4 +26,48 @@ public class MingXiServiceImpl implements MingXiService {
         mingXi.put("type","还款");
         return mingXiMapper.saveMingXi(mingXi);
     }
+
+    @Override
+    public Map queryLoan() {
+        Map map = mingXiMapper.queryLoan();
+        if (map!=null&&map.size()>0){
+            return map;
+        }
+        return null;
+    }
+
+    @Override
+    public Map queryBorrow() {
+        Map map = mingXiMapper.queryBorrow();
+        if (map!=null&&map.size()>0){
+            return map;
+        }
+        return null;
+    }
+
+    @Override
+    public List<Map> getDataA(Map map) {
+        return mingXiMapper.getDataA(map);
+    }
+
+    @Override
+    public List<Map> queryDetail(Map map) {
+        List<Map> detail = mingXiMapper.queryDetail(map);
+        if (detail!=null&&detail.size()>0){
+            return detail;
+        }
+        return null;
+    }
+
+    @Override
+    public int queryDetailCount(Map map) {
+        return mingXiMapper.queryDetailCount(map);
+    }
+
+    @Override
+    public int deleteRecord(Integer id) {
+        return mingXiMapper.deleteRecord(id);
+    }
+
+
 }
