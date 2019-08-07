@@ -10,7 +10,6 @@ import com.aaa.ysemm.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -71,7 +70,6 @@ public class ManagerServiceImpl implements ManagerService {
     @Transactional
     @Override
     public ResultUtil postEmp(Employee employee) {
-        System.out.println("map+++++++++++++++++++"+employee.toString());
         //添加用户账号
          managerMapper.postLogin(employee);
         //获取操作用户的信息

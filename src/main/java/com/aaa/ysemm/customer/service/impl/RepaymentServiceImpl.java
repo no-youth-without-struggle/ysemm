@@ -2,7 +2,7 @@ package com.aaa.ysemm.customer.service.impl;
 
 import com.aaa.ysemm.customer.dao.RepaymentMapper;
 import com.aaa.ysemm.customer.entity.MingXi;
-import com.aaa.ysemm.customer.entity.UserLogin;
+import com.aaa.ysemm.entity.UserLogin;
 import com.aaa.ysemm.customer.service.RepaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

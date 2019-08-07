@@ -22,7 +22,7 @@
     </select>
     <!--模糊查询人员个数-->
     <select id="getCount" resultType="int">
-        SELECT count(*) from employee e INNER JOIN department d on e.deptId=d.deptId
+        SELECT count(*) from employee e INNER JOIN emp_role er on e.eid=er.eid INNER JOIN role r on r.rId=er.rid INNER JOIN login lo on e.lid=lo.lid INNER JOIN department d on e.deptId=d.deptId
         <include refid="likeEmp"></include>
     </select>
     <sql id="likeEmp">

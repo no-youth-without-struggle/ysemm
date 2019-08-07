@@ -2,8 +2,7 @@ package com.aaa.ysemm.customer.controller;
 
 
 import com.aaa.ysemm.customer.dao.CusManageMapper;
-import com.aaa.ysemm.customer.entity.MingXi;
-import com.aaa.ysemm.customer.entity.UserLogin;
+import com.aaa.ysemm.entity.UserLogin;
 import com.aaa.ysemm.customer.service.MingXiService;
 import com.aaa.ysemm.customer.service.MoneyManageService;
 import com.aaa.ysemm.customer.service.RepaymentService;

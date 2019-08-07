@@ -1,5 +1,4 @@
 package com.aaa.ysemm.customer.service.impl;
-
 import com.aaa.ysemm.customer.dao.CusLoginMapper;
 import com.aaa.ysemm.entity.UserLogin;
 import com.aaa.ysemm.customer.service.CusLoginService;
@@ -24,8 +23,6 @@ import java.util.Map;
 public class CusLoginServiceImpl implements CusLoginService {
     @Autowired
     private CusLoginMapper loginMapper;
-    //短信验证码
-    String code=null;
     /**
      * 判断用户是否存在
      * @param telephone
@@ -76,7 +73,6 @@ public class CusLoginServiceImpl implements CusLoginService {
      */
     @Override
     public UserLogin getSubmitLoin(Map map) {
-        System.out.println("tttttttttt"+map);
         UserLogin submitLoin = loginMapper.getSubmitLoin(map);
         System.out.println("submit"+submitLoin);
         return submitLoin;
