@@ -3,6 +3,8 @@ package com.aaa.ysemm.customer.dao;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
+import java.util.Map;
+
 /**
  * fileName:CusManageMapper
  * description:
@@ -15,6 +17,6 @@ public interface CusManageMapper {
     /**
      *个人账户金额减去 还款金额
      */
-    @Update("update customer_manager set total_money=total_money-#{reMoney} where id=1")
-    int updateMoney(Object reMoney);
+    @Update("update customer_manager set total_money=total_money-#{reMoney} where uid=#{uid}")
+    int updateMoney(Map map);
 }

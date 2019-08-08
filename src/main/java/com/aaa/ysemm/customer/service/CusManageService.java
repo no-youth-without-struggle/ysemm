@@ -2,6 +2,8 @@ package com.aaa.ysemm.customer.service;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
+
 /**
  * fileName:CusManageService
  * description:
@@ -13,5 +15,5 @@ public interface CusManageService {
     /**
      *个人账户金额减去 还款金额
      */
-    int updateMoney(Object reMoney);
+    int updateMoney(Map map);
 }

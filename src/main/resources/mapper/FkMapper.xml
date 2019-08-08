@@ -6,7 +6,7 @@
 
 <mapper namespace="com.aaa.ysemm.manage.dao.FkMapper">
     <!--size 缓存个数-->
-    <cache type="org.mybatis.caches.redis.RedisCache" size="1024" flushInterval="0" readOnly="true" eviction="FIFO"></cache>
+    <!--<cache type="org.mybatis.caches.redis.RedisCache" size="1024" flushInterval="0" readOnly="true" eviction="FIFO"></cache>-->
 
     <!--<resultMap id="BaseResultMap" type="com.aaa.test.entity.Fk">-->
         <!--<result column="loan_cid" jdbcType="INTEGER" property="loancid" />-->

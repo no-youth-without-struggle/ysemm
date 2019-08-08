@@ -111,19 +111,25 @@ public class RepaymentController {
         return map;
     }
     @RequestMapping("pub")
-    public Object p(@RequestBody Map map){
+    public Object p(@RequestBody Map map,HttpSession session){
+        //获取登陆里面的 登陆账号的信息
+        UserLogin emp = (UserLogin) session.getAttribute("emp");
+        Integer uid = emp.getUid();
+        map.put("uid",uid);
         //获取当前系统时间
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String format = dateFormat.format(new Date());
+        map.put("telephone",map.get("cname"));
         map.put("operatorTime",format);
         Object reMoney = map.get("reMoney");
+        Object uid1 = map.get("uid");
+        System.out.println(uid1+"sda"+reMoney);
         Object rid = map.get("rid");
         repayService.updateRepaymentStatus(rid);
         //添加到明细表
         mingXiService.saveMingXi(map);
         //个人账户总金额 减去还款的金额
-        System.out.println("得到的公司金额。。。。。"+reMoney);
-        cusManageMapper.updateMoney(reMoney);
+        cusManageMapper.updateMoney(map);
         //总金额加上还款金额
         moneyManageService.updateManageMoney(reMoney);
         return map;

@@ -5,7 +5,7 @@
 <!--namespace:命名空间：对应的dao接口的名字-->
 <mapper namespace="com.aaa.ysemm.manage.dao.ManagerMapper">
     <!--size 缓存个数-->
-    <cache type="org.mybatis.caches.redis.RedisCache" size="1024" flushInterval="0" readOnly="true" eviction="FIFO"></cache>
+    <!--<cache type="org.mybatis.caches.redis.RedisCache" size="1024" flushInterval="0" readOnly="true" eviction="FIFO"></cache>-->
    <!-- <resultMap id="getRole" type="map" autoMapping="true">
         <id column="eid" property="eid"></id>
         <collection property="empRole"  column="eid=eid" select="Role" javaType="list" autoMapping="true">

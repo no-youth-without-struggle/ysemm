@@ -5,11 +5,11 @@
 <!--namespace:命名空间：对应的dao接口的名字-->
 <mapper namespace="com.aaa.ysemm.customer.dao.WithdrawMapper">
     <!--size 缓存个数-->
-    <cache type="org.mybatis.caches.redis.RedisCache" size="1024" flushInterval="0" readOnly="true" eviction="FIFO"></cache>
+    <!--<cache type="org.mybatis.caches.redis.RedisCache" size="1024" flushInterval="0" readOnly="true" eviction="FIFO"></cache>-->
     <!--查询登录人账户的剩余金额-->
     <select id="queryMoney" resultType="map">
         select cp.cid cid,cp.cname cname,ul.uid uid,ul.telephone telephone,cm.operator operator,cm.total_money totalMoney from customer_manager cm join user_login ul
-          ON cm.id=ul.uid join company cp on cp.uid=ul.uid
+          ON  cm.uid=ul.uid  join company cp on cp.uid=ul.uid
 where ul.uid=#{uid} and  ul.status=1
     </select>
     <!--充值账户金额-->
