@@ -42,5 +42,4 @@ public interface RepaymentMapper {
      * 通过登录的账号判断账户金额是否能够还的本期的贷款
      */
     Map queryCM(Object uid);
-
 }

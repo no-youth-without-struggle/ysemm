@@ -24,7 +24,6 @@ loans l on re.lid=l.loan_id INNER JOIN company c on c.cid=l.loan_cid
         <select id="Page" resultType="int">
        select count(*) from repayment re join
 loans l on re.lid=l.loan_id INNER JOIN company c on c.cid=l.loan_cid
-
             <where>
                 <if test="afterTime!=null and afterTime!=''">
                     and toTime  &lt; #{afterTime}

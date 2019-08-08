@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace:命名空间：对应的dao接口的名字-->
+<mapper namespace="com.aaa.ysemm.customer.dao.WithdrawMapper">
+    <!--查询登录人账户的剩余金额-->
+    <select id="queryMoney" resultType="map">
+        select cp.cid cid,cp.cname cname,ul.uid uid,ul.telephone telephone,cm.operator operator,cm.total_money totalMoney from customer_manager cm join user_login ul
+          ON cm.id=ul.uid join company cp on cp.uid=ul.uid
+where ul.uid=#{uid} and  ul.status=1
+    </select>
+    <!--充值账户金额-->
+    <update id="updateMoney" parameterType="map">
+        update customer_manager set total_money=#{totalMoney} where uid=#{uid}
+    </update>
+    <!--账户金额提现-->
+    <update id="deleteMoney" parameterType="map">
+        update customer_manager set total_money=#{totalMoney} where uid=#{uid}
+    </update>
+</mapper>

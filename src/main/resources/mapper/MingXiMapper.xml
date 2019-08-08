@@ -5,7 +5,7 @@
 <!--namespace:命名空间：对应的dao接口的名字-->
 <mapper namespace="com.aaa.ysemm.customer.dao.MingXiMapper">
     <!--保存数据到明细表-->
-    <insert id="saveMingXi" parameterType="map">
+    <insert id="saveMingXi">
         insert into mingxi(cm_id,pay_type,pay_money,operator,operator_time,remark)
 VALUES(#{cid},#{type},#{reMoney},#{telephone},#{operatorTime},#{nper})
     </insert>

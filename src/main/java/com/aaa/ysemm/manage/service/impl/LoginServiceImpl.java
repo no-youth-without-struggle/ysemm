@@ -4,7 +4,6 @@ import com.aaa.ysemm.manage.dao.LoginDao;
 import com.aaa.ysemm.entity.Login;
 import com.aaa.ysemm.manage.service.LoginService;
 import com.aaa.ysemm.util.PasswordHelper;
-import com.aaa.ysemm.util.ResultUtil;
 import com.aaa.ysemm.util.TreeNodeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

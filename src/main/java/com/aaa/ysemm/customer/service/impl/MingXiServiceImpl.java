@@ -23,8 +23,16 @@ public class MingXiServiceImpl implements MingXiService {
     @Override
     public int saveMingXi(Map mingXi) {
         System.out.println(mingXi+"sdsssssssss");
+        String remark = (String) mingXi.get("nper");
         mingXi.put("type","还款");
-        return mingXiMapper.saveMingXi(mingXi);
+        if (remark.equals("充值金额")){
+            mingXi.put("type","充值");
+        }
+        if (remark.equals("提现金额")){
+            mingXi.put("type","提现");
+        }
+        int i = mingXiMapper.saveMingXi(mingXi);
+        return i;
     }
 
     @Override
