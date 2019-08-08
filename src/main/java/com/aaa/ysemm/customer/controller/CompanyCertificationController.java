@@ -43,7 +43,7 @@ public class CompanyCertificationController {
 
 //上传图片，调用身份证ocr，添加数据库
     @RequestMapping("/upload")
-    public void upload(@RequestParam MultipartFile face_IDCard,HttpSession session) throws IOException {
+    public void upload(@RequestBody MultipartFile face_IDCard,HttpSession session) throws IOException {
 //        调用base64加密face_IDCard
         BASE64Encoder base64Encoder= new  BASE64Encoder();
         String encode = base64Encoder.encode(face_IDCard.getBytes());
