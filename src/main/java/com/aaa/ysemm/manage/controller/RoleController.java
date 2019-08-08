@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession;
  * versoin:1.0.0
  */
 @RestController
-@RequestMapping("role")
+@RequestMapping("/role")
 public class RoleController {
 
     @Autowired
@@ -27,7 +27,7 @@ public class RoleController {
      * 获取角色角色菜单树数据
      * @return
      */
-    @RequestMapping("tree")
+    @RequestMapping("/tree")
     public Object tree(){
         return roleService.getPowerTreeData();
     }
@@ -37,7 +37,7 @@ public class RoleController {
      * @param powerId
      * @return
      */
-    @RequestMapping("getPowerById")
+    @RequestMapping("/getPowerById")
     public Object getPowerById(Integer powerId){
         return roleService.getPowerById(powerId);
     }
@@ -47,7 +47,7 @@ public class RoleController {
      * @param treeNode
      * @return
      */
-    @RequestMapping("save")
+    @RequestMapping("/save")
      public Object save(@RequestBody TreeNode treeNode, HttpSession session){
          return roleService.save(treeNode,session);
      }
@@ -57,7 +57,7 @@ public class RoleController {
      * @param treeNode
      * @return
      */
-    @RequestMapping("update")
+    @RequestMapping("/update")
      public Object update(@RequestBody TreeNode treeNode){
         return roleService.update(treeNode);
      }
@@ -67,7 +67,7 @@ public class RoleController {
      * @param id
      * @return
      */
-    @RequestMapping("delete")
+    @RequestMapping("/delete")
      public Object delete(Integer id){
            return roleService.delete(id);
      }
@@ -77,7 +77,7 @@ public class RoleController {
      * @param roleId
      * @return
      */
-     @RequestMapping("getPowersByRoleId")
+     @RequestMapping("/getPowersByRoleId")
     public Object getPowersByRoleId(Integer roleId){
          return roleService.getPowersByRoleId(roleId);
      }

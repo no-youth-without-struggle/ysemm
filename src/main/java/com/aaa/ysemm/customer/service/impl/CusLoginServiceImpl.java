@@ -7,6 +7,7 @@ import com.aaa.ysemm.util.RandomStringUtil;
 import com.aaa.ysemm.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.Map;
@@ -43,6 +44,7 @@ public class CusLoginServiceImpl implements CusLoginService {
      * @param userLogin
      * @return
      */
+    @Transactional
     @Override
     public ResultUtil postForm(UserLogin userLogin) {
         //获取用户名、密码
@@ -60,6 +62,8 @@ public class CusLoginServiceImpl implements CusLoginService {
         userLogin.setUsername(username);
         //将用户信息添加到数据库
         int status=loginMapper.postForm(userLogin);
+        //添加用户的账户信息
+        loginMapper.postCusFund(userLogin);
         if (status>0){
             return new ResultUtil(200,"创建成功",null);
         }

@@ -1,10 +1,9 @@
-package com.aaa.ysemm.customer.controller;
+package com.aaa.ysemm.manage.controller;
 
-import com.aaa.ysemm.customer.service.FkService;
+import com.aaa.ysemm.manage.service.FkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +13,8 @@ public class FKController {
     @Autowired
     private FkService fkService;
 
-    @RequestMapping("/queryFK")
+    @GetMapping("/queryFK")
+    @ResponseBody
     public List<Map> queryFK(){
         List<Map> map=fkService.queryFK();
         return map;
@@ -26,7 +26,8 @@ public class FKController {
      * @param
      * @return
      */
-    @RequestMapping("/queryZj")
+    @GetMapping("/queryZj")
+    @ResponseBody
     public Map queryZj(Integer cid){
         Map result= fkService.loanMoney(cid);
         return result;

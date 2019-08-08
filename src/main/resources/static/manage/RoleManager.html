@@ -119,11 +119,11 @@
         },
         created:function(){
             var self=this;
-            axios.post("/demo4/role/tree", this.form)
+            axios.post("/role/tree", this.form)
                 .then(function (response) {
                     self.treeData=response.data;
                 })
-            axios.post("/demo4/power/tree", this.form)
+            axios.post("/Permission/getTree", this.form)
                 .then(function (response) {
                     self.powerTreeData=response.data;
                 })
@@ -138,11 +138,11 @@
                     this.idIsShow=true;
                     this.form.submitBtn='修改';
                     _this.checkedKeys=[];
-                    axios.post("/demo4/power/tree", this.form)
+                    axios.post("/Permission/tree", this.form)
                         .then(function (response) {
                             _this.powerTreeData=response.data;
 
-                            axios.post("/demo4/role/getPowersByRoleId?roleId="+data.id)
+                            axios.post("/role/getPowersByRoleId?roleId="+data.id)
                                 .then(function (response) {
                                     alert(response.data);
                                     alert(JSON.stringify(response.data));
@@ -170,9 +170,9 @@
             onSubmit:function(){
                 var reqUrl="";
                 if(this.idIsShow){
-                    reqUrl="/demo4/role/update";
+                    reqUrl="/role/update";
                 }else{
-                    reqUrl="/demo4/role/save";
+                    reqUrl="/role/save";
                 }
                 var _this=this;
                 axios.post(reqUrl, this.form)
@@ -201,7 +201,7 @@
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(function() {
-                        axios.post("/demo4/role/delete?id="+_this.form.id)
+                        axios.post("/role/delete?id="+_this.form.id)
                             .then(function (response) {
                                 if(response.data==1){
                                     _this.$message({

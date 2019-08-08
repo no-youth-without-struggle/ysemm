@@ -28,7 +28,7 @@ public class RepaymentServiceImpl implements RepaymentService {
     }
 
     @Override
-    public List<Map> queryHKQX(Object obj) {
+    public List<Map> queryHKQX(UserLogin obj) {
         List<Map> mapList = repaymentMapper.queryHKQX(obj);
         System.out.println("map"+mapList);
         return mapList;

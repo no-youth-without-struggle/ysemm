@@ -56,9 +56,9 @@ public class RepaymentController {
      *还款信息查询
      */
     @RequestMapping("queryHKQX")
-    public List<Map> queryHKQX(Object obj, HttpServletRequest request){
+    public List<Map> queryHKQX(Object obj, HttpSession session){
         //获取登陆里面的 登陆账号的信息
-        Object emp = request.getSession().getAttribute("emp");
+        UserLogin emp = (UserLogin) session.getAttribute("emp");
 //        通过信息查询当前账户的还款余额
         List<Map> queryHKQX = repayService.queryHKQX(emp);
         if (queryHKQX!=null&&queryHKQX.size()>0){

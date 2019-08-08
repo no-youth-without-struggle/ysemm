@@ -9,7 +9,7 @@
         select uid from user_login where telephone=#{telephone}
     </select>
     <!--添加注册用户-->
-    <insert id="postForm">
+    <insert id="postForm" keyColumn="uid" useGeneratedKeys="true" keyProperty="uid">
         insert into user_login(username,telephone,password,password_salt,time)
         values (#{username},#{telephone},#{password},#{passwordSalt},#{time})
     </insert>
@@ -19,16 +19,11 @@
         select uid,username,telephone,password,password_salt passwordSalt,status,time,pay_password payPassword from user_login
         where telephone=#{telephone} and status=#{status}
     </select>
+    <!--添加用户的账户信息-->
+    <insert id="postCusFund">
+        insert into customer_manager(uid,total_money,remark) values(#{uid},0,"总金额")
+    </insert>
 
-  <!--  &lt;!&ndash;验证用户的账号密码是否存在&ndash;&gt;
-    <select id="getLogin" resultType="Login">
-    select lid,email,password,status,current_time from login
-    where email=#{email} and password=#{password} and status=1;
-    </select>
-    &lt;!&ndash;根据用户id查询用户的角色信息&ndash;&gt;
-    <select id="getRole" resultType="map">
-        select r.rid,r.rname from employee e INNER JOIN emp_role er on e.eid=er.eid INNER JOIN role r  on er.rid=r.rid where e.lid=1
-    </select>-->
 
 
 

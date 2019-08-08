@@ -1,5 +1,6 @@
 package com.aaa.ysemm.manage.service.impl;
 
+import com.aaa.ysemm.entity.Login;
 import com.aaa.ysemm.entity.TreeNode;
 import com.aaa.ysemm.manage.dao.RoleDao;
 import com.aaa.ysemm.manage.service.RoleService;
@@ -88,6 +89,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public int save(TreeNode treeNode,HttpSession session) {
        // treeNode.setAddUserName(((Map)session.getAttribute("emp")).get("username")+"");
+        Login login = (Login) session.getAttribute("login");
         String nodeIds = treeNode.getUrl();//1,7,8,2,9,10
         String[] nodeIdsArr = nodeIds.split(",");
         System.out.println("................selectKey赋值之前:" +treeNode.getId());

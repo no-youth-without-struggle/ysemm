@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>二审审核</title>
+</head>
+<script src="vue/js/vue.js"></script>
+<script src="vue/js/index.js"></script>
+<script src="vue/js/axios.js"></script>
+<link rel="stylesheet" href="vue/css/index.css">
+
+<style>
+    .demo-table-expand {
+        font-size: 0;
+    }
+    .demo-table-expand label {
+        width: 90px;
+        color: #99a9bf;
+    }
+    .demo-table-expand .el-form-item {
+        margin-right: 0;
+        margin-bottom: 0;
+        width: 50%;
+    }
+</style>
+<body>
+<div id="app">
+    <el-form :inline="true" :model="formInline" class="demo-form-inline">
+        <el-form-item label="用户名">
+            <el-input v-model="formInline.name" placeholder="用户名"style="width: 150px;"></el-input>
+        </el-form-item>
+        <el-form-item label="开始时间">
+            <el-date-picker type="date" placeholder="选择日期" v-model="formInline.startDate" style="width: 150px;"></el-date-picker>
+        </el-form-item>
+        <el-form-item label="结束时间">
+            <el-date-picker type="date" placeholder="选择日期" v-model="formInline.endDate" style="width: 150px;"></el-date-picker>
+        </el-form-item>
+        <el-form-item>
+            <el-button type="primary" @click="selectEmp">查询</el-button>
+        </el-form-item>
+    </el-form>
+    <!--表单数据-->
+
+    <template>
+        <el-table
+                :data="tableData"
+                style="width: 100%">
+            <el-table-column type="expand">
+                <template slot-scope="props">
+                    <el-form label-position="left" inline class="demo-table-expand">
+                        <el-form-item label="抵押物品名称">
+                            <span>{{ props.row.pledgeName }}</span>
+                        </el-form-item>
+                        <el-form-item label="抵押物品类型">
+                            <span>{{ props.row.pledgeType }}</span>
+                        </el-form-item>
+                        <el-form-item label="抵押物品估值">
+                            <span>{{ props.row.valuation }}</span>
+                        </el-form-item>
+                        <el-form-item label="抵押物品描述">
+                            <span>{{ props.row.description }}</span>
+                        </el-form-item>
+                        <el-form-item label="还款类型">
+                            <span>{{ props.row.repaymentType }}</span>
+                        </el-form-item>
+                        <el-form-item label="还款利率">
+                            <span>{{ props.row.repaymentRate }}</span>
+                        </el-form-item>
+                        <el-form-item label="还款期数">
+                            <span>{{ props.row.repaymentTime }}</span>
+                        </el-form-item>
+                    </el-form>
+                </template>
+            </el-table-column>
+            <el-table-column
+                    label="借款单号"
+                    prop="loanId">
+            </el-table-column>
+            <el-table-column
+                    label="企业名称"
+                    prop="cname">
+            </el-table-column>
+            <el-table-column
+                    label="法人姓名"
+                    prop="pname">
+            </el-table-column>
+            <el-table-column
+                    label="性别"
+                    prop="sex">
+            </el-table-column>
+            <el-table-column
+                    label="贷款类型"
+                    prop="loan_type">
+            </el-table-column>
+            <el-table-column
+                    label="还款类型"
+                    prop="repaymentType">
+            </el-table-column>
+            <el-table-column
+                    label="借款金额"
+                    prop="loanMoney">
+            </el-table-column>
+            <el-table-column
+                    label="借款状态"
+                    prop="loansStatus">
+            </el-table-column>
+            <el-table-column
+                    label="申请时间"
+                    prop="applyTime">
+            </el-table-column>
+            <el-table-column label="操作" width="300">
+                <template slot-scope="scope">
+                    <el-button
+                            size="mini"
+                            type="danger"
+                            click="handleDelete(scope.$index, scope.row)">通过</el-button>
+                   <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">驳回</el-button>
+                    <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">通过</el-button>-->
+                    <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
+                    <el-button
+                            size="mini"
+                            type="danger"
+                            click="handleDelete(scope.$index, scope.row)">驳回</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </template>
+
+    <!--分页-->
+    <div class="block">
+        <el-pagination background @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="formInline.page"
+                       :page-sizes="[5, 10, 15, 20]" :page-size="5" layout="total, sizes, prev, pager, next, jumper" :total="counts">
+        </el-pagination>
+    </div>
+    <script>
+        var app = new Vue({
+            el:"#app",
+            data:{
+                tableData: [],
+                counts:'',//总数
+                formInline:{
+                    name:'',
+                    startDate:'',
+                    endDate:'',
+                    page:1,
+                    count:5,
+                },
+            },
+            methods:{
+                //修改
+           handleEdit:function(index, row) {
+                    this.title="修改信息";
+                    app.centerDialogVisible=true;
+                    this.emp=row;
+                    this.form=this.emp;
+                },
+                //查询
+                selectEmp:function () {
+                    load();
+                },
+                //添加
+                handleSizeChange:function(val) {//当前每页个数
+                    app.formInline.count=val;
+                    app.formInline.page=1;
+                    load();
+                },
+                handleCurrentChange:function(val) {//当前页数
+                    app.formInline.page=val;
+                    load();
+                },
+            }
+        });
+
+
+        /**
+         *分页+模糊搜索
+         */
+        function load(){
+            axios.post("/secondAudit/getCompany",app.formInline)
+                .then(function (value) {
+                    app.tableData=value.data.borrow;
+                    app.counts=value.data.count;
+                });
+        }
+        load();
+    </script>
+</div>
+</body>
+
+</html>

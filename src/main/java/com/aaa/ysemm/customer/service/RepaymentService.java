@@ -24,7 +24,7 @@ public interface RepaymentService {
     /**
      * 查询还款期限的信息 以及应还信息
      */
-    List<Map> queryHKQX(Object obj);
+    List<Map> queryHKQX(UserLogin obj);
     /**
      * 查询还款期限的信息 以及应还信息
      */

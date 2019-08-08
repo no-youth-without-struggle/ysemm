@@ -1,7 +1,7 @@
-package com.aaa.ysemm.customer.service.impl;
+package com.aaa.ysemm.manage.service.impl;
 
-import com.aaa.ysemm.customer.dao.FkMapper;
-import com.aaa.ysemm.customer.service.FkService;
+import com.aaa.ysemm.manage.dao.FkMapper;
+import com.aaa.ysemm.manage.service.FkService;
 import com.aaa.ysemm.util.AverageCapitalPlusInterestUtils;
 import com.aaa.ysemm.util.AverageCapitalUtils;
 import com.aaa.ysemm.util.DateUtil;

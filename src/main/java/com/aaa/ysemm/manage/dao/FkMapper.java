@@ -1,4 +1,4 @@
-package com.aaa.ysemm.customer.dao;
+package com.aaa.ysemm.manage.dao;
 
 import com.aaa.ysemm.customer.entity.Loans;
 
