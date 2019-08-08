@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>放还款管理</title>
+    <title>资金管理</title>
     <!-- 引入 echarts.js -->
     <script src="js/echarts.min.js"></script>
     <script src="js/jquery3.3.1.min.js"></script>
@@ -39,23 +39,6 @@
 年
 <select id="year">
 </select>
-月
-<select id="month">
-    <option value="0" >请选择</option>
-    <option value="01">1</option>
-    <option value="02">2</option>
-    <option value="03">3</option>
-    <option value="04">4</option>
-    <option value="05">5</option>
-    <option value="06">6</option>
-
-    <option value="07">7</option>
-    <option value="08">8</option>
-    <option value="09">9</option>
-    <option value="10">10</option>
-    <option value="11">11</option>
-    <option value="12">12</option>
-</select>
 <div id="main" style="width: 600px;height:400px;"></div>
 <script type="text/javascript">
     // 基于准备好的dom，初始化echarts实例
@@ -64,37 +47,34 @@
     var sjVal=[];
     var currentYear =new Date().getFullYear();
 
-
-    getData(currentYear,0);
-    function getData(year,month) {
+    getData(currentYear);
+    function getData(year) {
         $.ajax({
-            url: "/mingxi/getDataA",
+            url: "/mingxi/profit",
             type: "post",
-            data: {year: year, month: month},
+            data: {year: year},
             dataType: "json",
             // async: false,//同步操作
             success: function (data) {
                 var xData=[];
                 var yData1=[];
-                var yData2=[];
                 // alert(data.year+","+data.month);
                 for (var i = 0; i < data.length; i++) {
                     var obj = data[i];
                     xData.push(obj.months);
-                    yData1.push(obj.hk);
-                    yData2.push(obj.fk);
+                    yData1.push(obj.money);
                 }
                 // 指定图表的配置项和数据
                 var option = {
                     title : {
-                        text: '网站资金统计',
+                        text: '利润资金统计',
                         subtext: '真实数据'
                     },
                     tooltip : {
                         trigger: 'axis'
                     },
                     legend: {
-                        data:['还款','放款']
+                        data:['利润']
                     },
                     toolbox: {
                         show : true,
@@ -119,7 +99,7 @@
                     ],
                     series : [
                         {
-                            name:'还款',
+                            name:'利润',
                             type:'bar',
                             data:yData1,
                             markPoint : {
@@ -131,22 +111,6 @@
                             markLine : {
                                 data : [
                                     {type : 'average', name: '平均值'}
-                                ]
-                            }
-                        },
-                        {
-                            name:'放款',
-                            type:'bar',
-                            data:yData2,
-                            markPoint : {
-                                data : [
-                                    {type : 'max', name: '最大值'},
-                                    {type : 'min', name: '最小值'}
-                                ]
-                            },
-                            markLine : {
-                                data : [
-                                    {type : 'average', name : '平均值'}
                                 ]
                             }
                         }/*,

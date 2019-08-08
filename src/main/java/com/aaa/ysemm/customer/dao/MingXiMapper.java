@@ -68,4 +68,10 @@ public interface MingXiMapper {
      */
     @Update("update mingxi set STATUS=1 where id=#{id}")
     int deleteRecord(Integer id);
+    /**
+     * 按年统计利润
+     */
+    @Select("select DATE_FORMAT(toTime,'%Y-%m') as months,ifnull(sum(re_rate_money),0) as money from repayment \n" +
+            " where DATE_FORMAT(toTime,'%Y')=#{year} group by DATE_FORMAT(toTime,'%Y-%m') ORDER BY  DATE_FORMAT(toTime,'%Y-%m')")
+    List<Map> getProfit(Map map);
 }
