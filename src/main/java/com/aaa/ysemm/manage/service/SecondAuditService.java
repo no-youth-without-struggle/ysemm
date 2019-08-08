@@ -1,6 +1,8 @@
 package com.aaa.ysemm.manage.service;
 
+import com.aaa.ysemm.entity.Login;
 import com.aaa.ysemm.manage.entity.PageUtil;
+import com.aaa.ysemm.util.ResultUtil;
 
 import java.util.Map;
 
@@ -14,4 +16,8 @@ import java.util.Map;
  */
 public interface SecondAuditService {
     Map<String, Object> getCompany(PageUtil page);
+
+    ResultUtil handleSuccess(Map map, Login login);
+
+    ResultUtil handleFail(Map map, Login login);
 }

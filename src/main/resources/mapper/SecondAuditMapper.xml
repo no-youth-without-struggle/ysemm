@@ -4,14 +4,16 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--namespace:命名空间：对应的dao接口的名字-->
 <mapper namespace="com.aaa.ysemm.manage.dao.SecondAuditMapper">
+    <!--size 缓存个数-->
+    <cache type="org.mybatis.caches.redis.RedisCache" size="1024" flushInterval="0" readOnly="true" eviction="FIFO"></cache>
     <!--获取用户的借款详情-->
     <select id="getCompany" resultType="map">
       select co.uid,co.cname,co.pname,co.email,co.IDCard,co.telephone,co.sex,co.phone,
 co.business_license businessLicense, co.nature,co.address,co.bankCard,co.bankType,co.face_IDCard,co.reverse_IDCard,
 lo.loan_id loanId,lo.loan_money loanMoney,lo.loan_type loanType,lo.apply_time applyTime,lo.repayment_time repaymentTime,
 lo.repayment_rate repaymentRate,lo.repayment_type repaymentType,lo.loans_status loansStatus,
- pl.pledge_name pledgeName,pl.valuation,pl.pledge_type pledgeType,pl.description
-  from loans lo left JOIN company co on co.cid=lo.loan_cid left JOIN pledge pl on pl.id=lo.loan_cid
+pl.pledge_name pledgeName,pl.valuation,pl.pledge_type pledgeType,pl.description
+  from loans lo left JOIN company co on co.cid=lo.loan_cid left JOIN pledge pl on pl.id=lo.pledge_id
  <include refid="sqlBorrow"></include>
  limit #{page},#{count}
     </select>
@@ -29,7 +31,17 @@ lo.repayment_rate repaymentRate,lo.repayment_type repaymentType,lo.loans_status 
         </where>
     </sql>
     <select id="getCount" resultType="int">
-        select count(*) from loans lo left JOIN company co on co.cid=lo.loan_cid left JOIN pledge pl on pl.id=lo.loan_cid
+        select count(*) from loans lo left JOIN company co on co.cid=lo.loan_cid left JOIN pledge pl on pl.id=lo.pledge_id
         <include refid="sqlBorrow"></include>
     </select>
+    <!--通过审核-->
+    <update id="handleSuccess">
+      update loans set loans_status=#{loansType},auditor_two=#{operator},auditor_two_id=#{operatorid},auditor_two_time=#{operatorTime}
+      where loan_id=#{loanId}
+    </update>
+    <!--驳回-->
+    <update id="handleFail">
+      update loans set loans_status=#{loansType},auditor_two=#{operator},auditor_two_id=#{operatorid},auditor_two_time=#{operatorTime}
+      where loan_id=#{loanId}
+    </update>
 </mapper>
