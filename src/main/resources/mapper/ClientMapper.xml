@@ -3,9 +3,10 @@
                 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.aaa.ysemm.manage.dao.ClientDao">
+    <!--size 缓存个数-->
+    <cache type="org.mybatis.caches.redis.RedisCache" size="1024" flushInterval="0" readOnly="true" eviction="FIFO"></cache>
 
     <select id="queryClinet" resultType="map">
-
 select  * from company
 <where>
     <if test="cname!=null and cname!=''">

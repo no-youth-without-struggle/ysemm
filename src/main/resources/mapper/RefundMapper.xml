@@ -3,7 +3,10 @@
                 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.aaa.ysemm.manage.dao.RefundDao">
+    <!--size 缓存个数-->
+    <cache type="org.mybatis.caches.redis.RedisCache" size="1024" flushInterval="0" readOnly="true" eviction="FIFO"></cache>
 <select id="queryRefund" resultType="map">
+
 select re.rid,re.re_money reMoney,re.re_balance reBalace,re.toTime,re.nper nper,re.`status`,c.telephone,c.cid,c.cname,l.loan_type,l.loan_money from repayment re join
 loans l on re.lid=l.loan_id INNER JOIN company c on c.cid=l.loan_cid
 
