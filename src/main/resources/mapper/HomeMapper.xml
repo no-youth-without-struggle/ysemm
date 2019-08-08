@@ -4,6 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--namespace:命名空间：对应的dao接口的名字-->
 <mapper namespace="com.aaa.ysemm.customer.dao.HomeMapper">
+    <!--size 缓存个数-->
+    <!--<cache type="org.mybatis.caches.redis.RedisCache" size="1024" flushInterval="0" readOnly="true" eviction="FIFO"></cache>-->
     <select id="getCompany" resultType="map">
             SELECT cname,pname,telephone,sex,address,phone from company  where uid=#{uid}
     </select>
@@ -43,7 +45,7 @@ SELECT sum(l.loan_money) borrowMoney from loans l INNER JOIN company c on l.loan
     </select>
     <!--查询剩余金额-->
     <select id="repaymentMoney" resultType="double">
-SELECT max(re.re_balance+re.re_money-re.re_rate_money) repaymentMoney from repayment re INNER JOIN loans l on re.lid=l.loan_id INNER JOIN company c on l.loan_cid=c.cid where c.uid=#{uid} and re.status=0
+SELECT re.re_balance+re.re_money-re.re_rate_money repaymentMoney from repayment re INNER JOIN loans l on re.lid=l.loan_id INNER JOIN company c on l.loan_cid=c.cid where c.uid=#{uid} and re.status=0
     </select>
     <!--根据用户的查询类型进行分页+搜索-->
     <select id="getMoneyRecord" resultType="map">

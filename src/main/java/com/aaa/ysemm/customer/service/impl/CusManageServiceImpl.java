@@ -5,6 +5,8 @@ import com.aaa.ysemm.customer.service.CusManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 
 /**
  * fileName:CusManageServiceImpl
@@ -19,8 +21,8 @@ public class CusManageServiceImpl implements CusManageService {
     @Autowired
     private CusManageMapper cusManageMapper;
     @Override
-    public int updateMoney(Object reMoney) {
-        int money = cusManageMapper.updateMoney(reMoney);
+    public int updateMoney(Map map) {
+        int money = cusManageMapper.updateMoney(map);
         if (money!=0){
             return money;
         }

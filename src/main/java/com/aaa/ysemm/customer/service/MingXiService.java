@@ -49,4 +49,8 @@ public interface MingXiService {
      * @return
      */
     int deleteRecord(Integer id);
+    /**
+     * 按年统计利润
+     */
+    List<Map> getProfit(Map map);
 }

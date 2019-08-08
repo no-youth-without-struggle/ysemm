@@ -3,7 +3,11 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--namespace:命名空间：对应的dao接口的名字-->
+
 <mapper namespace="com.aaa.ysemm.manage.dao.FkMapper">
+    <!--size 缓存个数-->
+    <!--<cache type="org.mybatis.caches.redis.RedisCache" size="1024" flushInterval="0" readOnly="true" eviction="FIFO"></cache>-->
+
     <!--<resultMap id="BaseResultMap" type="com.aaa.test.entity.Fk">-->
         <!--<result column="loan_cid" jdbcType="INTEGER" property="loancid" />-->
         <!--<result column="loan_money" jdbcType="INTEGER" property="loanmoney" />-->
