@@ -72,4 +72,11 @@ public class MingXiController {
         }
         return new ResultUtil(400,"失败",null);
     }
+    /**
+     * 按年统计利润
+     */
+    @RequestMapping("profit")
+    public List<Map> getProfit(@RequestParam Map map){
+        return mingXiService.getProfit(map);
+    }
 }

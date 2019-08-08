@@ -77,5 +77,10 @@ public class MingXiServiceImpl implements MingXiService {
         return mingXiMapper.deleteRecord(id);
     }
 
+    @Override
+    public List<Map> getProfit(Map map) {
+        return mingXiMapper.getProfit(map);
+    }
+
 
 }
