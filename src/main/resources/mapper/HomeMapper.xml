@@ -15,7 +15,7 @@
     </insert>
     <!--添加抵押物品信息-->
     <insert id="insertPledge" useGeneratedKeys="true" keyProperty="id" parameterType="map">
-      insert into pledge(id,pledge_name,valuation,pledge_type,description) values(0,#{pledgeName},#{valuation},#{pledgeType},#{description})
+      insert into pledge(id,pledge_name,valuation,pledge_type,description) values(0,#{pledgeName},#{valuation},#{type},#{description})
     </insert>
     <select id="getLogin" resultType="int">
         select cid

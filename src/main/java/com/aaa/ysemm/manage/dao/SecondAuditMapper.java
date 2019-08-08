@@ -17,4 +17,8 @@ public interface SecondAuditMapper {
     List<Map<String, Object>> getCompany(PageUtil page);
 
     Integer getCount(PageUtil page);
+
+    int handleSuccess(Map map);
+
+    int handleFail(Map map);
 }

@@ -102,7 +102,8 @@
             </el-table-column>
             <el-table-column
                     label="借款状态"
-                    prop="loansStatus">
+                    prop="loansStatus"
+                    :formatter="formatType">
             </el-table-column>
             <el-table-column
                     label="申请时间"
@@ -113,14 +114,14 @@
                     <el-button
                             size="mini"
                             type="danger"
-                            click="handleDelete(scope.$index, scope.row)">通过</el-button>
+                            @click="handleSuccess(scope.$index, scope.row)">通过</el-button>
                    <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">驳回</el-button>
                     <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">通过</el-button>-->
                     <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
                     <el-button
                             size="mini"
                             type="danger"
-                            click="handleDelete(scope.$index, scope.row)">驳回</el-button>
+                            @click="handleFail(scope.$index, scope.row)">驳回</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -147,6 +148,13 @@
                 },
             },
             methods:{
+                formatType:function(row, column){
+                    if (row.loansStatus==1){
+                        return "二审中";
+                    }else{
+                        return "审核通过";
+                    }
+                },
                 //修改
            handleEdit:function(index, row) {
                     this.title="修改信息";
@@ -168,6 +176,37 @@
                     app.formInline.page=val;
                     load();
                 },
+                handleSuccess:function (index, row) {//通过
+                         var _this=this;
+                    axios.post("/secondAudit/handleSuccess",row)
+                        .then(function (result) {
+                                if (result.data.code==200){
+                                    _this.$message({
+                                        message: '恭喜你，这是一条成功消息',
+                                        type: 'success'
+                                    });
+                                }else{
+                                    _this.$message.error('错了哦，这是一条错误消息');
+                                }
+                            load();
+                        });
+                },
+                handleFail:function (index, row) {//驳回
+                    var _this=this;
+                    axios.post("/secondAudit/handleFail",row)
+                        .then(function (result) {
+                            if (result.data.code==200){
+                                _this.$message({
+                                    message: result.data.msg,
+                                    type: 'success'
+                                });
+                            }else{
+                                _this.$message.error( result.data.msg,);
+                            }
+                            load();
+                        });
+                }
+
             }
         });
 
