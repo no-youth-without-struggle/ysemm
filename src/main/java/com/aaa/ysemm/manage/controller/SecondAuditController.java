@@ -1,12 +1,15 @@
 package com.aaa.ysemm.manage.controller;
 
+import com.aaa.ysemm.entity.Login;
 import com.aaa.ysemm.manage.entity.PageUtil;
 import com.aaa.ysemm.manage.service.SecondAuditService;
+import com.aaa.ysemm.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpSession;
 import java.util.Map;
 
 /**
@@ -30,5 +33,23 @@ public class SecondAuditController {
     @RequestMapping("/getCompany")
     public Map<String,Object> getCompany(@RequestBody PageUtil page){
        return service.getCompany(page);
+    }
+    /**
+     * 审核通过
+     */
+    @RequestMapping("/handleSuccess")
+    public ResultUtil handleSuccess(@RequestBody Map map, HttpSession session){
+        Login login = (Login) session.getAttribute("login");
+        return service.handleSuccess(map,login);
+    }
+
+
+    /**
+     * 审核驳回
+     */
+    @RequestMapping("/handleFail")
+    public ResultUtil handleFail(@RequestBody Map map, HttpSession session){
+        Login login = (Login) session.getAttribute("login");
+        return service.handleFail(map,login);
     }
 }
