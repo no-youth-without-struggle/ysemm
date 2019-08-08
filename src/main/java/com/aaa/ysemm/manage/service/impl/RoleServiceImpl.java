@@ -129,4 +129,19 @@ public class RoleServiceImpl implements RoleService {
     public List<Integer> getPowersByRoleId(int roleId) {
         return roleDao.getPowersByRoleId(roleId);
     }
+
+
+    @Override
+    public int deleteRolesByUserId(int userId) {
+        return roleDao.deleteRolesByUserId(userId);
+    }
+
+    @Override
+    public List<Integer> getRolesByUserId(int userId) {
+            return roleDao.getRolesByUserId(userId);
+    }
+    @Override
+    public int saveUserAndRole(int userId, int roleId) {
+        return roleDao.saveUserAndRole(userId,roleId);
+    }
 }

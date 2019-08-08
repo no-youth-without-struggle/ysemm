@@ -40,6 +40,9 @@ public interface LoginDao {
     @Select(" select r.rid,r.rname from employee e INNER JOIN emp_role er on e.eid=er.eid INNER JOIN role r  on er.rid=r.rid where e.lid=#{lid}")
     List<Map> getRole(Login login);
 
-    @Select("SELECT p.id,p.name label,p.parentid,p.url from role_per rp INNER JOIN permission p on p.id=rp.pid where rp.rid=#{rid}")
+    @Select("select p.id,p.`name` label,p.parentid parentId,p.url,p.operator addUsrName,p.operator_time addTime from\n" +
+            "permission p join tb_role_power rp on p.id=rp.power_id\n" +
+            "join tb_user_role ur on ur.role_id=rp.role_id\n" +
+            "where ur.user_id=(SELECT eid from employee where lid=#{rid} );")
     List<TreeNode> getLoginMenu(Integer rid);
 }

@@ -53,4 +53,24 @@ public interface RoleService {
      * @return
      */
     List<Integer> getPowersByRoleId(int roleId);
+    /**
+     * 根据用户ID删除以前该用户关联的所有角色
+     * @param userId
+     * @return
+     */
+    int deleteRolesByUserId(int userId);
+    /**
+     * 根据用户ID获取所有角色
+     * @param userId
+     * @return
+     */
+    List<Integer> getRolesByUserId(int userId);
+
+    /**
+     * 批量添加用户和角色关联表
+     * @param userId
+     * @param roleId
+     * @return
+     */
+    int saveUserAndRole(int userId,int roleId);
 }

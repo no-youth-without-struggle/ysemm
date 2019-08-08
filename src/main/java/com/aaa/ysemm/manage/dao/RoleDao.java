@@ -81,4 +81,28 @@ public interface RoleDao {
      */
     @Select("select power_id from tb_role_power where role_id=#{roleId}")
     List<Integer> getPowersByRoleId(int roleId);
+
+    /**
+     * 根据用户ID获取所有角色
+     * @param userId
+     * @return
+     */
+    @Select("select role_id from tb_user_role where user_id=#{userId}")
+    List<Integer> getRolesByUserId(int userId);
+
+    /**
+     * 根据用户ID删除以前该用户关联的所有角色
+     * @param userId
+     * @return
+     */
+    @Delete("delete from tb_user_role where user_id=#{userId}")
+    int deleteRolesByUserId(int userId);
+    /**
+     * 批量添加用户和角色关联表
+     * @param userId
+     * @param roleId
+     * @return
+     */
+    @Insert("insert into tb_user_role value(null,#{userId},#{roleId})")
+    int saveUserAndRole(@Param("userId") int userId,@Param("roleId") int roleId);
 }

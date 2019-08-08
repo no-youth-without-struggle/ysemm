@@ -6,6 +6,7 @@ import com.aaa.ysemm.entity.Role;
 import com.aaa.ysemm.manage.dao.ManagerMapper;
 import com.aaa.ysemm.manage.entity.PageUtil;
 import com.aaa.ysemm.manage.service.ManagerService;
+import com.aaa.ysemm.manage.service.RoleService;
 import com.aaa.ysemm.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,8 @@ import java.util.Map;
 public class ManagerServiceImpl implements ManagerService {
     @Autowired
     private ManagerMapper managerMapper;
+    @Autowired
+    private RoleService roleService;
 
 
     /**
@@ -80,7 +83,15 @@ public class ManagerServiceImpl implements ManagerService {
         //添加用户的信息
         managerMapper.postEmp(employee);
         //添加角色信息
-        managerMapper.postRole(employee);
+        if(employee.getRoleIds()!=null&&!"".equals(employee.getRoleIds())) {
+            //解析roleid字符串
+            String roleIds = employee.getRoleIds();
+            String[] roleIdsArr = roleIds.split(",");
+            //批量添加用户角色关联
+            for (String roleId : roleIdsArr) {
+                managerMapper.postRole(employee.getEid(), Integer.valueOf(roleId));
+            }
+        }
         return new ResultUtil(ResultUtil.CODE_SUCCESS,ResultUtil.MSG_SUCCESS,emp);
     }
 
@@ -92,13 +103,23 @@ public class ManagerServiceImpl implements ManagerService {
      */
     @Transactional
     @Override
-    public ResultUtil updateEmp( Map map) {
+    public ResultUtil updateEmp( Employee employee) {
         //修改人员信息表信息
-         managerMapper.updateEmp(map);
+         managerMapper.updateEmp(employee);
          //修改登录信息
-            managerMapper.updateLogin(map);
+            managerMapper.updateLogin(employee);
         //修改角色信息
-            managerMapper.updateRole(map);
+        if(employee.getRoleIds()!=null&&!"".equals(employee.getRoleIds())) {
+            //根据用户id删除该用户原来关联的角色id
+            roleService.deleteRolesByUserId(employee.getEid());
+            //解析roleid字符串
+            String roleIds = employee.getRoleIds();
+            String[] roleIdsArr = roleIds.split(",");
+            //批量添加用户角色关联
+            for (String roleId : roleIdsArr) {
+                roleService.saveUserAndRole(employee.getEid(), Integer.valueOf(roleId));
+            }
+        }
             return new ResultUtil(ResultUtil.CODE_SUCCESS,ResultUtil.MSG_SUCCESS,null);
     }
 }

@@ -74,10 +74,8 @@
             </el-row>
             <el-row :gutter="20">
                 <el-col :span="10">
-                    <el-form-item label="角色" >
-                    <el-select  v-model="form.rId" >
-                        <el-option v-for="item in role" :label="item.rname" :value="item.rid"></el-option>
-                    </el-select>
+                    <el-form-item label="角色授权">
+                        <el-button type="primary" @click="showRoles">拥有角色</el-button>
                     </el-form-item>
                 </el-col>
                 <el-col :span="10">
@@ -163,6 +161,19 @@
                     </el-form-item>
                 </el-col>
             </el-row>
+            <el-dialog title="角色树" :visible.sync="dialogRoleFormVisible" height="70%" width="50%" center>
+                <el-tree :data="treeData" default-expand-all
+                         ref="tree"
+                         node-key="id"
+                         show-checkbox
+                         check-strictly="true"
+                         :default-checked-keys="checkedKeys"
+                         @check-change="handleRoleTreeClick"
+                ></el-tree>
+                <div slot="footer" class="dialog-footer">
+                    <el-button type="primary" @click="dialogRoleFormVisible = false">确 定</el-button>
+                </div>
+            </el-dialog>
 
         </el-form>
 
@@ -177,9 +188,10 @@
                 tableData: [],
                 dept:[],
                 counts:'',//总数
-                form:{},
+                form:{
+                    roleIds:'',
+                },
                 emp:{},
-               /* empRole:[],*/
                 formInline:{
                     name:'',
                     startDate:'',
@@ -187,6 +199,9 @@
                     page:1,
                     count:5,
                 },
+                dialogRoleFormVisible:false,
+                treeData:[],//权限树
+                checkedKeys:[]
             },
             methods:{
                 formatStatus:function(row, column){
@@ -250,7 +265,35 @@
                             app.form={};
                         });
                 },
-            }
+                showRoles:function(){
+                    this.checkedKeys=[];
+                    var _this=this;
+                    if(_this.form.eid!='') {
+                        axios.post("/role/tree")
+                            .then(function (response) {
+                                _this.treeData = response.data;
+                                //  alert(JSON.stringify(_this.treeData));
+                                axios.post("/role/getRolesByUserId?userId=" + _this.form.eid)
+                                    .then(function (response) {
+                                        //  alert(response.data);
+                                        //alert(JSON.stringify(response.data));
+                                        _this.checkedKeys = response.data;
+                                    })
+                            })
+                    }
+                    this.dialogRoleFormVisible=true;
+                },
+                handleRoleTreeClick:function(){
+                    //[ 2, 9, 10]
+                    console.log(this.$refs.tree.getCheckedKeys());
+                    var nodes = this.$refs.tree.getCheckedKeys()+"";
+                    var tnodes = nodes.replace("[").replace("]").replace(" ");//2,9,10
+                    console.log(tnodes);
+                    this.form.roleIds=tnodes;
+                }
+            },
+
+
         });
 
 
@@ -265,6 +308,16 @@
                     app.empRole=value.data.emp.empRole;
                 });
         }
+
+        /**获取权限树
+         */
+        axios.post("/role/tree")
+            .then(function (response) {
+                self.treeData=response.data;
+            })
+
+
+
 
         /**
          * 获取下拉菜单

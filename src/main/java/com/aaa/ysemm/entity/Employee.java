@@ -28,9 +28,7 @@ public class Employee {
 	private String address;
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private  Date hiredate;
-
-	public Employee() {
-	}
+	private String roleIds;
 
 	@Override
 	public String toString() {
@@ -52,27 +50,8 @@ public class Employee {
 				", password='" + password + '\'' +
 				", address='" + address + '\'' +
 				", hiredate=" + hiredate +
+				", roleIds='" + roleIds + '\'' +
 				'}';
-	}
-
-	public Employee(String IDCard, Integer rId, int eid, int lid, String ename, String telephone, String email, Date birthday, String sex, int deptId, int status, String operator, Integer operatorId, Date operatorTime, String password, String address, Date hiredate) {
-		this.IDCard = IDCard;
-		this.rId = rId;
-		this.eid = eid;
-		this.lid = lid;
-		this.ename = ename;
-		this.telephone = telephone;
-		this.email = email;
-		this.birthday = birthday;
-		this.sex = sex;
-		this.deptId = deptId;
-		this.status = status;
-		this.operator = operator;
-		this.operatorId = operatorId;
-		this.operatorTime = operatorTime;
-		this.password = password;
-		this.address = address;
-		this.hiredate = hiredate;
 	}
 
 	public String getIDCard() {
@@ -209,6 +188,38 @@ public class Employee {
 
 	public void setHiredate(Date hiredate) {
 		this.hiredate = hiredate;
+	}
+
+	public String getRoleIds() {
+		return roleIds;
+	}
+
+	public void setRoleIds(String roleIds) {
+		this.roleIds = roleIds;
+	}
+
+	public Employee() {
+	}
+
+	public Employee(String IDCard, Integer rId, int eid, int lid, String ename, String telephone, String email, Date birthday, String sex, int deptId, int status, String operator, Integer operatorId, Date operatorTime, String password, String address, Date hiredate, String roleIds) {
+		this.IDCard = IDCard;
+		this.rId = rId;
+		this.eid = eid;
+		this.lid = lid;
+		this.ename = ename;
+		this.telephone = telephone;
+		this.email = email;
+		this.birthday = birthday;
+		this.sex = sex;
+		this.deptId = deptId;
+		this.status = status;
+		this.operator = operator;
+		this.operatorId = operatorId;
+		this.operatorTime = operatorTime;
+		this.password = password;
+		this.address = address;
+		this.hiredate = hiredate;
+		this.roleIds = roleIds;
 	}
 }
 

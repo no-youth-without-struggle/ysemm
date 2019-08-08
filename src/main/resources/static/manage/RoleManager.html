@@ -75,7 +75,7 @@
         </el-main>
 
     </el-container>
-    <el-dialog title="权限树" :visible.sync="dialogFormVisible">
+    <el-dialog title="角色树" :visible.sync="dialogFormVisible">
         <el-tree :data="treeData" default-expand-all ref="tree"
                  show-checkbox
                  check-strictly="true"
@@ -138,14 +138,11 @@
                     this.idIsShow=true;
                     this.form.submitBtn='修改';
                     _this.checkedKeys=[];
-                    axios.post("/Permission/tree", this.form)
+                    axios.post("/Permission/getTree", this.form)
                         .then(function (response) {
                             _this.powerTreeData=response.data;
-
                             axios.post("/role/getPowersByRoleId?roleId="+data.id)
                                 .then(function (response) {
-                                    alert(response.data);
-                                    alert(JSON.stringify(response.data));
                                     _this.checkedKeys=response.data;
                                 })
                         })
