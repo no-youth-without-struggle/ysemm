@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--namespace:命名空间：对应的dao接口的名字-->
+
+<mapper namespace="com.aaa.ysemm.manage.dao.FkMapper">
+    <!--size 缓存个数-->
+    <cache type="org.mybatis.caches.redis.RedisCache" size="1024" flushInterval="0" readOnly="true" eviction="FIFO"></cache>
+
+    <!--<resultMap id="BaseResultMap" type="com.aaa.test.entity.Fk">-->
+        <!--<result column="loan_cid" jdbcType="INTEGER" property="loancid" />-->
+        <!--<result column="loan_money" jdbcType="INTEGER" property="loanmoney" />-->
+        <!--<result column="loans_status" jdbcType="INTEGER" property="loansstatus" />-->
+    <!--</resultMap>-->
+    <select id="queryFK" resultType="map">
+        select c.cname,l.loan_money,l.loan_id,s.status_name
+ from loans l LEFT JOIN company c ON l.loan_cid=c.cid JOIN loans_sta s ON l.loans_status=s.loans_status where l.loans_status=2
+    </select>
+    <select id="queryZj" resultType="map">
+        select l.loan_id,mm.total_money,l.loan_money from money_manager mm JOIN loans l
+    </select>
+    <!--获取贷款的公司信息-->
+    <select id="getLoan" resultType="map">
+        select c.cname,l.loan_cid loanCid,l.loan_money loanMoney,l.loan_type loanType,l.repayment_type repaymentType,l.repayment_time repaymentTime,l.repayment_rate repaymentRate
+        from loans l INNER JOIN company c  on l.loan_cid=c.cid where l.loan_id=#{cid}
+    </select>
+    <!--更改总公司的钱数-->
+    <update id="updateMoney">
+        update money_manager set total_money=total_money-#{money} where id=1
+    </update>
+    <select id="queryCompany" resultType="int">
+        select cid from company where uid=#{uid}
+    </select>
+    <!--更改借款公司的钱数-->
+    <update id="updateComMoney">
+             update customer_manager set total_money=total_money+#{loanMoney}
+        where uid=(select uid from company  where cid=#{loanCid})
+    </update>
+    <!--记录放款信息-->
+    <insert id="insertNodes">
+        insert  into mingxi(cm_id,pay_type,pay_money,operator,operator_time,remark)
+        values (#{loanCid},"放款",#{loanMoney},#{cname},#{times},#{loanType})
+    </insert>
+    <!--修改借款状态-->
+    <update id="updateLoans">
+        update loans set loans_status=4 where loan_id=#{cid}
+    </update>
+    <!--按类型将数据还款信息录入数据库-->
+    <insert id="insertRepayment">
+    insert into repayment(lid,re_money,re_balance,nper,toTime,re_rate_money)
+    values (#{lid},#{reMoney},#{reBalance},#{nper},#{toTime},#{reRateMoney})
+    </insert>
+</mapper>

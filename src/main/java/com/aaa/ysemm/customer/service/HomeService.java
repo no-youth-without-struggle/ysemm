@@ -1,6 +1,7 @@
 package com.aaa.ysemm.customer.service;
 
-import com.aaa.ysemm.customer.entity.UserLogin;
+import com.aaa.ysemm.entity.UserLogin;
+import com.aaa.ysemm.manage.entity.PageUtil;
 import com.aaa.ysemm.util.ResultUtil;
 
 import java.util.Map;
@@ -19,4 +20,15 @@ public interface HomeService {
     ResultUtil postBorrow(Map map);
 
 
+    Map getAllMoney(Map map);
+
+    ResultUtil getBorrowQualification(UserLogin userLogin);
+
+    Map<String, Object> getFund(UserLogin userLogin);
+
+    Map<String, Object> getMoneyRecord(PageUtil page);
+
+    ResultUtil postPaypassword(Map map);
+
+    ResultUtil postLoginPassword(Map map);
 }

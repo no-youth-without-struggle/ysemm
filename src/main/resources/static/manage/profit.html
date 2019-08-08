@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>资金管理</title>
+    <!-- 引入 echarts.js -->
+    <script src="js/echarts.min.js"></script>
+    <script src="js/jquery3.3.1.min.js"></script>
+    <script>
+        $(function(){
+            //动态加载下拉年
+            var currentYear =new Date().getFullYear();
+            var options ="";
+            for (var i = currentYear-3; i <= currentYear+3; i++) {
+                if(i==currentYear)
+                    options+=" <option value='"+i+"' selected=\"selected\">"+i+"</option>";
+                else
+                    options+=" <option value='"+i+"'>"+i+"</option>";
+            }
+            $("#year").append(options);
+
+            //年份发生变化时
+            $("#year").change(function(){
+                var year=$("#year").val();
+                var month=$("#month").val();
+                getData(year,month);
+            });
+            //月份发生变化时
+            $("#month").change(function(){
+                var year=$("#year").val();
+                var month=$("#month").val();
+                getData(year,month);
+            });
+        });
+    </script>
+</head>
+<body>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+年
+<select id="year">
+</select>
+<div id="main" style="width: 600px;height:400px;"></div>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+    var ysVal=[];
+    var sjVal=[];
+    var currentYear =new Date().getFullYear();
+
+    getData(currentYear);
+    function getData(year) {
+        $.ajax({
+            url: "/mingxi/profit",
+            type: "post",
+            data: {year: year},
+            dataType: "json",
+            // async: false,//同步操作
+            success: function (data) {
+                var xData=[];
+                var yData1=[];
+                // alert(data.year+","+data.month);
+                for (var i = 0; i < data.length; i++) {
+                    var obj = data[i];
+                    xData.push(obj.months);
+                    yData1.push(obj.money);
+                }
+                // 指定图表的配置项和数据
+                var option = {
+                    title : {
+                        text: '利润资金统计',
+                        subtext: '真实数据'
+                    },
+                    tooltip : {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data:['利润']
+                    },
+                    toolbox: {
+                        show : true,
+                        feature : {
+                            dataView : {show: true, readOnly: false},
+                            magicType : {show: true, type: ['line', 'bar']},
+                            restore : {show: true},
+                            saveAsImage : {show: true}
+                        }
+                    },
+                    calculable : true,
+                    xAxis : [
+                        {
+                            type : 'category',
+                            data : xData
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value'
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'利润',
+                            type:'bar',
+                            data:yData1,
+                            markPoint : {
+                                data : [
+                                    {type : 'max', name: '最大值'},
+                                    {type : 'min', name: '最小值'}
+                                ]
+                            },
+                            markLine : {
+                                data : [
+                                    {type : 'average', name: '平均值'}
+                                ]
+                            }
+                        }/*,
+            {
+                name:'利润',
+                type:'bar',
+                data:[1.0, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 152.2, 48.7, 18.8, 6.0, 2.3],
+                markPoint : {
+                    data : [
+                        {type : 'max', name: '最大值'},
+                        {type : 'min', name: '最小值'}
+                    ]
+                },
+                markLine : {
+                    data : [
+                        {type : 'average', name : '平均值'}
+                    ]
+                }
+            }*/
+                    ]
+                };
+
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(option);
+            }
+        })
+    }
+</script>
+</body>
+</html>

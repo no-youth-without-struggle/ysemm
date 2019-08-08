@@ -4,6 +4,8 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--namespace:命名空间：对应的dao接口的名字-->
 <mapper namespace="com.aaa.ysemm.customer.dao.HomeMapper">
+    <!--size 缓存个数-->
+    <cache type="org.mybatis.caches.redis.RedisCache" size="1024" flushInterval="0" readOnly="true" eviction="FIFO"></cache>
     <select id="getCompany" resultType="map">
             SELECT cname,pname,telephone,sex,address,phone from company  where uid=#{uid}
     </select>
@@ -15,11 +17,70 @@
     </insert>
     <!--添加抵押物品信息-->
     <insert id="insertPledge" useGeneratedKeys="true" keyProperty="id" parameterType="map">
-      insert into pledge(id,pledge_name,valuation,pledge_type,description) values(0,#{pledgeName},#{valuation},#{pledgeType},#{description})
+      insert into pledge(id,pledge_name,valuation,pledge_type,description) values(0,#{pledgeName},#{valuation},#{type},#{description})
     </insert>
     <select id="getLogin" resultType="int">
         select cid
         from company where uid=#{uid}
     </select>
+    <!--查询用户是否完成实名认证-->
+    <select id="getCompanyQualification" resultType="String">
+       SELECT cname from company WHERE uid=#{uid}
+    </select>
+    <!--查询用户是否有借款-->
+    <select id="getLoans" resultType="int">
+        select l.loan_id from loans l INNER JOIN company c on c.cid=l.loan_cid where l.loans_status in (0,1,2,4) and c.uid=#{uid}
+    </select>
+    <select id="getRepayment" resultType="int">
+        select rid from repayment re INNER JOIN loans lo on lo.loan_id=re.lid INNER JOIN  company c on c.cid=lo.loan_cid where re.status=0 and c.uid=#{uid}
+    </select>
+    <!--查询总金额-->
+    <select id="getAllMoney" resultType="double">
+         SELECT total_money from customer_manager where uid=#{uid}
+    </select>
+
+    <!--查询借款金额-->
+    <select id="getBorrowMoney" resultType="double">
+SELECT sum(l.loan_money) borrowMoney from loans l INNER JOIN company c on l.loan_cid=c.cid where c.uid=#{uid} and l.loans_status!=5
+    </select>
+    <!--查询剩余金额-->
+    <select id="repaymentMoney" resultType="double">
+SELECT max(re.re_balance+re.re_money-re.re_rate_money) repaymentMoney from repayment re INNER JOIN loans l on re.lid=l.loan_id INNER JOIN company c on l.loan_cid=c.cid where c.uid=#{uid} and re.status=0
+    </select>
+    <!--根据用户的查询类型进行分页+搜索-->
+    <select id="getMoneyRecord" resultType="map">
+        select pay_type,pay_money,operator_time,remark from mingxi
+        <include refid="getFundPage"></include>
+        limit #{page},#{count}
+    </select>
+    <sql id="getFundPage">
+        <where>
+            cm_id=(select c.cid from company c INNER JOIN user_login ul on c.uid=ul.uid where ul.uid=#{id} )
+            <if test="name!=null and name!=''">
+               and pay_type=#{name}
+            </if>
+            <if test="startDate!=null and startDate!=''">
+              and operator_time &gt; #{startDate}
+            </if>
+            <if test="endDate!=null and endDate!=''">
+              and operator_time &lt; #{endDate}
+            </if>
+        </where>
+    </sql>
+    <!--查询总数-->
+    <select id="getFund" resultType="int">
+        select count(*) from mingxi
+        <include refid="getFundPage"></include>
+    </select>
+
+    <!--修改支付密码-->
+    <update id="postPaypassword">
+        update user_login set pay_password=#{payPasswordOne} where uid=#{uid} and telephone=#{telephone}
+    </update>
+    <!--修改登录密码-->
+    <update id="postLoginPassword">
+        update user_login set password=#{addMD5Password} where uid=#{uid} and telephone=#{telephone}
+    </update>
+
 
 </mapper>

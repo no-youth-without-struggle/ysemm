@@ -15,6 +15,16 @@ import lombok.ToString;
  */
 
 public class ResultUtil {
+    public static final int CODE_SUCCESS=200;
+    public static final int CODE_FAIL=400;
+    public static final int CODE_OTHER=300;
+
+    public static final String MSG_SUCCESS="操作成功";
+    public static final String MSG_FAIL="操作失败";
+    private  static  String MSG_OTHER="";
+
+
+
     private int code;
     private String msg;
     private Object obj;

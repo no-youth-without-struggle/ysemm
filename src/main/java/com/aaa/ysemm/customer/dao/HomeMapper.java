@@ -1,12 +1,14 @@
 package com.aaa.ysemm.customer.dao;
 
-import com.aaa.ysemm.customer.entity.UserLogin;
+import com.aaa.ysemm.entity.UserLogin;
 import com.aaa.ysemm.customer.entitys.Company;
 import com.aaa.ysemm.customer.entitys.Loans;
 import com.aaa.ysemm.customer.entitys.Pledge;
+import com.aaa.ysemm.manage.entity.PageUtil;
 import org.apache.ibatis.annotations.Insert;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,4 +29,24 @@ public interface HomeMapper {
     void insertPledge(Object pledge);
 
     Integer getLogin(Object uid);
+
+    String getCompanyQualification(UserLogin userLogin);
+
+    List<Integer> getLoans(UserLogin userLogin);
+
+    List<Integer> getRepayment(UserLogin userLogin);
+
+    double getAllMoney(UserLogin userLogin);
+
+    double getBorrowMoney(UserLogin userLogin);
+
+    double repaymentMoney(UserLogin userLogin);
+
+    List<Map> getMoneyRecord(PageUtil page);
+
+    Integer getFund(PageUtil page);
+
+    void postPaypassword(Map map);
+
+    void postLoginPassword(Map map);
 }

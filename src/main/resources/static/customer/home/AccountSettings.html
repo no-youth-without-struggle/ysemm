@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>账号设置</title>
+    <script src="../vue/js/vue.js"></script>
+    <script src="../vue/js/index.js"></script>
+    <script src="../vue/js/axios.js"></script>
+    <link href="../vue/css/index.css" rel="stylesheet">
+    <!--import rules from "@/api/rules.js"-->
+    <script src="/common/vue_rules.js"></script>
+</head>
+<body>
+<div id="app">
+    <el-collapse v-model="activeNames" @change="handleChange" accordion>
+        <el-collapse-item title="支付密码设置" name="1">
+            <el-form :model="payForm" :rules="payrules" ref="payForm"label-width="100px" class="demo-ruleForm" >
+                <el-form-item label="手机号码" prop="telephone">
+                    <el-input v-model="payForm.telephone" style="width:260px;" :disabled="true"></el-input>
+                </el-form-item>
+                <el-form-item label="支付密码" prop="payPasswordOne">
+                    <el-input v-model="payForm.payPasswordOne" style="width:260px;"></el-input>
+                </el-form-item>
+                <el-form-item label="再次输入" prop="payPasswordTwo">
+                    <el-input v-model="payForm.payPasswordTwo" style="width:260px;"></el-input>
+                </el-form-item>
+                <el-form-item label="验证码" prop="payCode">
+                    <el-input v-model="payForm.payCode" style="width: 148px;"></el-input>
+                    <el-button type="primary" @click="submitPayCode()" :disabled="isDisabledPay">{{buttonNamePay}}</el-button>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="submitPayForm()" style="width: 260px;">修改</el-button>
+                </el-form-item>
+            </el-form>
+        </el-collapse-item>
+        <el-collapse-item title="登录密码修改" name="2">
+            <el-form :model="loginForm"  label-width="100px" class="demo-ruleForm">
+                <el-form-item label="手机号码" prop="telephone">
+                    <el-input v-model="loginForm.telephone" style="width:260px;" :disabled="true"></el-input>
+                </el-form-item>
+                <el-form-item label="新密码" prop="newLoginPasswordOne">
+                    <el-input v-model="loginForm.newLoginPasswordOne" style="width:260px;"></el-input>
+                </el-form-item>
+                <el-form-item label="再次输入" prop="newLoginpayPasswordTwo">
+                    <el-input v-model="loginForm.newLoginpayPasswordTwo" style="width:260px;"></el-input>
+                </el-form-item>
+                <el-form-item label="验证码" prop="loginPasswordCode">
+                    <el-input v-model="loginForm.loginPasswordCode" style="width: 148px;"></el-input>
+                    <el-button type="primary" @click="submitLoginCode()"  :disabled="isDisabled">{{buttonName}}</el-button>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="submitLoginForm()" style="width: 260px;">修改</el-button>
+                </el-form-item>
+            </el-form>
+        </el-collapse-item>
+    </el-collapse>
+</div>
+<script>
+    var app=new Vue({
+        el:"#app",
+        data:{
+            buttonNamePay:"发送短信",
+            buttonName: "发送短信",
+            isDisabledPay:false,
+            isDisabled:false,
+            time: 60,
+            activeNames: ['1'],
+            payForm:{
+                telephone:"",
+            },
+            loginForm:{
+                telephone:"",
+            },
+            payrules:{//验证1
+                payPasswordOne:[
+
+                    ],
+                payPasswordTwo:[
+                    {}
+                    ],
+                payCode:[{}],
+                telephone:[
+                    { required: true, message: '请输入电话号码', trigger: 'blur' },
+                ],
+
+            }
+
+        },
+        methods:{
+            handleChange:function(val) {
+                console.log(val);
+            },
+            submitPayCode:function () {//发送手机验证码
+                let me = this;
+                me.isDisabledPay = true;
+                let interval = window.setInterval(function() {
+                    me.buttonNamePay = '（' + me.time + '秒）后重新发送';
+                    --me.time;
+                    if(me.time < 0) {
+                        me.buttonNamePay = "重新发送";
+                        me.time = 60;
+                        me.isDisabledPay = false;
+                        window.clearInterval(interval);
+                    }
+                }, 1000);
+                axios.get("/homeBorrow/getPayCode?telephone="+this.payForm.telephone)
+                    .then(function (result) {
+
+                    });
+            },
+            submitPayForm:function () {//发送修改支付密码
+                axios.post("/homeBorrow/postPaypassword",this.payForm)
+                    .then(function (result) {
+                    app.payForm={};
+                    });
+            },
+            submitLoginCode:function () {//发送手机验证码
+                    let me = this;
+                    me.isDisabled = true;
+                    let interval = window.setInterval(function() {
+                        me.buttonName = '（' + me.time + '秒）后重新发送';
+                        --me.time;
+                        if(me.time < 0) {
+                            me.buttonName = "重新发送";
+                            me.time = 10;
+                            me.isDisabled = false;
+                            window.clearInterval(interval);
+                        }
+                    }, 1000);
+                axios.get("/homeBorrow/getLoginCode?telephone="+this.loginForm.telephone)
+                    .then(function (result) {
+
+                    });
+            },
+            submitLoginForm:function () {//发送修改登录密码
+                axios.post("/homeBorrow/postLoginPassword",this.loginForm)
+                    .then(function (result) {
+                        app.loginForm={};
+                    });
+            },
+        }
+    })
+    axios.post("/homeBorrow/getTelephone")
+        .then(function (result) {
+            app.payForm.telephone=result.data.telephone;
+            app.loginForm.telephone=result.data.telephone;
+        })
+</script>
+</body>
+</html>

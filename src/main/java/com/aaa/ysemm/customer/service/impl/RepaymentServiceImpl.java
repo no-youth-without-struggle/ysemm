@@ -2,6 +2,7 @@ package com.aaa.ysemm.customer.service.impl;
 
 import com.aaa.ysemm.customer.dao.RepaymentMapper;
 import com.aaa.ysemm.customer.entity.MingXi;
+import com.aaa.ysemm.entity.UserLogin;
 import com.aaa.ysemm.customer.service.RepaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,19 +28,21 @@ public class RepaymentServiceImpl implements RepaymentService {
     }
 
     @Override
-    public List<Map> queryHKQX(Object obj) {
+    public List<Map> queryHKQX(UserLogin obj) {
         List<Map> mapList = repaymentMapper.queryHKQX(obj);
         System.out.println("map"+mapList);
         return mapList;
     }
 
     @Override
-    public List<Map> queryHKQX2(Object obj) {
-        return repaymentMapper.queryHKQX2(obj);
+    public List<Map> queryHKQX2(UserLogin obj) {
+        Integer uid = obj.getUid();
+        System.out.println(obj.getUid());
+        return repaymentMapper.queryHKQX2(obj.getUid());
     }
 
     @Override
-    public List<Map> queryAHKQX(Object obj) {
+    public List<Map> queryAHKQX(UserLogin obj) {
         return repaymentMapper.queryAHKQX(obj);
     }
 

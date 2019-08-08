@@ -4,12 +4,14 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!--namespace:命名空间：对应的dao接口的名字-->
 <mapper namespace="com.aaa.ysemm.customer.dao.CusLoginMapper">
+    <!--size 缓存个数-->
+    <cache type="org.mybatis.caches.redis.RedisCache" size="1024" flushInterval="0" readOnly="true" eviction="FIFO"></cache>
     <!--查询手机号是否存在-->
     <select id="getTelephone" resultType="int">
         select uid from user_login where telephone=#{telephone}
     </select>
     <!--添加注册用户-->
-    <insert id="postForm">
+    <insert id="postForm" keyColumn="uid" useGeneratedKeys="true" keyProperty="uid">
         insert into user_login(username,telephone,password,password_salt,time)
         values (#{username},#{telephone},#{password},#{passwordSalt},#{time})
     </insert>
@@ -19,6 +21,12 @@
         select uid,username,telephone,password,password_salt passwordSalt,status,time,pay_password payPassword from user_login
         where telephone=#{telephone} and status=#{status}
     </select>
+    <!--添加用户的账户信息-->
+    <insert id="postCusFund">
+        insert into customer_manager(uid,total_money,remark) values(#{uid},0,"总金额")
+    </insert>
+
+
 
 
 </mapper>

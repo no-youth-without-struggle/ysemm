@@ -1,9 +1,7 @@
 package com.aaa.ysemm.customer.dao;
 
-import com.aaa.ysemm.customer.entity.UserLogin;
+import com.aaa.ysemm.entity.UserLogin;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,5 +19,7 @@ public interface CusLoginMapper {
 
     int postForm(UserLogin userLogin);
 
-    List<UserLogin> getSubmitLoin(Map map);
+    UserLogin getSubmitLoin(Map map);
+
+    void postCusFund(UserLogin userLogin);
 }

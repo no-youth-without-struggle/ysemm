@@ -1,6 +1,6 @@
 package com.aaa.ysemm.customer.controller;
 
-import com.aaa.ysemm.customer.entity.UserLogin;
+import com.aaa.ysemm.entity.UserLogin;
 import com.aaa.ysemm.customer.service.CompanyCertificationService;
 import com.aaa.ysemm.util.FtpUtil;
 import com.aaa.ysemm.util.IDCard;

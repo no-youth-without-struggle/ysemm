@@ -26,7 +26,6 @@ import java.util.Map;
  */
 @Configuration
 public class ShiroConfig {
-
 	//@Autowired
 	//private HttpServletRequest request;
 	@Bean
@@ -38,20 +37,25 @@ public class ShiroConfig {
 		Map<String,String> filterChainDefinitionMap = new LinkedHashMap<String,String>();
 		// 配置不会被拦截的链接 顺序判断
 		//放开static resources
-		filterChainDefinitionMap.put("/image/**", "anon");
-		filterChainDefinitionMap.put("/images/**", "anon");
-		filterChainDefinitionMap.put("/css/**", "anon");
-		filterChainDefinitionMap.put("/asset/**", "anon");
-		filterChainDefinitionMap.put("/assets/**", "anon");
-		filterChainDefinitionMap.put("/js/**", "anon");
-		filterChainDefinitionMap.put("/script/**", "anon");
-		filterChainDefinitionMap.put("/style/**", "anon");
+		filterChainDefinitionMap.put("/customer/img/**", "anon");
+		filterChainDefinitionMap.put("/customer/images/**", "anon");
+		filterChainDefinitionMap.put("/customer/css/**", "anon");
+		filterChainDefinitionMap.put("/customer/system/**", "anon");
+		filterChainDefinitionMap.put("/customer/layui/**", "anon");
+		filterChainDefinitionMap.put("/customer/js/**", "anon");
+		filterChainDefinitionMap.put("/customer/script/**", "anon");
+		filterChainDefinitionMap.put("/customer/home/css/**", "anon");
+		filterChainDefinitionMap.put("/customer/home/images/**", "anon");
+		filterChainDefinitionMap.put("/customer/home/script/**", "anon");
+		filterChainDefinitionMap.put("/customer/vue/**", "anon");
+
 		filterChainDefinitionMap.put("/static/", "anon");
 		//验证token
-		filterChainDefinitionMap.put("/checkToken", "anon");
+		filterChainDefinitionMap.put("/beforelogin/", "anon");
 		//放开登录注册以及首页
+		filterChainDefinitionMap.put("/customer/login.html", "anon");
+		filterChainDefinitionMap.put("/customer/register.html", "anon");
 		filterChainDefinitionMap.put("/manage/**", "anon");
-		filterChainDefinitionMap.put("/login/**", "anon");
 		filterChainDefinitionMap.put("/login/**", "anon");
 		//未登录放开首页贷款信息
 	/*	filterChainDefinitionMap.put("/indexInformation","anon");
@@ -81,23 +85,23 @@ public class ShiroConfig {
 		filterChainDefinitionMap.put("/logout", "logout");
 		//<!-- 过滤链定义，从上向下顺序执行，一般将/**放在最为下边 -->:这是一个坑呢，一不小心代码就不好使了;
 		//<!-- authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问-->
-		/*filterChainDefinitionMap.put("/**", "authc");*/
+		filterChainDefinitionMap.put("/customer/**", "authc");
 		// 如果不设置默认会自动寻找Web工程根目录下的"/login"页面
 		/*shiroFilterFactoryBean.setLoginUrl("/manage/index.html");*/
-		shiroFilterFactoryBean.setLoginUrl("/manage/backlogin.html");
+		shiroFilterFactoryBean.setLoginUrl("/customer/login.html");
 		//StringBuffer requestURL = ShiroHttpServletRequest.getRequestURL();
 
 		// 登录成功后要跳转的链接
-		shiroFilterFactoryBean.setSuccessUrl("/manage/reg.html");
+		shiroFilterFactoryBean.setSuccessUrl("/customer/register.html");
 
 		//未授权界面;
-		shiroFilterFactoryBean.setUnauthorizedUrl("/403");
+		shiroFilterFactoryBean.setUnauthorizedUrl("/customer/login.html");
 		shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 		return shiroFilterFactoryBean;
 
 	}
 
-	@Bean("myShiroRealm")
+	/*@Bean("myShiroRealm")
 	public MyShiroRealm myShiroRealm(){
 		MyShiroRealm myShiroRealm = new MyShiroRealm();
 		return myShiroRealm;
@@ -109,7 +113,7 @@ public class ShiroConfig {
 		DefaultWebSecurityManager securityManager =  new DefaultWebSecurityManager();
 		securityManager.setRealm(myShiroRealm());
 		return securityManager;
-	}
+	}*/
 
 /**
  *
