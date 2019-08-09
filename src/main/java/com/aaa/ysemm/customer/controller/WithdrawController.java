@@ -3,17 +3,14 @@ package com.aaa.ysemm.customer.controller;
 import com.aaa.ysemm.customer.service.MingXiService;
 import com.aaa.ysemm.customer.service.WithdrawService;
 import com.aaa.ysemm.entity.UserLogin;
+import com.aaa.ysemm.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -47,7 +44,12 @@ public class WithdrawController {
      * @return
      */
     @RequestMapping("saveMoney")
-    public int saveMoney(@RequestBody Map map,HttpSession session){
+    public ResultUtil saveMoney(@RequestBody Map map, HttpSession session){
+        //判断当前支付密码是否正确
+        String payPassword=withdrawService.getPayPassword(map);
+            if (payPassword==null||payPassword==""){
+                return new ResultUtil(ResultUtil.CODE_OTHER,"支付密码不正确",null);
+            }
         //获取当前系统时间
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String format = dateFormat.format(new Date());
@@ -67,13 +69,22 @@ public class WithdrawController {
         //增加明细记录
         mingXiService.saveMingXi(map);
         // 充值
-        return withdrawService.updateMoney(map);
+        int i = withdrawService.updateMoney(map);
+        if (i>0){
+            return new ResultUtil(ResultUtil.CODE_SUCCESS,ResultUtil.MSG_SUCCESS,null);
+        }
+        return new ResultUtil(ResultUtil.CODE_FAIL,ResultUtil.MSG_FAIL,null);
     }
     /**
      * 金额提现
      */
       @RequestMapping("deleteMoney")
-    public int deleteMoney(@RequestBody Map map,HttpSession session){
+    public ResultUtil deleteMoney(@RequestBody Map map,HttpSession session){
+          //判断当前支付密码是否正确
+          String payPassword=withdrawService.getPayPassword(map);
+          if (payPassword==null||payPassword==""){
+              return new ResultUtil(ResultUtil.CODE_OTHER,"支付密码不正确",null);
+          }
          //获取当前时间
           SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
           String format = dateFormat.format(new Date());
@@ -91,6 +102,10 @@ public class WithdrawController {
             //增加明细记录
           mingXiService.saveMingXi(map);
             // 提现
-          return  withdrawService.deleteMoney(map);
-    }
+          int i = withdrawService.deleteMoney(map);
+          if (i>0){
+              return new ResultUtil(ResultUtil.CODE_SUCCESS,ResultUtil.MSG_SUCCESS,null);
+          }
+          return new ResultUtil(ResultUtil.CODE_FAIL,ResultUtil.MSG_FAIL,null);
+      }
 }

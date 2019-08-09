@@ -47,7 +47,6 @@
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
             <el-form-item>
                 <el-select v-model="formInline.money" placeholder="选择提现金额" style="position:fixed;left:250px;top:134px;">
-                    <el-option label="请选择" value=""></el-option>
                     <el-option label="1000" value="1000"></el-option>
                     <el-option label="2000" value="2000"></el-option>
                     <el-option label="3000" value="3000"></el-option>
@@ -56,8 +55,19 @@
         </el-form>
     </el-row>
     <el-row>
-        <el-button style="margin-left: 290px" type="primary" @click="withdraw">提现</el-button>
+        <el-button style="margin-left: 290px" type="primary" @click="paySubmit">提现</el-button>
     </el-row>
+    <!--支付密码输入-->
+    <el-dialog title="请输入支付密码" :visible.sync="dialogVisible" height="260px" width="40%" :before-close="handleClose">
+        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="80px" class="demo-ruleForm">
+            <el-form-item label="支付密码" prop="payPassword">
+                <el-input type="password" v-model="ruleForm.payPassword" placeholder="请输入支付密码" style="width: 220px;"></el-input>
+            </el-form-item>
+        </el-form>
+        <el-button @click="close">取 消</el-button>
+        <el-button type="primary" @click="withdraw">确 定</el-button>
+        </span>
+    </el-dialog>
 </div>
 <script>
     var vue=new Vue({
@@ -67,12 +77,21 @@
             formInline:{
                 money:''
             },
+            ruleForm:{},
             cid:'',
-            cname:''
+            cname:'',
+            dialogVisible:false,
         },
         created:function () {
             this.load();
         },methods:{
+            close:function(){
+                this.dialogVisible=false;
+                this.ruleForm={};
+            },
+            paySubmit:function(){
+                this.dialogVisible=true;
+            },
             load:function(){
                 var self=this;
                 axios.post('/withdraw/queryMoney')
@@ -83,20 +102,49 @@
                     })
             },
             withdraw:function() {
-                this.load();
+                this.dialogVisible=false;
+                var _this=this;
+                if (this.ruleForm.payPassword!=null&&this.ruleForm.payPassword!=""&&this.formInline.money!=null&&this.formInline.money!=""){
                 //要提现的金额
                 var money=this.formInline.money;
                 //当前的金额
                 var inMoney=this.input;
                 if (inMoney<money){
-                    alert("很遗憾,您提现的金额大于您账户金额");
+                    _this.$message({
+                        message: '很遗憾,您提现的金额大于您账户金额',
+                        type: 'warning'
+                    });
                 }
                 var allM=parseInt(inMoney)-parseInt(money);
-                alert(allM);
-                axios.post('/withdraw/deleteMoney',{totalMoney:allM,reMoney:money,cid:cid,cname:cname}).then(function (response) {
-                    alert("提现成功!");
+                axios.post('/withdraw/deleteMoney',{totalMoney:allM,reMoney:money,cid:cid,cname:cname,payPassword:this.ruleForm.payPassword}).then(function (response) {
+                    var code =response.data.code;
+                    if (code==200) {
+                        _this.$message({
+                            message: '恭喜你，充值成功',
+                            type: 'success'
+                        });
+                    }
+                    if (code==300){
+                        _this.$message({
+                            message: '请输入正确的支付密码',
+                            type: 'warning'
+                        });
+                    }
+                    if (code==400){
+                        _this.$message({
+                            message: '充值失败',
+                            type: 'error'
+                        });
+                    }
+                    _this.load();
+                    _this.ruleForm={};
                 });
-                this.load();
+                }else {
+                    _this.$message({
+                        message: '请填写完整信息',
+                        type: 'warning'
+                    });
+                }
             }
         }
     });

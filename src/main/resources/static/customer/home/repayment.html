@@ -211,7 +211,10 @@
                            _this.loadData();
                        });
                }else {
-                   alert("余额不足请充值！");
+                   _this.$message({
+                       message: '余额不足请充值！',
+                       type: 'success'
+                   });
                }
             },//查询还过款的信息
             huankuanInfo:function () {

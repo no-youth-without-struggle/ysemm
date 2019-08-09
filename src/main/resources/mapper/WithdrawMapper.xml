@@ -20,4 +20,8 @@ where ul.uid=#{uid} and  ul.status=1
     <update id="deleteMoney" parameterType="map">
         update customer_manager set total_money=#{totalMoney} where uid=#{uid}
     </update>
+    <!--查询支付密码是否正确-->
+    <select id="getPayPassword" resultType="String">
+        select pay_password from user_login where uid=(select uid from company where cid=#{cid}) and pay_password=#{payPassword}
+    </select>
 </mapper>

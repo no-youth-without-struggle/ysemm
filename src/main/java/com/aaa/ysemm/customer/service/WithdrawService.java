@@ -24,4 +24,5 @@ public interface WithdrawService {
      */
     int deleteMoney(Map map);
 
+    String getPayPassword(Map map);
 }

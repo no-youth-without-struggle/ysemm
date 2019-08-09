@@ -73,13 +73,11 @@
                 </el-col>
             </el-row>
             <el-row :gutter="20">
-                <el-col :span="10">
-                    <el-form-item label="角色" >
-                    <el-select  v-model="form.rId" >
-                        <el-option v-for="item in role" :label="item.rname" :value="item.rid"></el-option>
-                    </el-select>
-                    </el-form-item>
-                </el-col>
+                        <el-col :span="10">
+                            <el-form-item label="角色授权">
+                                <el-button type="primary" @click="showRoles">拥有角色</el-button>
+                            </el-form-item>
+                        </el-col>
                 <el-col :span="10">
                     <el-form-item label="部门">
                         <el-select v-model="form.deptId" placeholder="请选择部门" >
@@ -252,7 +250,7 @@
                 },
                 dialogRoleFormVisible:false,
                 treeData:[],//权限树
-                checkedKeys:[]
+                checkedKeys:[],
                 rules:{
                     telephone:[{validator: validateTel, trigger: 'blur'}],
                     ename: [{validator: validateName, trigger: 'blur'}],

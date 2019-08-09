@@ -47,7 +47,6 @@
         <el-form :inline="true" :model="formInline" class="demo-form-inline">
             <el-form-item>
                 <el-select v-model="formInline.money" placeholder="选择充值金额" style="position:fixed;left:250px;top:134px;">
-                    <el-option label="请选择" value=""></el-option>
                     <el-option label="1000" value="1000"></el-option>
                     <el-option label="2000" value="2000"></el-option>
                     <el-option label="3000" value="3000"></el-option>
@@ -56,20 +55,32 @@
         </el-form>
     </el-row>
     <el-row>
-        <el-button style="margin-left: 290px" type="primary" @click="pay">充值</el-button>
+        <el-button style="margin-left: 290px" type="primary" @click="paySubmit">充值</el-button>
     </el-row>
+    <!--支付密码输入-->
+    <el-dialog title="请输入支付密码" :visible.sync="dialogVisible" height="260px" width="40%" :before-close="handleClose">
+        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="80px" class="demo-ruleForm">
+        <el-form-item label="支付密码" prop="payPassword">
+            <el-input type="password" v-model="ruleForm.payPassword" placeholder="请输入支付密码" style="width: 220px;"></el-input>
+        </el-form-item>
+        </el-form>
+    <el-button @click="close">取 消</el-button>
+    <el-button type="primary" @click="pay">确 定</el-button>
+  </span>
+    </el-dialog>
 </div>
 <script>
     var vue=new Vue({
         el:'#app',
         data:{
+            dialogVisible:false,
             input:'',
             formInline:{
                 money:''
             },
+            ruleForm:{},
             cid:'',
             cname:'',
-            payPassword:''
         },
         created:function () {
             this.load();
@@ -83,31 +94,51 @@
                         cname=response.data.cname;
                     })
             },
+            close:function(){
+                this.dialogVisible=false;
+                this.ruleForm={};
+            },
+            paySubmit:function(){
+                this.dialogVisible=true;
+            },
             pay:function() {
-                this.$alert('<strong><input type="password" id="password"/></strong>', '请输入支付密码', {
-                    dangerouslyUseHTMLString: true
-                });
-                this.load();
-                if (this.payPassword==$("#password").val()){
-                    if (this.payPassword!=null||this.payPassword==""){
+                var _this=this;
+                this.dialogVisible=false;
+                    if (this.ruleForm.payPassword!=null&&this.ruleForm.payPassword!=""&&this.formInline.money!=null&&this.formInline.money!=""){
                         //要充值的金额
                         var money=this.formInline.money;
                         //当前的金额
                         var inMoney=this.input;
                         var allM=parseInt(money)+parseInt(inMoney);
-                        axios.post('/withdraw/saveMoney',{totalMoney:allM,reMoney:money,cid:cid,cname:cname}).then(function (response) {
-                            vue.$message({
-                                message: '恭喜你，充值成功',
-                                type: 'success'
-                            });
-                            this.load();
+                        axios.post('/withdraw/saveMoney',{totalMoney:allM,reMoney:money,cid:cid,cname:cname,payPassword:this.ruleForm.payPassword}).then(function (response) {
+                            var code =response.data.code;
+                            if (code==200) {
+                                _this.$message({
+                                    message: '恭喜你，充值成功',
+                                    type: 'success'
+                                });
+                            }
+                            if (code==300){
+                                _this.$message({
+                                    message: '请输入正确的支付密码',
+                                    type: 'warning'
+                                });
+                            }
+                            if (code==400){
+                                _this.$message({
+                                    message: '充值失败',
+                                    type: 'error'
+                                });
+                            }
+                            _this.load();
+                            _this.ruleForm={};
                         })
                     }else {
-                        alert("cuow")
+                        _this.$message({
+                            message: '请填写完整信息',
+                            type: 'warning'
+                        });
                     }
-                }else{
-                    alert("支付密码错误");
-                }
             },
 
         }

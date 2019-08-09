@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -133,7 +134,7 @@ public class HomeServiceImpl implements HomeService {
         //查询用户的借款信息
         Map<String,Object> borrowMoney=mapper.getBorrowMoney(userLogin);
         if (borrowMoney!=null){
-            Double borrow = (Double) borrowMoney.get("borrowMoney");
+            BigDecimal borrow = (BigDecimal) borrowMoney.get("borrowMoney");
             map.put("borrowMoney",borrow);
         }else{
             map.put("borrowMoney",0);

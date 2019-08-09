@@ -34,4 +34,14 @@ public class WithdrawServiceImpl implements WithdrawService {
         return withdrawMapper.deleteMoney(map);
     }
 
+    /**
+     * 判断支付密码是否正确
+     * @param map
+     * @return
+     */
+    @Override
+    public String getPayPassword(Map map) {
+        return withdrawMapper.getPayPassword(map);
+    }
+
 }

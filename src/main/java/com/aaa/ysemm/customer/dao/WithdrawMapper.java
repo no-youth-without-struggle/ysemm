@@ -26,4 +26,11 @@ public interface WithdrawMapper {
      * 金额提现
      */
     int deleteMoney(Map map);
+
+    /**
+     * 查询密码是否正确
+     * @param map
+     * @return
+     */
+    String getPayPassword(Map map);
 }
