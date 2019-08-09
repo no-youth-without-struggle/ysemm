@@ -38,9 +38,9 @@ public interface HomeMapper {
 
     double getAllMoney(UserLogin userLogin);
 
-    double getBorrowMoney(UserLogin userLogin);
+ Map<String,Object> getBorrowMoney(UserLogin userLogin);
 
-    double repaymentMoney(UserLogin userLogin);
+    Map<String,Object> repaymentMoney(UserLogin userLogin);
 
     List<Map> getMoneyRecord(PageUtil page);
 

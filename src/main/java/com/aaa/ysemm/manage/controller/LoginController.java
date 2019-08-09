@@ -39,25 +39,12 @@ public class LoginController {
      * @return
      */
     @RequestMapping("/userLogin")
-    public Map login(@RequestBody Map map, HttpSession session) {
-        Map logins = loginService.getLogin(map);
-        if (logins != null) {
-            Login login = (Login) logins.get("login");
-            session.setAttribute("login", login);
-        }
+    public ResultUtil login(@RequestBody Map map, HttpSession session) {
+        ResultUtil logins = loginService.getLogin(map,session);
         return logins;
 
     }
 
-    /**
-     * 获取权限菜单
-     */
-    @RequestMapping("/loginMenu")
-    public ResultUtil getLoginMenu(Integer rid,HttpSession session){
-        List<TreeNode> loginMenu = loginService.getLoginMenu(rid);
-        session.setAttribute("loginMenu",loginMenu);
-        return  new ResultUtil(ResultUtil.CODE_SUCCESS,ResultUtil.MSG_SUCCESS,null);
-    }
     /**
      * 获取动态权限树
      */

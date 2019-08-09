@@ -81,4 +81,13 @@ public class RoleController {
     public Object getPowersByRoleId(Integer roleId){
          return roleService.getPowersByRoleId(roleId);
      }
+    /**
+     * 根据用户id获取该用户关联的所有角色id
+     * @param userId
+     * @return
+     */
+    @RequestMapping("getRolesByUserId")
+    public Object getRolesByUserId(Integer userId){
+        return roleService.getRolesByUserId(userId);
+    }
 }

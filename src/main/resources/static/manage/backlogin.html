@@ -67,19 +67,10 @@ function submitForm() {
 		contentType:'application/json;charset=UTF-8',
 		dataType:"json",
 		success:function (data) {
-           var menu="";
-            var roles=data.roles;
-            var login=data.login;
-            if(login==null){
-            	alert("登录失败");
+            if(data.code!=200){
+				window.location.href="http://localhost:8080/manage/backlogin.html";
 			}else {
-				$('#modal').modal('toggle');
-				for (var i = 0; i <roles.length ; i++) {
-					menu+="<li><button type='button' onclick='loginPermission("+roles[i].rid+")' class='btn btn-danger btn-lg btn-block'>"+roles[i].rname+"</button></li>"
-				}
-				$("#role").html(menu);
-				/*$("#role").listview(menu); */  //在使用'ul'标签时才使用，作用:刷新列表
-				$("#role").trigger("create");  //重点：这名的意思是重新加载所在标签的样式。非常有用的一句话，不加这一句你动态append的标签将丢失Css样式
+				window.location.href="http://localhost:8080/manage/index.html";
 			}
 
 		}

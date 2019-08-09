@@ -4,6 +4,7 @@ import com.aaa.ysemm.customer.entity.TreeNode;
 import com.aaa.ysemm.entity.Login;
 import com.aaa.ysemm.util.ResultUtil;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +28,5 @@ public interface LoginService {
     int saveReg(Login login);
 
 
-    Map getLogin(Map map);
-
-    List<TreeNode> getLoginMenu(Integer rid);
+    ResultUtil getLogin(Map map, HttpSession session);
 }

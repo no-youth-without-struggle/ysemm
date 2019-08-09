@@ -59,8 +59,8 @@ public class ManagerController {
      * 修改人员信息
      */
     @RequestMapping("/updateEmp")
-    public ResultUtil updateEmp(@RequestBody Map map){
-        return service.updateEmp(map);
+    public ResultUtil updateEmp(@RequestBody Employee employee){
+        return service.updateEmp(employee);
     }
 
 
