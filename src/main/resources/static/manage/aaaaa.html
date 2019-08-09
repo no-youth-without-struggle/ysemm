@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>贷款申请表</title>
+    <!--先引入vue.js库-->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!--axios-->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!-- 引入组件库 -->
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <style>
+        .avatar-uploader .el-upload {
+            border: 1px dashed #d9d9d9;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .avatar-uploader .el-upload:hover {
+            border-color: #409EFF;
+        }
+        .avatar-uploader-icon {
+            font-size: 28px;
+            color: #8c939d;
+            width: 178px;
+            height: 178px;
+            line-height: 178px;
+            text-align: center;
+        }
+        .avatar {
+            width: 178px;
+            height: 178px;
+            display: block;
+        }
+        #app{
+            width:800px;
+            height: 100%;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        #sex{
+            text-align: left;
+        }
+
+    </style>
+</head>
+<body>
+<div id="app">
+    <div>
+        <h2>贷款申请表</h2>
+    </div>
+    <el-form :inline="true" :model="form" ref="form" :rules="rules" label-width="150px" class="demo-form-inline" >
+        <!--隐藏主键-->
+        <el-input v-model="form.applyId" type="hidden" autocomplete="off"></el-input>
+        <el-input v-model="form.userId" type="hidden" autocomplete="off"></el-input>
+        <el-row :gutter="20">
+            <el-col :span="12">
+                <div class="grid-content bg-purple">
+                    <el-form-item label="贷款类型" prop="loanType">
+                        <el-select v-model="form.loanType" placeholder="请选择贷款方式">
+                            <el-option label="信用贷" value="1"></el-option>
+                            <el-option label="抵押贷" value="2"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </div>
+            </el-col>
+            <el-col :span="12">
+                <div class="grid-content bg-purple" >
+                    <el-form-item label="贷款金额" prop="loanMoney">
+                        <el-input v-model.number="form.loanMoney" placeholder="贷款金额" autocomplete="off"></el-input>
+                    </el-form-item>
+                </div>
+            </el-col>
+        </el-row>
+        <el-row :gutter="20">
+            <el-col :span="12">
+                <div class="grid-content bg-purple">
+                    <el-form-item label="贷款期限" prop="loanDeadline">
+                        <el-select v-model="form.loanDeadline" placeholder="请选择贷款期限">
+                            <el-option label="6个月" value="6"></el-option>
+                            <el-option label="7个月" value="7"></el-option>
+                            <el-option label="8个月" value="8"></el-option>
+                            <el-option label="9个月" value="9"></el-option>
+                            <el-option label="10个月" value="10"></el-option>
+                            <el-option label="11个月" value="11"></el-option>
+                            <el-option label="12个月" value="12"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </div>
+            </el-col>
+            <el-col :span="12">
+                <div class="grid-content bg-purple" >
+                    <el-form-item label="担保人姓名" prop="bondsmanName">
+                        <el-input v-model="form.bondsmanName" placeholder="担保人姓名" autocomplete="off"></el-input>
+                    </el-form-item>
+                </div>
+            </el-col>
+        </el-row>
+        <el-row :gutter="20">
+            <el-col :span="12">
+                <div class="grid-content bg-purple">
+                    <el-form-item label="担保人年龄" prop="bondsmanAge">
+                        <el-input v-model.number="form.bondsmanAge" placeholder="担保人年龄" autocomplete="off"></el-input>
+                    </el-form-item>
+                </div>
+            </el-col>
+            <el-col :span="12">
+                <div class="grid-content bg-purple" id="sex">
+                    <el-form-item label="担保人性别" prop="bondsmanSex">
+                        <template>
+                            <el-radio v-model="form.bondsmanSex" label="男">男</el-radio>&nbsp;&nbsp;
+                            <el-radio v-model="form.bondsmanSex" label="女">女</el-radio>
+                        </template>
+                    </el-form-item>
+                </div>
+            </el-col>
+        </el-row>
+        <el-row :gutter="20">
+            <el-col :span="12">
+                <div class="grid-content bg-purple" >
+                    <el-form-item label="担保人电话" prop="bondsmanTel">
+                        <el-input v-model="form.bondsmanTel" placeholder="担保人电话" autocomplete="off"></el-input>
+                    </el-form-item>
+                </div>
+            </el-col>
+            <el-col :span="12">
+                <div class="grid-content bg-purple">
+                    <el-form-item label="担保人身份证号" prop="bondsmanZj">
+                        <el-input v-model="form.bondsmanZj" placeholder="担保人身份证号" autocomplete="off"></el-input>
+                    </el-form-item>
+                </div>
+            </el-col>
+        </el-row>
+        <el-row :gutter="20">
+            <el-col :span="12">
+                <div class="grid-content bg-purple">
+                    <el-form-item label="身份证正面" >
+                        <el-upload
+                                name="bondsmanSfzz"
+                                class="avatar-uploader"
+                                action="/demo/apply/uploadSfzz"
+                                :show-file-list="false"
+                                :on-success="handleAvatarSuccess"
+                                :before-upload="beforeAvatarUpload">
+                            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                        </el-upload>
+                    </el-form-item>
+                </div>
+            </el-col>
+            <el-col :span="12">
+                <div class="grid-content bg-purple">
+                    <el-form-item label="身份证反面" >
+                        <el-upload
+                                name="bondsmanSfzf"
+                                class="avatar-uploader"
+                                action="/demo/apply/uploadSfzf"
+                                :show-file-list="false"
+                                :on-success="handleAvatarSuccess1"
+                                :before-upload="beforeAvatarUpload">
+                            <img v-if="imageUrl1" :src="imageUrl1" class="avatar">
+                            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                        </el-upload>
+                    </el-form-item>
+                </div>
+            </el-col>
+        </el-row>
+        <el-row :gutter="20">
+            <el-col :span="12">
+                <div class="grid-content bg-purple">
+                    <el-form-item label="担保人家庭住址" prop="bondsmanAdd">
+                        <el-input v-model="form.bondsmanAdd" placeholder="担保人家庭住址" autocomplete="off"></el-input>
+                    </el-form-item>
+                </div>
+            </el-col>
+            <el-col :span="12">
+                <div class="grid-content bg-purple">
+                    <el-form-item label="担保人年收入" prop="income">
+                        <el-input v-model.number="form.income" placeholder="担保人年收入,单位：万元" autocomplete="off"></el-input>
+                    </el-form-item>
+                </div>
+            </el-col>
+        </el-row>
+        <el-row :gutter="20">
+            <el-col :span="12">
+                <div class="grid-content bg-purple">
+                    <el-form-item label="还款方式" prop="repaymentId">
+                        <el-select v-model="form.repaymentId" placeholder="请选择还款方式">
+                            <el-option label="一次性付" value="1"></el-option>
+                            <el-option label="按月分期" value="2"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </div>
+            </el-col>
+            <el-col :span="12">
+                <div class="grid-content bg-purple">
+                    <el-form-item label="还款类型">
+                        <el-select v-model="form.repaymentType" placeholder="请选择还款类型">
+                            <el-option label="等额本金" value="1"></el-option>
+                            <el-option label="等额本息" value="2"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </div>
+            </el-col>
+        </el-row>
+        <el-row :gutter="20">
+            <el-col :span="12">
+                <div class="grid-content bg-purple">
+                    <el-form-item label="贷款描述" prop="describes">
+                        <el-input v-model="form.describes" placeholder="贷款描述" autocomplete="off"></el-input>
+                    </el-form-item>
+                </div>
+            </el-col>
+            <el-col :span="12">
+                <div class="grid-content bg-purple">
+
+                </div>
+            </el-col>
+        </el-row>
+    </el-form>
+    <div id="footer" slot="footer" class="dialog-footer">
+        <el-button type="danger" @click="close">返回首页</el-button>
+
+        <el-button type="primary" @click="submitForm('form')">下一步</el-button>
+    </div>
+</div>
+
+<script>
+    //验证姓名
+    var validateName = (rule, value, callback) => {
+        var reg = /^[\u4e00-\u9fa5]{2,12}$/;
+        if (value === '') {
+            callback(new Error('担保人姓名不能为空'));
+        } else if (!reg.test(value)) {
+            callback(new Error('格式错误 : 姓名由2-12位汉字组成'));
+        } else {
+            callback();
+        }
+    };
+    //验证电话
+    var validateTel = (rule, value, callback) => {
+        var reg= /^1[3456789][0-9]{9}$/;
+        if (value === '') {
+            callback(new Error('担保人电话不能为空'));
+        } else if (!reg.test(value)) {
+            callback(new Error('请输入正确的电话'));
+        } else {
+            callback();
+        }
+    }
+    //验证身份证,身份证号为15位或18位
+    var validateZj = (rule, value, callback) => {
+        var reg= /(^\d{15}$)|(^\d{17}(\d|X|x)$)/;
+        if (value === '') {
+            callback(new Error('担保人身份证号不能为空'));
+        } else if (!reg.test(value)) {
+            callback(new Error('请输入正确的身份证号'));
+        } else {
+            callback();
+        }
+    }
+    //验证贷款描述
+    var validateDescribes = (rule, value, callback) => {
+        var reg = /^[\u4e00-\u9fa5]{5,100}$/;
+        if (value === '') {
+            callback(new Error('描述不能为空'));
+        } else if (!reg.test(value)) {
+            callback(new Error('字数不对'));
+        } else {
+            callback();
+        }
+    };
+
+    var vue=new Vue({
+        el:"#app",
+        data:{
+            form:{
+                userId:'',
+                loanType:'',//贷款类型
+                loanMoney:'',//贷款金额
+                loanDeadline:'',//贷款期限
+                bondsmanName:'',//担保人姓名
+                bondsmanAge:'',//担保人年龄
+                bondsmanSex:'',//担保人性别
+                bondsmanTel:'',//担保人电话
+                bondsmanZj:'',//担保人身份证号
+                bondsmanSfzz:'',//担保人身份证正面
+                bondsmanSfzf:'',//担保人身份证反面
+                bondsmanAdd:'',//担保人住址
+                income:'',//担保人年收入
+                repaymentId:'',//还款方式
+                repaymentType:'',//还款类型
+                describes:'',//贷款描述
+                loanStatus:'1'//贷款状态默认为1，未审核
+            },
+
+            rules:{
+                loanType:[{
+                    required: true,
+                    message: '请选择贷款方式',
+                    trigger: 'change'
+                }],
+                loanMoney:[{
+                    required: true,
+                    message: '金额不能为空',
+                    trigger: 'blur'
+                },
+                    {
+                        type: 'number',
+                        message: '金额必须为数字值'
+                    }],
+                loanDeadline:[{
+                    required: true,
+                    message: '请选择贷款期限',
+                    trigger: 'change'
+                }],
+                bondsmanName: [{validator: validateName, trigger: 'blur'}],
+                bondsmanAge:[{
+                    required: true,
+                    message: '年龄不能为空'
+                },
+                    {
+                        type: 'number',
+                        message: '年龄必须为数字值'
+                    }],
+                bondsmanTel:[{validator: validateTel, trigger: 'blur'}],
+                bondsmanZj:[{validator: validateZj, trigger: 'blur'}],
+                //验证担保人住址
+                bondsmanAdd:[{
+                    required: true,
+                    message: '担保人住址不能为空',
+                    trigger: 'blur'
+                }],
+                //验证年收入
+                income:[{
+                    required: true,
+                    message: '年收入不能为空'
+                },
+                    {
+                        type: 'number',
+                        message: '年收入必须为数字值'
+                    }],
+                //验证贷款描述
+                describes:[{validator: validateDescribes, trigger: 'blur'}]
+            },
+            formLabelWidth:'300px',
+            url:'',
+            imageUrl:'',
+            imageUrl1:''
+        },
+        created:function(){
+            this.getUserId();
+        },
+        methods:{
+            close:function(){
+                location.href="#";
+            },
+            submitForm(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        //验证通过之后调用录入方法
+                        this.next();
+                    } else {
+                        console.log('error submit!!');
+                return false;
+            }
+            });
+            },
+            //用来往数据库录数据
+            next:function () {
+                var self=this;
+                this.url="/demo/apply/save";
+                axios.post(this.url,this.form)
+                    .then(function (response) {
+                        //添加或者修改成功
+                        if(response.data>0){
+                            self.$message({
+                                message:'恭喜你，操作成功！',
+                                type:'success',
+                            });
+                            // location.href="zhengjian.html"
+                            location.href="zhengjian.html?applyId="+response.data;
+                        }else{
+                            //添加或者修改错误
+                            self.$message.error('错了哦，操作错误');
+                        }
+                    });
+            },
+            handleAvatarSuccess:function(res, file) {
+                this.imageUrl = URL.createObjectURL(file.raw);
+                this.form.bondsmanSfzz =file.response.newFileName;
+            },
+            handleAvatarSuccess1:function(res, file) {
+                this.imageUrl1 = URL.createObjectURL(file.raw);
+                this.form.bondsmanSfzf =file.response.newFileName;
+            },
+            beforeAvatarUpload:function(file) {
+                var isJPG = file.type === 'image/jpeg';
+                var isLt2M = file.size / 1024 / 1024 < 2;
+                if (!isJPG) {
+                    this.$message.error('上传头像图片只能是 JPG 格式!');
+                }
+                if (!isLt2M) {
+                    this.$message.error('上传头像图片大小不能超过 2MB!');
+                }
+                return isJPG && isLt2M;
+            },
+            getUserId:function () {
+                var self=this;
+                axios.post('/demo/apply/getUserId').then(function (response){
+                    self.form.userId=response.data.id;
+                });
+            }
+        }
+    });
+</script>
+</body>
+</html>

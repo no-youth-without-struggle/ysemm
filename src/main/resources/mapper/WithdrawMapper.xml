@@ -8,7 +8,7 @@
     <!--<cache type="org.mybatis.caches.redis.RedisCache" size="1024" flushInterval="0" readOnly="true" eviction="FIFO"></cache>-->
     <!--查询登录人账户的剩余金额-->
     <select id="queryMoney" resultType="map">
-        select cp.cid cid,cp.cname cname,ul.uid uid,ul.telephone telephone,cm.operator operator,cm.total_money totalMoney from customer_manager cm join user_login ul
+        select cp.cid cid,cp.cname cname,ul.uid uid,ul.telephone telephone,cm.operator operator,cm.total_money totalMoney,ul.pay_password payPassword from customer_manager cm join user_login ul
           ON  cm.uid=ul.uid  join company cp on cp.uid=ul.uid
 where ul.uid=#{uid} and  ul.status=1
     </select>

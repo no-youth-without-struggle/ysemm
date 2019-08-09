@@ -68,7 +68,8 @@
                 money:''
             },
             cid:'',
-            cname:''
+            cname:'',
+            payPassword:''
         },
         created:function () {
             this.load();
@@ -83,17 +84,32 @@
                     })
             },
             pay:function() {
+                this.$alert('<strong><input type="password" id="password"/></strong>', '请输入支付密码', {
+                    dangerouslyUseHTMLString: true
+                });
                 this.load();
-                //要充值的金额
-                var money=this.formInline.money;
-                //当前的金额
-                var inMoney=this.input;
-                var allM=parseInt(money)+parseInt(inMoney);
-                axios.post('/withdraw/saveMoney',{totalMoney:allM,reMoney:money,cid:cid,cname:cname}).then(function (response) {
-                    alert("充值成功!");
-                    this.load();
-                })
-            }
+                if (this.payPassword==$("#password").val()){
+                    if (this.payPassword!=null||this.payPassword==""){
+                        //要充值的金额
+                        var money=this.formInline.money;
+                        //当前的金额
+                        var inMoney=this.input;
+                        var allM=parseInt(money)+parseInt(inMoney);
+                        axios.post('/withdraw/saveMoney',{totalMoney:allM,reMoney:money,cid:cid,cname:cname}).then(function (response) {
+                            vue.$message({
+                                message: '恭喜你，充值成功',
+                                type: 'success'
+                            });
+                            this.load();
+                        })
+                    }else {
+                        alert("cuow")
+                    }
+                }else{
+                    alert("支付密码错误");
+                }
+            },
+
         }
     });
 </script>

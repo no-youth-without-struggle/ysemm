@@ -40,7 +40,7 @@
 					<el-row>
 						<el-col :span="8">
 							<el-form-item label="借款金额">
-								<el-input v-model="form.loanMoney"@change="rate()"style="width:160px;height: 25px;"></el-input>元
+								<el-input v-model="form.loanMoney"@change="rate()" id="loanMoney" style="width:160px;height: 25px;"></el-input>元
 							</el-form-item>
 						</el-col>
 						<el-col :span="8">
@@ -202,6 +202,9 @@
 						window.location.href="message1.html";
 					}
 				});
+		if($("#loanMoney").val()>50000){
+			alert("借款金额不能大于50000元!");
+		}
 
 	</script>
 

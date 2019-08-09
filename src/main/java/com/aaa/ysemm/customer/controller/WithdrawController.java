@@ -37,6 +37,8 @@ public class WithdrawController {
         Integer uid = emp.getUid();
         //返回查询的结果
         Map map = withdrawService.queryMoney(uid);
+        System.out.println(map);
+        System.out.println(map.get("payPassword")+"zzzzzzzzzzz");
         return map;
     }
 

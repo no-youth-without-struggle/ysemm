@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>企业信息登记</title>
+    <title>Title</title>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <!-- 引入样式 -->
     <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
@@ -38,11 +38,13 @@
             height: 180px;
             display: block;
         }
+
         .avatar1 {
             width: 360px;
             height: 180px;
             display: block;
         }
+
         .avatar2 {
             width: 360px;
             height: 180px;
@@ -55,50 +57,51 @@
 <div id="app">
     <el-steps :active="active" align-center finish-status="success">
         <el-step title="步骤1" description="填写你的基本信息"></el-step>
-        <el-step title="步骤2" description="企业信息登记是对您包括您的公司的一个实名认证，您只需要上传相关照片信息，我们会自动帮您完成信息登记（请认真完成此步奏，否则您在本网站的借款方式将变得无比繁琐）"></el-step>
+        <el-step title="步骤2"
+                 description="企业信息登记是对您包括您的公司的一个实名认证，您只需要上传相关照片信息，我们会自动帮您完成信息登记（请认真完成此步奏，否则您在本网站的借款方式将变得无比繁琐）"></el-step>
         <el-step title="步骤3" description="完成"></el-step>
     </el-steps>
 
-    <el-form v-if="isShowA" ref="form" :model="form" label-width="80px">
+    <el-form v-if="isShowA" :model="form" ref="form" :rules="rules" label-width="80px">
         <el-row :gutter="20">
             <el-col :span="12">
-                <el-form-item label="公司名称">
+                <el-form-item label="公司名称" prop="cname">
                     <el-input style="width: 260px" v-model="form.cname"></el-input>
                 </el-form-item>
-           </el-col>
+            </el-col>
 
             <el-col :span="12">
-                <el-form-item  label="您的邮箱">
+                <el-form-item label="您的邮箱" prop="email">
                     <el-input style="width: 260px" v-model="form.email"></el-input>
                 </el-form-item>
             </el-col>
 
             <el-col :span="12">
-                <el-form-item label="手机号" prop="tel">
+                <el-form-item label="手机号" prop="telephone">
                     <el-input style="width: 260px" v-model="form.telephone"></el-input>
                 </el-form-item>
             </el-col>
 
             <el-col :span="12">
-                <el-form-item label="公司电话">
+                <el-form-item label="公司电话" prop="phone">
                     <el-input style="width: 260px" v-model="form.phone"></el-input>
                 </el-form-item>
             </el-col>
 
             <el-col :span="12">
-                <el-form-item label="公司性质">
+                <el-form-item label="公司性质" prop="nature">
                     <el-input style="width: 260px" v-model="form.nature"></el-input>
                 </el-form-item>
             </el-col>
 
             <el-col :span="12">
-                <el-form-item label="公司地址">
+                <el-form-item label="公司地址" prop="address">
                     <el-input style="width: 260px" v-model="form.address"></el-input>
                 </el-form-item>
             </el-col>
 
             <el-col :span="12">
-                <el-form-item label="银行卡号">
+                <el-form-item label="银行卡号" prop="bankCard">
                     <el-input style="width: 260px" v-model="form.bankCard"></el-input>
                 </el-form-item>
             </el-col>
@@ -108,86 +111,138 @@
             <el-button type="primary" @click="onSubmit">提交</el-button>
         </el-form-item>
     </el-form>
+    <el-row v-if="isShowB" :gutter="20">
+        <el-col :span="8">
+            <el-upload
+                    name="face_IDCard"
+                    class="upload-demo"
+                    drag
+                    action="/authentication/upload"
+                    multiple
+                    :show-file-list="false"
+                    :key="1"
+                    :on-success="handleAvatarSuccess"
+                    :before-upload="beforeAvatarUpload">
+                <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                <i class="el-icon-upload"></i>
+                <div class="el-upload__text">身份证正面照<em>点击上传</em></div>
+            </el-upload>
+        </el-col>
+        <el-col :span="8">
+            <el-upload
+                    margin-left="350px"
+                    name="reverse_IDCard"
+                    class="upload-demo"
+                    drag
+                    action="/authentication/uploadanouther"
+                    multiple
+                    :show-file-list="false"
+                    :key="2"
+                    :on-success="handleAvatarSuccess1"
+                    :before-upload="beforeAvatarUpload">
+                <img v-if="imageUrl" :src="imageUrl1" class="avatar1">
+                <i class="el-icon-upload"></i>
+                <div class="el-upload__text">身份证反面照<em>点击上传</em></div>
+            </el-upload>
 
+        </el-col>
+        <el-col :span="8">
+            <el-upload
+                    name="business_license"
+                    class="upload-demo"
+                    drag
+                    action="/authentication/businesslicense"
+                    multiple
+                    :show-file-list="false"
+                    :key="3"
+                    :on-success="handleAvatarSuccess2"
+                    :before-upload="beforeAvatarUpload">
+                <img v-if="imageUrl" :src="imageUrl2" class="avatar2">
+                <i class="el-icon-upload"></i>
+                <div class="el-upload__text">公司营业执照<em>点击上传</em></div>
+            </el-upload>
+            <div style="margin-left: 45%; margin-top: 30px">
+                <el-button type="primary">主要按钮</el-button>
+            </div>
 
-            <el-row v-if="isShowB" :gutter="20">
-                <el-col :span="8">
-                    <el-upload
-                            name="face_IDCard"
-                            class="upload-demo"
-                            drag
-                            action="/authentication/upload"
-                            multiple
-                            :show-file-list="false"
-                            :key="1"
-                            :on-success="handleAvatarSuccess"
-                            :before-upload="beforeAvatarUpload">
-                        <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                        <i class="el-icon-upload"></i>
-                        <div class="el-upload__text">身份证正面照<em>点击上传</em></div>
-                    </el-upload>
-                </el-col>
-                <el-col :span="8">
-                    <el-upload
-                            margin-left="350px"
-                            name="reverse_IDCard"
-                            class="upload-demo"
-                            drag
-                            action="/authentication/uploadanouther"
-                            multiple
-                            :show-file-list="false"
-                            :key="2"
-                            :on-success="handleAvatarSuccess1"
-                            :before-upload="beforeAvatarUpload">
-                        <img v-if="imageUrl1" :src="imageUrl1" class="avatar1">
-                        <i class="el-icon-upload"></i>
-                        <div class="el-upload__text">身份证反面照<em>点击上传</em></div>
-                    </el-upload>
+        </el-col>
+    </el-row>
 
-                </el-col>
-                <el-col :span="8">
-                    <el-upload
-                            name="businesslicense"
-                            class="upload-demo"
-                            drag
-                            action="/authentication/businesslicense"
-                            multiple
-                            :show-file-list="false"
-                            :key="3"
-                            :on-success="handleAvatarSuccess2"
-                            :before-upload="beforeAvatarUpload">
-                        <img v-if="imageUrl2" :src="imageUrl2" class="avatar2">
-                        <i class="el-icon-upload"></i>
-                        <div class="el-upload__text">公司营业执照<em>点击上传</em></div>
-                    </el-upload>
-                    <div style="margin-left: 45%; margin-top: 30px">
-                        <el-button type="primary">主要按钮</el-button>
-                    </div>
+    <el-row v-if="isShowC">
+        <span>完成认证</span>
+    </el-row>
 
-                </el-col>
-            </el-row>
-
-           <el-row v-if="isShowC">
-               <span>完成认证</span>
-           </el-row>
-
-            <el-dialog
-                    title="提示"
-                    :visible.sync="centerDialogVisible"
-                    width="30%"
-                    center>
-                <span>企业信息登记是对您包括您的公司的一个实名认证，您只需要上传相关照片信息，我们会自动帮您完成信息登记（请认真完成此步奏，否则您在本网站的借款方式将变得无比繁琐）</span>
-                <span slot="footer" class="dialog-footer">
+    <el-dialog
+            title="提示"
+            :visible.sync="centerDialogVisible"
+            width="30%"
+            center>
+        <span>企业信息登记是对您包括您的公司的一个实名认证，您只需要上传相关照片信息，我们会自动帮您完成信息登记（请认真完成此步奏，否则您在本网站的借款方式将变得无比繁琐）</span>
+        <span slot="footer" class="dialog-footer">
     <el-button type="primary" @click="centerDialogVisible = false">我知道了</el-button>
   </span>
-            </el-dialog>
+    </el-dialog>
 
 
     <el-button style="margin-top: 12px;" @click="unnext">上一步</el-button>
     <el-button style="margin-top: 12px;" @click="next">下一步</el-button>
 </div>
 <script>
-
+    //验证姓名
+    var validateName = (rule, value, callback) => {
+        var reg = /^[\u4e00-\u9fa5]{2,12}$/;
+        if (value === '') {
+            callback(new Error('公司名称姓名不能为空'));
+        } else if (!reg.test(value)) {
+            callback(new Error('格式错误 : 公司名称由2-12位汉字组成'));
+        } else {
+            callback();
+        }
+    };
+    //验证电话
+    var validateTel = (rule, value, callback) => {
+        var reg= /^1[3456789][0-9]{9}$/;
+        if (value === '') {
+            callback(new Error('手机号不能为空'));
+        } else if (!reg.test(value)) {
+            callback(new Error('请输入正确的手机号'));
+        } else {
+            callback();
+        }
+    }
+    //验证银行卡号为17位或19位
+    var validateZj = (rule, value, callback) => {
+        var reg= /(^\d{15}$)|(^\d{17}(\d|X|x)$)/;
+        if (value === '') {
+            callback(new Error('银行卡号不能为空'));
+        } else if (!reg.test(value)) {
+            callback(new Error('请输入正确的银行卡号'));
+        } else {
+            callback();
+        }
+    }
+    //验证电话
+    var validateTels = (rule, value, callback) => {
+        var reg= /^1[3456789][0-9]{9}$/;
+        if (value === '') {
+            callback(new Error('电话号不能为空'));
+        } else if (!reg.test(value)) {
+            callback(new Error('请输入正确的电话号'));
+        } else {
+            callback();
+        }
+    }
+    //验证电话
+    var validateYoux = (rule, value, callback) => {
+        var reg= /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+        if (value === '') {
+            callback(new Error('邮箱号不能为空'));
+        } else if (!reg.test(value)) {
+            callback(new Error('请输入正确的邮箱号'));
+        } else {
+            callback();
+        }
+    }
     var vue = new Vue({
         el: "#app",
         data: {
@@ -196,27 +251,46 @@
             imageUrl2: '',
             centerDialogVisible: false,
             active: 0,
-            isShowA:true,
-            isShowB:false,
-            isShowC:false,
-            form:{ tel: [{
+            isShowA: true,
+            isShowB: false,
+            isShowC: false,
+            form: {},
+            rules:{
+                //验证公司姓名
+                cname:[{validator: validateName, trigger: 'blur'}],
+                //验证手机号
+                telephone:[{validator: validateTel, trigger: 'blur'}],
+                //验证电话号
+                phone:[{validator: validateTels, trigger: 'blur'}],
+                //验证电话号
+                bankCard:[{validator: validateZj, trigger: 'blur'}],
+                //验证担保人住址
+                address:[{
                     required: true,
-                    validator: CheckTel,
+                    message: '公司住址不能为空',
                     trigger: 'blur'
-                }]
-            },
-
+                }],
+                nature:[{
+                    required: true,
+                    message: '公司性质不能为空',
+                    trigger: 'blur'
+                }],
+                email:[{validator: validateYoux, trigger: 'blur'}]
+            }
         },
         methods: {
             handleAvatarSuccess(res, file) {
+
                 this.imageUrl = URL.createObjectURL(file.raw);
 
             },
             handleAvatarSuccess1(res, file1) {
+
                 this.imageUrl1 = URL.createObjectURL(file1.raw);
 
             },
             handleAvatarSuccess2(res, file2) {
+
                 this.imageUrl2 = URL.createObjectURL(file2.raw);
             },
             beforeAvatarUpload(file) {
@@ -232,42 +306,42 @@
             },
             next() {
                 if (this.active++ > 2) this.active = 3;
-                if(this.active==0){
-                    this.isShowA=true;
-                    this.isShowB=false;
-                    this.isShowC=false;
-                }else if(this.active==1){
-                    this.isShowA=false;
-                    this.isShowB=true;
-                    this.isShowC=false;
-                    this.centerDialogVisible=true;
-                }else {
-                    this.isShowA=false;
-                    this.isShowB=false;
-                    this.isShowC=true;
+                if (this.active == 0) {
+                    this.isShowA = true;
+                    this.isShowB = false;
+                    this.isShowC = false;
+                } else if (this.active == 1) {
+                    this.isShowA = false;
+                    this.isShowB = true;
+                    this.isShowC = false;
+                    this.centerDialogVisible = true;
+                } else {
+                    this.isShowA = false;
+                    this.isShowB = false;
+                    this.isShowC = true;
                 }
 
             },
             unnext() {
                 if (this.active-- < 2) this.active = 0;
-                if(this.active==0){
-                    this.isShowA=true;
-                    this.isShowB=false;
-                    this.isShowC=false;
-                }else if(this.active==1){
-                    this.isShowA=false;
-                    this.isShowB=true;
-                    this.isShowC=false;
-                    this.centerDialogVisible=true;
-                }else {
-                    this.isShowA=false;
-                    this.isShowB=false;
-                    this.isShowC=true;
+                if (this.active == 0) {
+                    this.isShowA = true;
+                    this.isShowB = false;
+                    this.isShowC = false;
+                } else if (this.active == 1) {
+                    this.isShowA = false;
+                    this.isShowB = true;
+                    this.isShowC = false;
+                    this.centerDialogVisible = true;
+                } else {
+                    this.isShowA = false;
+                    this.isShowB = false;
+                    this.isShowC = true;
                 }
             },
-            onSubmit:function () {
+            onSubmit: function () {
                 var self = this;
-                axios.post('/authentication/adduser',this.form)
+                axios.post('/authentication/adduser', this.form)
                     .then(function (value) {
                         if (value.data.ok == "chenggong") {
                             self.$notify({
@@ -275,30 +349,17 @@
                                 message: '第一步认证成功',
                                 type: 'success'
                             });
-                        }else{
+                        } else {
                             self.$notify.error({
                                 title: '错误',
                                 message: '遇到了未知错误，认证失败'
                             });
                         }
                     })
-            }
+            },
+
         }
     })
-
-    var CheckTel = (rule, value, callback) =>
-    {
-        if (!value) {
-            callback(new Error('请输入电话号码'));
-        } else if (!Number.isInteger(value)) {
-            callback(new Error('电话号码必须是数字'));
-        } else if (value.toString().length != 11) {
-            callback(new Error('电话号码必须是11位'));
-        } else {
-            callback();
-        }
-    }
-
 </script>
 </body>
 </html>
