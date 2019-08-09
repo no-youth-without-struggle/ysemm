@@ -23,7 +23,6 @@ loans l on re.lid=l.loan_id INNER JOIN company c on c.cid=l.loan_cid
 </where>
     limit #{start},#{pageSize}
 </select>
-
         <select id="Page" resultType="int">
        select count(*) from repayment re join
 loans l on re.lid=l.loan_id INNER JOIN company c on c.cid=l.loan_cid

@@ -51,15 +51,15 @@
     </style>
 </head>
 <body>
-
 <div id="app">
-    <el-steps :active="active" align-center finish-status="success">
+    <el-steps :active="active" finish-status="success" description="vertical"  align-center style="margin-top: 50px">
         <el-step title="步骤1" description="填写你的基本信息"></el-step>
-        <el-step title="步骤2" description="企业信息登记是对您包括您的公司的一个实名认证，您只需要上传相关照片信息，我们会自动帮您完成信息登记（请认真完成此步奏，否则您在本网站的借款方式将变得无比繁琐）"></el-step>
-        <el-step title="步骤3" description="完成"></el-step>
+        <el-step title="步骤2"description="企业信息登记是对您包括您的公司的一个实名认证，您只需要上传相关照片信息，我们会自动帮您完成信息登记（请认真完成此步奏，否则您在本网站的借款方式将变得无比繁琐）"></el-step>
+        <el-step title="步骤3"description="完成"></el-step>
     </el-steps>
 
-    <el-form v-if="isShowA" ref="form" :model="form" label-width="80px">
+    <el-card v-if="active==1" class="box-card" style="width: 95%;height: auto;">
+    <el-form  ref="form" :model="form" label-width="80px">
         <el-row :gutter="20">
             <el-col :span="12">
                 <el-form-item label="公司名称">
@@ -103,14 +103,10 @@
                 </el-form-item>
             </el-col>
         </el-row>
-
-        <el-form-item>
-            <el-button type="primary" @click="onSubmit">提交</el-button>
-        </el-form-item>
     </el-form>
-
-
-            <el-row v-if="isShowB" :gutter="20">
+    </el-card>
+    <el-card v-if="active==2" class="box-card" style="width: 100%;height: auto;">
+            <el-row v-if="active==2" :gutter="20">
                 <el-col :span="8">
                     <el-upload
                             name="face_IDCard"
@@ -160,17 +156,18 @@
                         <i class="el-icon-upload"></i>
                         <div class="el-upload__text">公司营业执照<em>点击上传</em></div>
                     </el-upload>
-                    <div style="margin-left: 45%; margin-top: 30px">
+                   <!-- <div style="margin-left: 45%; margin-top: 30px">
                         <el-button type="primary">主要按钮</el-button>
-                    </div>
+                    </div>-->
 
                 </el-col>
             </el-row>
+    </el-card>
+    <el-card v-if="active==3" class="box-card" style="width: 100%;height: auto;">
 
-           <el-row v-if="isShowC">
-               <span>完成认证</span>
-           </el-row>
+        <span style="color: red">恭喜完成完成认证！！！</span>
 
+    </el-card>
             <el-dialog
                     title="提示"
                     :visible.sync="centerDialogVisible"
@@ -183,19 +180,18 @@
             </el-dialog>
 
 
-    <el-button style="margin-top: 12px;" @click="unnext">上一步</el-button>
-    <el-button style="margin-top: 12px;" @click="next">下一步</el-button>
+    <el-button style="margin-top: 12px;" v-if="active==1" @click="onSubmit">下一步</el-button>
+    <el-button style="margin-top: 12px;" v-if="active==2" @click="twoSubmit">完成</el-button>
 </div>
 <script>
-
     var vue = new Vue({
         el: "#app",
         data: {
+            active: 1,
             imageUrl: '',
             imageUrl1: '',
             imageUrl2: '',
             centerDialogVisible: false,
-            active: 0,
             isShowA:true,
             isShowB:false,
             isShowC:false,
@@ -208,6 +204,12 @@
 
         },
         methods: {
+            two:function(){
+
+            },
+            three:function(){
+
+            },
             handleAvatarSuccess(res, file) {
                 this.imageUrl = URL.createObjectURL(file.raw);
 
@@ -230,42 +232,11 @@
                 }
                 return isJPG && isLt2M;
             },
-            next() {
-                if (this.active++ > 2) this.active = 3;
-                if(this.active==0){
-                    this.isShowA=true;
-                    this.isShowB=false;
-                    this.isShowC=false;
-                }else if(this.active==1){
-                    this.isShowA=false;
-                    this.isShowB=true;
-                    this.isShowC=false;
-                    this.centerDialogVisible=true;
-                }else {
-                    this.isShowA=false;
-                    this.isShowB=false;
-                    this.isShowC=true;
-                }
-
-            },
-            unnext() {
-                if (this.active-- < 2) this.active = 0;
-                if(this.active==0){
-                    this.isShowA=true;
-                    this.isShowB=false;
-                    this.isShowC=false;
-                }else if(this.active==1){
-                    this.isShowA=false;
-                    this.isShowB=true;
-                    this.isShowC=false;
-                    this.centerDialogVisible=true;
-                }else {
-                    this.isShowA=false;
-                    this.isShowB=false;
-                    this.isShowC=true;
-                }
+            twoSubmit:function(){
+                this.active=3;
             },
             onSubmit:function () {
+                this.active=2;
                 var self = this;
                 axios.post('/authentication/adduser',this.form)
                     .then(function (value) {

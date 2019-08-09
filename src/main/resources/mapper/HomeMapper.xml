@@ -25,7 +25,7 @@
     </select>
     <!--查询用户是否完成实名认证-->
     <select id="getCompanyQualification" resultType="String">
-       SELECT cname from company WHERE uid=#{uid}
+       SELECT cname from company WHERE uid=#{uid} and client_status!=2
     </select>
     <!--查询用户是否有借款-->
     <select id="getLoans" resultType="int">
@@ -40,12 +40,13 @@
     </select>
 
     <!--查询借款金额-->
-    <select id="getBorrowMoney" resultType="double">
+    <select id="getBorrowMoney" resultType="map">
 SELECT sum(l.loan_money) borrowMoney from loans l INNER JOIN company c on l.loan_cid=c.cid where c.uid=#{uid} and l.loans_status!=5
     </select>
     <!--查询剩余金额-->
-    <select id="repaymentMoney" resultType="double">
-SELECT re.re_balance+re.re_money-re.re_rate_money repaymentMoney from repayment re INNER JOIN loans l on re.lid=l.loan_id INNER JOIN company c on l.loan_cid=c.cid where c.uid=#{uid} and re.status=0
+    <select id="repaymentMoney" resultType="map">
+SELECT Min(rid) rid,(re.re_balance+re.re_money-re.re_rate_money) repaymentMoney from repayment re INNER JOIN loans l on re.lid=l.loan_id
+INNER JOIN company c on l.loan_cid=c.cid where c.uid=#{uid} and re.status=0
     </select>
     <!--根据用户的查询类型进行分页+搜索-->
     <select id="getMoneyRecord" resultType="map">

@@ -6,7 +6,6 @@
 <mapper namespace="com.aaa.ysemm.manage.dao.ManagerMapper">
     <!--模糊分页查询人员信息-->
     <select id="getEmp" resultType="map">
-
         SELECT lo.email,lo.`password`,e.eid,e.ename,e.telephone,e.IDCard,e.email,e.address,e.birthday,e.hiredate,e.sex,e.`status`,
         tr.id rId,tr.name rname,d.deptId,d.dname
         from employee e INNER JOIN login lo on lo.lid=e.lid LEFT JOIN  department d on  d.deptId=e.deptId INNER JOIN
@@ -17,7 +16,6 @@
     </select>
     <!--模糊查询人员个数-->
     <select id="getCount" resultType="int">
-
         SELECT count(*)
         from employee e INNER JOIN login lo on lo.lid=e.lid LEFT JOIN  department d on  d.deptId=e.deptId INNER JOIN
         tb_user_role tur on e.eid=tur.user_id INNER JOIN tb_role tr ON tur.role_id=tr.id

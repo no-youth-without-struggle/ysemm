@@ -132,6 +132,8 @@ public class RepaymentController {
         cusManageMapper.updateMoney(map);
         //总金额加上还款金额
         moneyManageService.updateManageMoney(reMoney);
+        //查询当前还有没有未还款的期数，如果没有，更改当前借款记录的状态
+        moneyManageService.getPeriods(map);
         return map;
     }
 }

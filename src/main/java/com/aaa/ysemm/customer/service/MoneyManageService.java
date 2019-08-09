@@ -2,6 +2,8 @@ package com.aaa.ysemm.customer.service;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
+
 /**
  * fileName:MoneyManageService
  * description:
@@ -14,4 +16,6 @@ public interface MoneyManageService {
      *还款的金额加上公司的总金额 等于公司的总账
      */
     int updateManageMoney(Object reMoney);
+
+    void getPeriods(Map map);
 }

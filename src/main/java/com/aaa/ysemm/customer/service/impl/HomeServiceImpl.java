@@ -131,13 +131,23 @@ public class HomeServiceImpl implements HomeService {
         //查询用户账号资金信息
        double allMoney= mapper.getAllMoney(userLogin);
         //查询用户的借款信息
-        double borrowMoney=mapper.getBorrowMoney(userLogin);
+        Map<String,Object> borrowMoney=mapper.getBorrowMoney(userLogin);
+        if (borrowMoney!=null){
+            Double borrow = (Double) borrowMoney.get("borrowMoney");
+            map.put("borrowMoney",borrow);
+        }else{
+            map.put("borrowMoney",0);
+        }
         //查询用户的剩余还款金额
-        double repaymentMoney=mapper.repaymentMoney(userLogin);
+        Map repaymentMoney=mapper.repaymentMoney(userLogin);
+        if (repaymentMoney!=null){
+            Double money = (Double) repaymentMoney.get("repaymentMoney");
+            map.put("repaymentMoney",money);
+        }else {
+            map.put("repaymentMoney",0);
+        }
         map.put("name",userLogin.getUsername());
         map.put("allMoney",allMoney);
-        map.put("borrowMoney",borrowMoney);
-        map.put("repaymentMoney",repaymentMoney);
         return map;
     }
 
