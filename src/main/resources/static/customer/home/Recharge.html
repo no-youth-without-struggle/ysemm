@@ -44,18 +44,15 @@
     </el-row>
     <el-row>
         <div id="cz">请选择充值金额:</div>
-        <el-form :inline="true" :model="formInline" class="demo-form-inline">
-            <el-form-item>
-                <el-select v-model="formInline.money" placeholder="选择充值金额" style="position:fixed;left:250px;top:134px;">
-                    <el-option label="1000" value="1000"></el-option>
-                    <el-option label="2000" value="2000"></el-option>
-                    <el-option label="3000" value="3000"></el-option>
-                </el-select>
+        <!--<el-form :model="payForm"  ref="payForm"label-width="100px" class="demo-ruleForm" >-->
+        <el-form :inline="true" :model="formInline" :rules="czrules"ref="formInline" class="demo-form-inline">
+            <el-form-item label="充值金额" prop="money">
+                <el-input v-model="formInline.money" placeholder="选择充值金额" style="width:260px;"></el-input>
             </el-form-item>
         </el-form>
     </el-row>
     <el-row>
-        <el-button style="margin-left: 290px" type="primary" @click="paySubmit">充值</el-button>
+        <el-button style="margin-left: 290px" type="primary" @click="paySubmit('formInline')">充值</el-button>
     </el-row>
     <!--支付密码输入-->
     <el-dialog title="请输入支付密码" :visible.sync="dialogVisible" height="260px" width="40%" :before-close="handleClose">
@@ -70,17 +67,30 @@
     </el-dialog>
 </div>
 <script>
+    let m = (rule, value, callback) => {
+        if (value <=0) {
+            callback(new Error('请充值有限的金额'));
+        } else {
+            callback();
+        }
+    };
     var vue=new Vue({
         el:'#app',
         data:{
             dialogVisible:false,
             input:'',
             formInline:{
-                money:''
+                money: ''
+            },
+            czrules:{
+                money:[
+                    { required: true, message: '充值金额不能为空',trigger: 'blur'},
+                    {pattern: /^\d+\.\d{1,2}$/, message: '请输入合法的充值金额,例：100.0',trigger: 'blur'},
+                ]
             },
             ruleForm:{},
             cid:'',
-            cname:'',
+            cname:''
         },
         created:function () {
             this.load();
@@ -98,8 +108,16 @@
                 this.dialogVisible=false;
                 this.ruleForm={};
             },
-            paySubmit:function(){
+            paySubmit:function(formInline){
+                var _this=this;
+                this.$refs[formInline].validate((valid) => {
+                    if (valid) {
                 this.dialogVisible=true;
+                    } else {
+                        _this.$message.error('请填写完整的表单');
+                        return false;
+                    }
+                });
             },
             pay:function() {
                 var _this=this;
@@ -140,6 +158,7 @@
                         });
                     }
             },
+
 
         }
     });

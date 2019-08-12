@@ -115,9 +115,7 @@
                             size="mini"
                             type="danger"
                             @click="handleSuccess(scope.$index, scope.row)">通过</el-button>
-                   <!-- <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">驳回</el-button>
-                    <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">通过</el-button>-->
-                    <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
+               <!--     <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">详情</el-button>-->
                     <el-button
                             size="mini"
                             type="danger"
@@ -182,11 +180,11 @@
                         .then(function (result) {
                                 if (result.data.code==200){
                                     _this.$message({
-                                        message: '恭喜你，这是一条成功消息',
+                                        message: '审核通过',
                                         type: 'success'
                                     });
                                 }else{
-                                    _this.$message.error('错了哦，这是一条错误消息');
+                                    _this.$message.error('审核失败');
                                 }
                             load();
                         });

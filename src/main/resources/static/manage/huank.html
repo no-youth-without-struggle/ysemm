@@ -16,7 +16,7 @@
                 type:"GET",
                 dataType:"json",
                 success:function (data) {
-                   alert(data.result);
+                    $("#al").html(data.result);
                    window.location.href="huank.html";
                 }
             });
@@ -57,7 +57,7 @@
                 </div>
                 <input class="btn btn-primary " type="button" value="查询" onclick="queryAll(1)">
         </form>
-
+        <div id="al" class="alert alert-warning alert-dismissible" role="alert"></div>
 <table class="table table-bordered" style="text-align: center">
     <tr>
         <td>公司名称</td>

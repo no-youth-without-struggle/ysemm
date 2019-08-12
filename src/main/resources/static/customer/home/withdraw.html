@@ -44,18 +44,14 @@
     </el-row>
     <el-row>
         <div id="cz">请选择提现金额: </div>
-        <el-form :inline="true" :model="formInline" class="demo-form-inline">
-            <el-form-item>
-                <el-select v-model="formInline.money" placeholder="选择提现金额" style="position:fixed;left:250px;top:134px;">
-                    <el-option label="1000" value="1000"></el-option>
-                    <el-option label="2000" value="2000"></el-option>
-                    <el-option label="3000" value="3000"></el-option>
-                </el-select>
+        <el-form :inline="true" :model="formInline" class="demo-form-inline" :rules="rules" ref="formInline">
+            <el-form-item label="提现金额" prop="money">
+                <el-input v-model="formInline.money" placeholder="选择提现金额" style="width:260px;"></el-input>
             </el-form-item>
         </el-form>
     </el-row>
     <el-row>
-        <el-button style="margin-left: 290px" type="primary" @click="paySubmit">提现</el-button>
+        <el-button style="margin-left: 290px" type="primary" @click="paySubmit('formInline')">提现</el-button>
     </el-row>
     <!--支付密码输入-->
     <el-dialog title="请输入支付密码" :visible.sync="dialogVisible" height="260px" width="40%" :before-close="handleClose">
@@ -81,6 +77,12 @@
             cid:'',
             cname:'',
             dialogVisible:false,
+            rules:{
+                money: [
+                    { required: true, message: '提现金额不能为空',trigger: 'blur'},
+                    {pattern: /^\d+\.\d{1,2}$/, message: '请输入合法的充值金额,例：100.0',trigger: 'blur'},
+                ],
+            }
         },
         created:function () {
             this.load();
@@ -89,8 +91,16 @@
                 this.dialogVisible=false;
                 this.ruleForm={};
             },
-            paySubmit:function(){
+            paySubmit:function(formInline){
+                var _this=this;
+                this.$refs[formInline].validate((valid) => {
+                    if (valid) {
                 this.dialogVisible=true;
+                    } else {
+                        _this.$message.error('请填写完整的表单');
+                        return false;
+                    }
+                });
             },
             load:function(){
                 var self=this;
@@ -104,41 +114,40 @@
             withdraw:function() {
                 this.dialogVisible=false;
                 var _this=this;
-                if (this.ruleForm.payPassword!=null&&this.ruleForm.payPassword!=""&&this.formInline.money!=null&&this.formInline.money!=""){
                 //要提现的金额
                 var money=this.formInline.money;
                 //当前的金额
                 var inMoney=this.input;
-                if (inMoney<money){
+                if (this.ruleForm.payPassword!=null&&this.ruleForm.payPassword!=""&&this.formInline.money!=null&&this.formInline.money!=""&&inMoney>=money){
+                    var allM=parseInt(inMoney)-parseInt(money);
+                    axios.post('/withdraw/deleteMoney',{totalMoney:allM,reMoney:money,cid:cid,cname:cname,payPassword:this.ruleForm.payPassword}).then(function (response) {
+                        var code =response.data.code;
+                        if (code==200) {
+                            _this.$message({
+                                message: '恭喜你，提现成功',
+                                type: 'success'
+                            });
+                        }
+                        if (code==300){
+                            _this.$message({
+                                message: '请输入正确的支付密码',
+                                type: 'warning'
+                            });
+                        }
+                        if (code==400){
+                            _this.$message({
+                                message: '提现失败',
+                                type: 'error'
+                            });
+                        }
+                        _this.load();
+                        _this.ruleForm={};
+                    });
+                }else if (inMoney<money){
                     _this.$message({
                         message: '很遗憾,您提现的金额大于您账户金额',
                         type: 'warning'
                     });
-                }
-                var allM=parseInt(inMoney)-parseInt(money);
-                axios.post('/withdraw/deleteMoney',{totalMoney:allM,reMoney:money,cid:cid,cname:cname,payPassword:this.ruleForm.payPassword}).then(function (response) {
-                    var code =response.data.code;
-                    if (code==200) {
-                        _this.$message({
-                            message: '恭喜你，充值成功',
-                            type: 'success'
-                        });
-                    }
-                    if (code==300){
-                        _this.$message({
-                            message: '请输入正确的支付密码',
-                            type: 'warning'
-                        });
-                    }
-                    if (code==400){
-                        _this.$message({
-                            message: '充值失败',
-                            type: 'error'
-                        });
-                    }
-                    _this.load();
-                    _this.ruleForm={};
-                });
                 }else {
                     _this.$message({
                         message: '请填写完整信息',

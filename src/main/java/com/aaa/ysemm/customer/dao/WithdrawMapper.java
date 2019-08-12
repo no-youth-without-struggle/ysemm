@@ -5,13 +5,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Map;
 
-/**
- * fileName:WithdrawMapper
- * description:
- * author:yangjunling
- * createTime:2019/8/7 15:03
- * version:1.0.0
- */
+
 @Repository
 public interface WithdrawMapper {
     /**

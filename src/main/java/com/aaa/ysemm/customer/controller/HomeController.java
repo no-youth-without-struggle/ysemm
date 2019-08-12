@@ -1,13 +1,9 @@
 package com.aaa.ysemm.customer.controller;
 
 import com.aaa.ysemm.entity.UserLogin;
-import com.aaa.ysemm.customer.entitys.Company;
-import com.aaa.ysemm.customer.entitys.Loans;
-import com.aaa.ysemm.customer.entitys.Pledge;
 import com.aaa.ysemm.customer.service.HomeService;
 import com.aaa.ysemm.manage.entity.PageUtil;
 import com.aaa.ysemm.util.PhotoUtil;
-import com.aaa.ysemm.util.RandomStringUtil;
 import com.aaa.ysemm.util.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -103,9 +99,9 @@ public class HomeController {
      */
     @RequestMapping("/getPayCode")
     public void  getPayCode(String telephone,HttpSession session){
-        String code = RandomStringUtil.getRandomNumber(6);
-      System.out.println("code"+code);
-        /* String code = PhotoUtil.getCode(telephone);*/
+     /*   String code = RandomStringUtil.getRandomNumber(6);*/
+         String code = PhotoUtil.getCode(telephone);
+        System.out.println("code"+code);
         session.setAttribute("payCode",code);
     }
     /**
@@ -127,9 +123,9 @@ public class HomeController {
      */
     @RequestMapping("/getLoginCode")
     public void  getLoginCode(String telephone,HttpSession session){
-        String code = RandomStringUtil.getRandomNumber(6);
+      /*  String code = RandomStringUtil.getRandomNumber(6);*/
+        String code = PhotoUtil.getCode(telephone);
         System.out.println("code"+code);
-    /*    String code = PhotoUtil.getCode(telephone);*/
         session.setAttribute("LoginPasswordCode",code);
     }
     /**

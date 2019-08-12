@@ -13,13 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
-/**
- * fileName:WithdrawController
- * description:
- * author:yangjunling
- * createTime:2019/8/7 15:12
- * version:1.0.0
- */
+
 @RestController
 @RequestMapping("withdraw")
 public class WithdrawController {
@@ -34,8 +28,6 @@ public class WithdrawController {
         Integer uid = emp.getUid();
         //返回查询的结果
         Map map = withdrawService.queryMoney(uid);
-        System.out.println(map);
-        System.out.println(map.get("payPassword")+"zzzzzzzzzzz");
         return map;
     }
 
@@ -94,6 +86,7 @@ public class WithdrawController {
            //登录信息的id
           Integer uid = emp.getUid();
           map.put("uid",uid);
+          //添加到明细表里面的信息需要 设置
           map.put("cm_id",map.get("cid"));
           map.put("telephone",map.get("cname"));
           map.put("operatorTime",format);

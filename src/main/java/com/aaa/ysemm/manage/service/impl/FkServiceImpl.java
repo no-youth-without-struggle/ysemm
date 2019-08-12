@@ -86,7 +86,7 @@ public class FkServiceImpl implements FkService {
             //每期还款本金+利息的钱数集合
             Map<Integer, Double> monthMoney = AverageCapitalUtils.getPerMonthPrincipalInterest(dmoney, rate, time);
             //每月还款本金
-            double perMonthPrincipal = AverageCapitalUtils.getPerMonthPrincipal(dmoney, 10);
+            double perMonthPrincipal = AverageCapitalUtils.getPerMonthPrincipal(dmoney, time);
             BigDecimal perMonth = BigDecimal.valueOf(perMonthPrincipal);
             //每月还款利息
             Map<Integer, Double> perMonthInterest = AverageCapitalUtils.getPerMonthInterest(dmoney, rate, time);

@@ -36,22 +36,22 @@
 				</table>
 				<!--借款信息填写-->
 				<el-divider content-position="left" style="color: red;">借款信息填写</el-divider>
-				<el-form ref="form" :model="form" label-width="100px">
+				<el-form ref="form" :model="form" label-width="100px" :rules="rules1" ref="form">
 					<el-row>
 						<el-col :span="8">
-							<el-form-item label="借款金额">
+							<el-form-item label="借款金额" prop="loanMoney">
 								<el-input v-model="form.loanMoney"@change="rate()" id="loanMoney" style="width:160px;height: 25px;"></el-input>元
 							</el-form-item>
 						</el-col>
 						<el-col :span="8">
-							<el-form-item label="借款类型">
+							<el-form-item label="借款类型" prop="loanType">
 								<el-select v-model="form.loanType" placeholder="请选择借款类型" style="width:160px;height: 25px;;">
 									<el-option label="抵押贷" value="抵押贷"></el-option>
 								</el-select>
 							</el-form-item>
 						</el-col>
 						<el-col :span="8">
-							<el-form-item label="还款方式">
+							<el-form-item label="还款方式" prop="repaymentType">
 								<el-select v-model="form.repaymentType" @change="rate()"placeholder="请选择活动区域" style="width:160px;height: 25px;;">
 									<el-option label="等额本金" value="等额本金"></el-option>
 									<el-option label="等额本息" value="等额本息"></el-option>
@@ -61,9 +61,8 @@
 					</el-row>
 					<el-row>
 						<el-col :span="8">
-							<el-form-item label="借款周期">
+							<el-form-item label="借款周期" prop="repaymentTime">
 								<el-select v-model="form.repaymentTime" @change="rate()" placeholder="请选择活动区域" style="width:160px;height: 25px;">
-									<el-option label="3期" value="3"></el-option>
 									<el-option label="6期" value="6"></el-option>
 									<el-option label="9期" value="9"></el-option>
 									<el-option label="12期" value="12"></el-option>
@@ -71,8 +70,8 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span="8">
-							<el-form-item label="借款年利率">
-								<el-input v-model="form.repaymentRate" style="width:160px;height: 25px;"></el-input>%
+							<el-form-item label="借款年利率" >
+								<el-input v-model="form.repaymentRate" style="width:160px;height: 25px;" :disabled="true"></el-input>%
 							</el-form-item>
 						</el-col>
 					</el-row>
@@ -83,21 +82,19 @@
 						<td>应付总利息：{{form.rateMoney}}元</td>
 					</tr>
 				</table>
-					
 				</el-form>
-
 			</el-card>
 			<el-card v-if="active==2" class="box-card" style="width: 100%;height: auto;">
 				<el-divider content-position="left" style="color: red;">抵押物信息</el-divider>
-				<el-form ref="form" :model="form" label-width="80px">
+				<el-form  :model="form" label-width="80px"  :rules="rules2" ref="form">
 					<el-row>
 						<el-col :span="8">
-							<el-form-item label="物品名称">
+							<el-form-item label="物品名称"  prop="pledgeName">
 								<el-input v-model="form.pledgeName" style="width:160px;height: 25px;;"></el-input>
 							</el-form-item>
 						</el-col>
 						<el-col :span="8">
-							<el-form-item label="物品类型">
+							<el-form-item label="物品类型"  prop="type">
 								<el-select v-model="form.type" placeholder="请选择物品类型" style="width:160px;height: 25px;;">
 									<el-option label="固定资产" value="固定资产"></el-option>
 									<el-option label="非固定资产" value="非固定资产"></el-option>
@@ -105,28 +102,34 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span="8">
-							<el-form-item label="市场估值">
-								<el-input v-model="form.valuation" style="width:160px;height: 25px;;"></el-input>万元
+							<el-form-item label="市场估值"  prop="valuation">
+								<el-input v-model="form.valuation" style="width:160px;height: 25px;;"></el-input>元
 							</el-form-item>
 						</el-col>
 					</el-row>
-					<el-form-item label="物品描述" style="width: 60%;">
+					<el-form-item label="物品描述" style="width: 60%;"  prop="description">
     						<el-input type="textarea" v-model="form.description"></el-input>
   					</el-form-item>
 				</el-form>
 			</el-card>
 			<el-card v-if="active==3" class="box-card" style="width: 100%;height: auto;">
-
 					<span style="color: red">恭喜完成申请，我们将在三天之内完成审核！！！</span>
-
 			</el-card>
 			<el-button v-if="active==2" style="margin-top: 12px;" @click="back">上一步</el-button>
-			<el-button v-if="active==1" style="margin-top: 12px;" @click="next">下一步</el-button>
-			<el-button v-if="active==2" style="margin-top: 12px;" @click="success">完成</el-button>
+			<el-button v-if="active==1" style="margin-top: 12px;" @click="next('form')">下一步</el-button>
+			<el-button v-if="active==2" style="margin-top: 12px;" @click="success('form')">完成</el-button>
 		</div>
 	</body>
 	<script>
-
+		//借款金额不大于100000
+		//借款金额<可用信用额度
+		let allMoney = function(rule,value,callback){
+			if(value>100000){
+				callback(new Error('借款金额不能超过10万元！'));
+			}else{
+				callback();
+			}
+		};
 		var app = new Vue({
 			el: "#app",
 			data: {
@@ -136,6 +139,41 @@
 					countMoney:0,
 				},
 				company:{},
+				rules1: {
+					loanMoney: [
+						{ required: true, message: '借款金额不能为空',trigger: 'blur'},
+						{pattern: /^\d+\.\d{1,2}$/, message: '请输入合法的借款金额,例：100.0',trigger: 'blur'},
+						{ validator:allMoney,trigger: 'blur'}
+					],
+					loanType: [
+						{ required: true, message: '请选择借款类型', trigger: 'change' }
+					],
+					repaymentType: [
+						{  required: true, message: '请选择还款方式', trigger: 'change' }
+					],
+					repaymentTime: [
+						{  required: true, message: '请选择借款周期', trigger: 'change' }
+					],
+					repaymentRate: [
+						{ required: true, message: '请选择借款周期', trigger: 'blur' }
+					],
+				},
+				rules2: {
+					pledgeName: [
+						{ required: true, message: '请填写物品名称', trigger: 'blur' }
+					],
+					type: [
+						{ required: true, message: '请选择物品类型', trigger: 'change' }
+					],
+					valuation: [
+						{ required: true, message: '借款金额不能为空',trigger: 'blur'},
+						{pattern: /^\d+\.\d{1,2}$/, message: '请输入合法的借款金额,例：100.0',trigger: 'blur'},
+					],
+					description: [
+						{ required: true, message: '请填写物品描述', trigger: 'blur' }
+					],
+				},
+
 
 			},
 			methods: {
@@ -145,34 +183,48 @@
 				back: function() {
 					this.active = 1;
 				},
-				next: function() {
-					this.active = 2;
+				next: function(form) {
+					this.$refs[form].validate((valid) => {
+						if (valid) {
+							this.active = 2;
+						} else {
+							_this.$message.error('操作失败');
+							return false;
+						}
+					});
 				},
-				success: function() {
-					this.active = 3;
-					axios.post("/homeBorrow/postBorrow",this.form)
-							.then(function (result) {
-								var msg=result.data;
-								if (msg==200){
-									app.$message({
-										message: msg.msg,
-										type: 'success'
-									});
-								}
+				success: function(form) {
+					var _this=this;
+					this.$refs[form].validate((valid) => {
+						if (valid) {
+							this.active = 3;
+							axios.post("/homeBorrow/postBorrow",this.form)
+									.then(function (result) {
+										var msg=result.data;
+										if (msg==200){
+											app.$message({
+												message: msg.msg,
+												type: 'success'
+											});
+										}
 
-							})
+									})
+						} else {
+							_this.$message.error('操作失败');
+							return false;
+						}
+					});
+
 				},
 				//利率
 				rate:function () {
 					var value=app.form.repaymentTime;
-					if (value==3){
-						this.form.repaymentRate=0.2;
-					} else if (value==6){
-						this.form.repaymentRate=0.15;
+					if (value==6){
+						this.form.repaymentRate=0.27;
 					} else if (value==9){
-						this.form.repaymentRate=0.10;
+						this.form.repaymentRate=0.25;
 					}else if (value==12) {
-						this.form.repaymentRate=0.08;
+						this.form.repaymentRate=0.22;
 					}
 					/**
 					 * 动态计算出总金额和总利息
@@ -182,7 +234,8 @@
 								app.form.rateMoney=result.data.rateMoney;
 								app.form.countMoney=result.data.allMoney;
 							})
-					
+
+
 				}
 			}
 		});
@@ -202,9 +255,6 @@
 						window.location.href="message1.html";
 					}
 				});
-		if($("#loanMoney").val()>50000){
-			alert("借款金额不能大于50000元!");
-		}
 
 	</script>
 

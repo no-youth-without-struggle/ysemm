@@ -18,44 +18,64 @@
                 <el-form-item label="手机号码" prop="telephone">
                     <el-input v-model="payForm.telephone" style="width:260px;" :disabled="true"></el-input>
                 </el-form-item>
-                <el-form-item label="支付密码" prop="payPasswordOne">
-                    <el-input v-model="payForm.payPasswordOne" style="width:260px;"></el-input>
+                <el-form-item  label="支付密码" prop="payPasswordOne">
+                    <el-input v-model="payForm.payPasswordOne" type="password" style="width:260px;"></el-input>
                 </el-form-item>
                 <el-form-item label="再次输入" prop="payPasswordTwo">
-                    <el-input v-model="payForm.payPasswordTwo" style="width:260px;"></el-input>
+                    <el-input v-model="payForm.payPasswordTwo" type="password" style="width:260px;"></el-input>
                 </el-form-item>
                 <el-form-item label="验证码" prop="payCode">
                     <el-input v-model="payForm.payCode" style="width: 148px;"></el-input>
                     <el-button type="primary" @click="submitPayCode()" :disabled="isDisabledPay">{{buttonNamePay}}</el-button>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="submitPayForm()" style="width: 260px;">修改</el-button>
+                    <el-button type="primary" @click="submitPayForm('payForm')" style="width: 260px;">修改</el-button>
                 </el-form-item>
             </el-form>
         </el-collapse-item>
         <el-collapse-item title="登录密码修改" name="2">
-            <el-form :model="loginForm"  label-width="100px" class="demo-ruleForm">
+            <el-form :model="loginForm" :rules="rules2" ref="loginForm" label-width="100px" class="demo-ruleForm">
                 <el-form-item label="手机号码" prop="telephone">
                     <el-input v-model="loginForm.telephone" style="width:260px;" :disabled="true"></el-input>
                 </el-form-item>
-                <el-form-item label="新密码" prop="newLoginPasswordOne">
-                    <el-input v-model="loginForm.newLoginPasswordOne" style="width:260px;"></el-input>
+                <el-form-item  type="password" label="新密码" prop="newLoginPasswordOne">
+                    <el-input type="password" v-model="loginForm.newLoginPasswordOne" style="width:260px;"></el-input>
                 </el-form-item>
-                <el-form-item label="再次输入" prop="newLoginpayPasswordTwo">
-                    <el-input v-model="loginForm.newLoginpayPasswordTwo" style="width:260px;"></el-input>
+                <el-form-item  label="再次输入" prop="newLoginpayPasswordTwo">
+                    <el-input type="password" v-model="loginForm.newLoginpayPasswordTwo" style="width:260px;"></el-input>
                 </el-form-item>
                 <el-form-item label="验证码" prop="loginPasswordCode">
                     <el-input v-model="loginForm.loginPasswordCode" style="width: 148px;"></el-input>
                     <el-button type="primary" @click="submitLoginCode()"  :disabled="isDisabled">{{buttonName}}</el-button>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="submitLoginForm()" style="width: 260px;">修改</el-button>
+                    <el-button type="primary" @click="submitLoginForm('loginForm')" style="width: 260px;">修改</el-button>
                 </el-form-item>
             </el-form>
         </el-collapse-item>
     </el-collapse>
 </div>
 <script>
+    var validatePass1 = (rule, value, callback) => {
+        if (value === '') {
+            callback(new Error('请再次输入密码'));
+        } else if (value !== app.payForm.payPasswordOne) {
+            callback(new Error('两次输入密码不一致!'));
+        } else {
+            callback();
+        }
+    };
+    var validatePass2 = (rule, value, callback) => {
+        if (value === '') {
+            callback(new Error('请再次输入密码'));
+        } else if (value !== app.loginForm.newLoginPasswordOne) {
+            callback(new Error('两次输入密码不一致!'));
+        } else {
+            callback();
+        }
+    };
+
+
     var app=new Vue({
         el:"#app",
         data:{
@@ -71,18 +91,31 @@
             loginForm:{
                 telephone:"",
             },
-            payrules:{//验证1
-                payPasswordOne:[
-
-                    ],
-                payPasswordTwo:[
-                    {}
-                    ],
-                payCode:[{}],
-                telephone:[
-                    { required: true, message: '请输入电话号码', trigger: 'blur' },
+            rules2:{//验证修改登录密码
+                newLoginPasswordOne: [
+                    { required: true, message: '请输入支付密码', trigger: 'blur' },
+                    { min: 6, max: 20, message: '长度在 6 到 20 个字符', trigger: 'blur' }
                 ],
-
+                newLoginpayPasswordTwo: [
+                    { validator: validatePass2, trigger: 'blur',required: true },
+                ],
+                loginPasswordCode:[
+                    { required: true, message: '请输入验证码', trigger: 'blur' },
+                    { max: 6, message: '长度为 6 个字符', trigger: 'blur' }
+                ]
+            },
+            payrules:{//验证1
+                payPasswordOne: [
+                    { required: true, message: '请输入支付密码', trigger: 'blur' },
+                    { min: 6, max: 20, message: '长度在 6 到 20 个字符', trigger: 'blur' }
+                ],
+                payPasswordTwo: [
+                    {validator: validatePass1, trigger: 'blur',required: true},
+                ],
+                payCode:[
+                    { required: true, message: '请输入验证码', trigger: 'blur' },
+                    { max: 6, message: '长度为 6 个字符', trigger: 'blur' }
+                ]
             }
 
         },
@@ -108,12 +141,25 @@
 
                     });
             },
-            submitPayForm:function () {//发送修改支付密码
-                axios.post("/homeBorrow/postPaypassword",this.payForm)
-                    .then(function (result) {
-                    app.payForm={};
-                    });
-            },
+            submitPayForm:function (payForm) {//发送修改支付密码
+                var _this=this;
+                this.$refs[payForm].validate((valid) => {
+                    if (valid) {
+                        axios.post("/homeBorrow/postPaypassword",this.payForm)
+                            .then(function (result) {
+                                app.payForm={};
+                                 _this.$message({
+                                         message: '恭喜你，设置成功',
+                                        type: 'success'
+                                     });
+                                });
+
+                         } else {
+                                _this.$message.error('请填写完整信息');
+                         return false;
+                         }
+                         });
+                     },
             submitLoginCode:function () {//发送手机验证码
                     let me = this;
                     me.isDisabled = true;
@@ -132,11 +178,23 @@
 
                     });
             },
-            submitLoginForm:function () {//发送修改登录密码
+            submitLoginForm:function (loginForm) {//发送修改登录密码
+                var _this=this;
+                this.$refs[loginForm].validate((valid) => {
+                    if (valid) {
                 axios.post("/homeBorrow/postLoginPassword",this.loginForm)
                     .then(function (result) {
                         app.loginForm={};
+                        _this.$message({
+                            message: '恭喜你，设置成功',
+                            type: 'success'
+                        });
                     });
+                    } else {
+                        _this.$message.error('请填写完整信息');
+                        return false;
+                    }
+                });
             },
         }
     })

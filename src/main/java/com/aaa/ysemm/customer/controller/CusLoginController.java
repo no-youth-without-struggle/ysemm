@@ -35,9 +35,9 @@ public class CusLoginController {
      */
     @RequestMapping("/getCode")
     public ResultUtil getCode(String telephone, HttpSession session){
-        String code= RandomStringUtil.getRandomNumber(6);
+       /* String code= RandomStringUtil.getRandomNumber(6);*/
         System.out.println(telephone);
-      /*  String code = PhotoUtil.getCode(telephone);*/
+        String code = PhotoUtil.getCode(telephone);
         System.out.println("code"+code);
         session.setAttribute("code",code);
         return new ResultUtil(200,"获取成功",null);

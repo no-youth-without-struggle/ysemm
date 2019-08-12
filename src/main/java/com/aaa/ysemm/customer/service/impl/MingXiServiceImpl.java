@@ -20,6 +20,7 @@ import java.util.Map;
 public class MingXiServiceImpl implements MingXiService {
     @Autowired
     private MingXiMapper mingXiMapper;
+    //充值提现放款还款 都在 明细表里面 增加记录
     @Override
     public int saveMingXi(Map mingXi) {
         System.out.println(mingXi+"sdsssssssss");
@@ -43,7 +44,9 @@ public class MingXiServiceImpl implements MingXiService {
         }
         return null;
     }
-
+    /**
+     * 查询借款 生成 借款统计图 按周
+     */
     @Override
     public Map queryBorrow() {
         Map map = mingXiMapper.queryBorrow();
@@ -52,12 +55,18 @@ public class MingXiServiceImpl implements MingXiService {
         }
         return null;
     }
-
+    /**
+     * 获取统计数据
+     * @param map
+     * @return
+     */
     @Override
     public List<Map> getDataA(Map map) {
         return mingXiMapper.getDataA(map);
     }
-
+    /**
+     * 明细查询
+     */
     @Override
     public List<Map> queryDetail(Map map) {
         List<Map> detail = mingXiMapper.queryDetail(map);
@@ -66,17 +75,28 @@ public class MingXiServiceImpl implements MingXiService {
         }
         return null;
     }
-
+    /**
+     * 查询分页总数量
+     *
+     * @param map
+     * @return
+     */
     @Override
     public int queryDetailCount(Map map) {
         return mingXiMapper.queryDetailCount(map);
     }
-
+    /**
+     * 删除明细表里面的本条记录
+     * @param id
+     * @return
+     */
     @Override
     public int deleteRecord(Integer id) {
         return mingXiMapper.deleteRecord(id);
     }
-
+    /**
+     * 按年统计利润
+     */
     @Override
     public List<Map> getProfit(Map map) {
         return mingXiMapper.getProfit(map);
